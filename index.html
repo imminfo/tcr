@@ -42,11 +42,16 @@
 
 <p>tcR package</p>
 
+<p>Manual (R package vignette): <a href="tcrvignette.pdf">View PDF <strong>Vignette</strong></a></li></p>
 
 <h3>
 <a name="quickstart" class="anchor" href="#quickstart"><span class="octicon octicon-link"></span></a>Quick Start</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>The package provides two <a href="http://rmarkdown.rstudio.com">RMarkdown</a> documents with full analysis of a single or a group of repertoires.
+  User just need to change paths in this documents to their MiTCR data and have the <a href = "http://yihui.name/knitr/">knitr</a> package installed.
+  Analysis of a single repertoire stored at "<path to the tcR package>/inst/library.report.Rmd" and included .
+  Analysis of a a group of repertoires stored at "<path to the tcR package>/inst/crossanalysis.report.Rmd" and included .
+</p>
 
 <h3>
 <a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h3>
@@ -56,7 +61,7 @@
 data(human.alphabets)
 </code></pre>
 
-<p>Get a number of clones, in-frames and out-of-frames, number of unique amino acid CDR3 sequences and other basic statistics:</p>
+<p>Get numbers of clones, in-frames and out-of-frames, unique amino acid CDR3 sequences and other basic statistics:</p>
 <pre><code>mitcr.stats(twb)
 </code></pre>
 
@@ -72,6 +77,8 @@ data(human.alphabets)
 <pre><code>twb.int <- intersect(twb, 'n0e')
 vis.heatmap(twb.int)
 </code></pre>
+
+<p>For more examples see <a href="tcrvignette.pdf"><strong>Vignette</strong></a></p>.
 
 <h3>
 <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
