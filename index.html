@@ -43,9 +43,10 @@
 <p>tcR package</p>
 
 <ul>
-  <li>Shared clones statistics</li>
-  <li>V- and J-segments usage</li>
-  <li>Diversity evaluation</li>
+  <li>Shared clones statistics: number of shared clones, clonotypes, using V-segments or not; Jaccard index for number of
+  shared clones; sequential intersection among the most abundant clones ("top-cross").</li>
+  <li>V- and J-segments usage and it's analysis: PCA, Shannon Entropy, Jensen-Shannon Divergence.</li>
+  <li>Diversity evaluation: ecological diversity index, Gini index, inverse Simpson index, rarefaction analysis</li>
   <li>Artificial repertoire generation (beta chain only, for now)</li>
   <li>Spectratyping</li>
   <li>Various visualisation procedures</li>
@@ -60,12 +61,12 @@
   User just need to change paths in this documents to their MiTCR data and have the <a href = "http://yihui.name/knitr/">knitr</a> package installed.
 </p>
 <p>
-  Exploratory analysis (<a href = "twb1.lib.report.html">example, two repertoires</a>) stored at "<path to the tcR package>/inst/library.report.Rmd"
+  Exploratory analysis (<a href = "twb12.lib.report.html">example for two repertoires</a>) stored at "<path to the tcR package>/inst/library.report.Rmd"
   and included statistics and visualisation of number of clones, clonotypes, in- and out-of-frames, unique amino acid CDR3
-  sequences, V- and J-usage, most frequent k-mers, mean unique clones estimation for the fixed number of reads.
+  sequences, V- and J-usage, most frequent k-mers, rarefaction analysis.
 </p>
 <p>
-  Analysis of a group of repertoires (<a href = "twb.cross.report.html">example</a>) stored at "<path to the tcR package>/inst/crossanalysis.report.Rmd"
+  Analysis of a group of repertoires (<a href = "twb.cross.report.html">example for four repertoires</a>) stored at "<path to the tcR package>/inst/crossanalysis.report.Rmd"
   and included statistics and visualisation of number of shared clones and clonotypes, V-usage for individuals and groups, J-usage for individuals,
   Jensen-Shannon divergence among V-usages of repertoires and top-cross.
 </p>
