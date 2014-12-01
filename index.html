@@ -42,6 +42,15 @@
 
 <p>tcR package</p>
 
+<ul>
+  <li>Shared clones statistics</li>
+  <li>V- and J-segments usage</li>
+  <li>Diversity evaluation</li>
+  <li>Artificial repertoire generation (beta chain only, for now)</li>
+  <li>Spectratyping</li>
+  <li>Various visualisation procedures</li>
+</ul>
+
 <p>Manual: <a href="tcrvignette.pdf">tcR package vignette</a></li></p>
 
 <h3>
@@ -51,10 +60,14 @@
   User just need to change paths in this documents to their MiTCR data and have the <a href = "http://yihui.name/knitr/">knitr</a> package installed.
 </p>
 <p>
-  Exploratory analysis (<a href = "twb1.lib.report.html">example, single repertoire</a>) stored at "<path to the tcR package>/inst/library.report.Rmd" and included .
+  Exploratory analysis (<a href = "twb1.lib.report.html">example, two repertoires</a>) stored at "<path to the tcR package>/inst/library.report.Rmd"
+  and included statistics and visualisation of number of clones, clonotypes, in- and out-of-frames, unique amino acid CDR3
+  sequences, V- and J-usage, most frequent k-mers, mean unique clones estimation for the fixed number of reads.
 </p>
 <p>
-  Analysis of a group of repertoires (<a href = "twb.cross.report.html">example</a>) stored at "<path to the tcR package>/inst/crossanalysis.report.Rmd" and included .
+  Analysis of a group of repertoires (<a href = "twb.cross.report.html">example</a>) stored at "<path to the tcR package>/inst/crossanalysis.report.Rmd"
+  and included statistics and visualisation of number of shared clones and clonotypes, V-usage for individuals and groups, J-usage for individuals,
+  Jensen-Shannon divergence among V-usages of repertoires and top-cross.
 </p>
 
 <h3>
