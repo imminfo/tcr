@@ -92,16 +92,16 @@ data(human.alphabets)
 <pre><code>freq.Vb(twb[[1]])
 </code></pre>
 
-<p>Compute V-usage of all subjects and plot a histogram:</p>
+<p>Compute V-usage of all subjects and visualise it through a histogram:</p>
 <pre><code>vis.V.usage(twb, .dodge = T)
 </code></pre>
 
-<p>Compute a pairwise number of shared clones and plot a heatmap:</p>
+<p>Compute a pairwise number of shared clones and plot a heatmap of them:</p>
 <pre><code>twb.int <- intersect(twb, 'n0e')
 vis.heatmap(twb.int)
 </code></pre>
 
-<p>Perform a rarefaction analysis and plot rarefaction curve on a log x-axis:</p>
+<p>Perform a rarefaction analysis and plot the resulting rarefaction curve on a log x-axis:</p>
 <pre><code>twb.rar <- rarefaction(twb, .col = "Read.count")
 vis.rarefaction(twb, .log = T)
 </code></pre>
