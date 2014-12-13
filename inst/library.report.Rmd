@@ -1,0 +1,142 @@
+---
+output:
+  html_document:
+    theme: spacelab
+    toc: yes
+---
+
+TCR beta repertoire exploratory analysis
+========================================================
+
+
+## Before analysis
+
+Before running this pipeline you should do next steps:
+
+1. Save your parsed MiTCR data to the `immdata` variable (it could be **a mitcr data frame or a list**).
+```
+immdata <- parse.folder('/home/username/mitcrdata/')
+```
+
+2. Save the `immdata` variable to the some folder as the `.rda` file.
+```
+save(immdata, file = '/home/username/immdata.rda')
+```
+
+3. In the code block below change the path string to the path to yours `immdata.rda` file. After that click the **Knit HTML** button to start analysis and the script will make a html report.
+```{r loaddata,warning=FALSE,message=F}
+load('../data/twb.rda')
+immdata <- twb[1:2]
+library(tcR)
+data(human.alphabets)
+```
+
+
+4. Friendly advice: run the pipeline on the top N sequences first and configure sizes of figures.
+```{r lapplyhead,warning=FALSE,message=F}
+N <- 50000
+immdata <- head(immdata, N)
+```
+
+
+
+## Data statistics
+
+```{r seqstats,warning=FALSE,message=F}
+mitcr.stats(immdata)
+lib.mitcr.stats(immdata)
+```
+
+
+
+
+## Segments' statistics
+
+### V-segment usage
+
+```{r vusagehist, fig.width=16, fig.height=5,warning=FALSE,message=F}
+if (has.class(immdata, 'list')) {
+  for (i in 1:length(immdata)) {
+    plot(vis.V.usage(immdata[[i]], .main = paste0(names(immdata)[i], ' ', 'V-usage')))
+  }
+} else {
+  vis.V.usage(immdata, .coord.flip=F)
+}
+```
+
+
+### J-segment usage
+
+```{r jusagehist, fig.width=14, fig.height=5,warning=FALSE,message=F}
+if (has.class(immdata, 'list')) {
+  for (i in 1:length(immdata)) {
+    plot(vis.J.usage(immdata[[i]], .main = paste0(names(immdata)[i], ' ', 'J-usage')))
+  }
+} else {
+  vis.J.usage(immdata, .coord.flip=F)
+}
+```
+
+
+
+
+## CDR3 length and read distributions
+
+```{r cdr3len, fig.width=10, fig.height=5,warning=FALSE,message=F}
+if (has.class(immdata, 'list')) {
+  for (i in 1:length(immdata)) {
+    plot(vis.count.len(immdata[[i]], .name = paste0(names(immdata)[i], ' ', 'CDR3 length')))
+  }
+} else {
+  vis.count.len(immdata)
+}
+```
+
+
+```{r readdistr, fig.width=10, fig.height=5,warning=FALSE,message=F}
+if (has.class(immdata, 'list')) {
+  for (i in 1:length(immdata)) {
+    plot(vis.number.count(immdata[[i]], .name = paste0(names(immdata)[i], ' ', 'read histogram')))
+  }
+} else {
+  vis.number.count(immdata)
+}
+```
+
+
+
+
+## Proportions of the most abundant clones
+
+```{r topprop, fig.width=13,warning=FALSE,message=F}
+vis.top.proportions(immdata)
+```
+
+
+
+
+## Most frequent kmers
+
+```{r kmers, fig.width=14,warning=FALSE,message=F}
+kms <- get.kmers(immdata, .verbose = F)
+vis.kmer.histogram(kms, .position = 'fill')
+```
+
+
+
+
+## Rarefaction analysis
+
+```{r muc, fig.width=11,warning=FALSE,message=F}
+clmn <- 'Read.count'
+if (has.class(immdata, 'list')) {
+  if ('Barcode.count' %in% names(immdata[[1]])) {
+    clmn <- 'Barcode.count'
+  }
+} else {
+  if ('Barcode.count' %in% names(immdata)) {
+    clmn <- 'Barcode.count'
+  }
+}
+vis.rarefaction(rarefaction(immdata, .col = clmn, .verbose = F), .log = T)
+```

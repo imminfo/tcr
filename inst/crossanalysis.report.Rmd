@@ -1,0 +1,183 @@
+---
+output:
+  html_document:
+    theme: spacelab
+    toc: yes
+---
+
+TCR beta repertoire cross-analysis
+========================================================
+
+
+## Before analysis
+
+Before running this pipeline you should do next steps:
+
+1. Save your parsed MiTCR data to the `immdata` variable (**it must be a list with mitcr data frames**).
+```
+immdata <- parse.folder('/home/username/mitcrdata/')
+```
+
+2. Save the `immdata` variable to the some folder as the `.rda` file.
+```
+save(immdata, file = '/home/username/immdata.rda')
+```
+
+3. In the code block below change the path string to the path to yours `immdata.rda` file. After that click the **Knit HTML** button to start analysis and make an output .html file with it's results.
+```{r loaddata,warning=FALSE,message=F}
+load('../data/twb.rda')
+immdata <- twb
+library(tcR)
+library(gridExtra)
+library(ggplot2)
+data(human.alphabets)
+```
+
+
+4. Friendly advice: run the pipeline on first N top sequences first and then set up the size of figures.
+```{r lapplyhead,warning=FALSE,message=F}
+N <- 10000
+immdata <- lapply(immdata, head, N)
+```
+
+
+
+
+## Number of shared clones and clonotypes
+
+### Number of shared clones (CDR3 nucleotide sequences)
+
+#### -- without and with normalisation
+
+```{r nuc0crosses, fig.width=13,warning=FALSE,message=F}
+crs1 <- intersect(immdata, 'n0e', .norm=F, .verbose=F)
+crs2 <- intersect(immdata, 'n0e', .norm=T, .verbose=F)
+do.call(grid.arrange, list(vis.heatmap(crs1, .title = 'Number of shared clones', .legend = 'Shared clones'), vis.heatmap(crs2, .title = 'Number of shared clones', .legend = 'Shared clones'), nrow = 1))
+```
+
+### Number of shared clonotypes (CDR3 amino acid sequences)
+
+#### -- without and with normalisation
+
+```{r aa0crosses, fig.width=13,warning=FALSE,message=F}
+crs1 <- intersect(immdata, 'a0e', .norm=F, .verbose=F)
+crs2 <- intersect(immdata, 'a0e', .norm=T, .verbose=F)
+do.call(grid.arrange, list(vis.heatmap(crs1), vis.heatmap(crs2), nrow = 1))
+```
+
+### Number of shared clones using V-segments
+
+#### -- without and with normalisation
+
+```{r nucvcrosses, fig.width=13,warning=FALSE,message=F}
+crs1 <- intersect(immdata, 'nve', .norm=F, .verbose=F)
+crs2 <- intersect(immdata, 'nve', .norm=T, .verbose=F)
+do.call(grid.arrange, list(vis.heatmap(crs1, .title = 'Number of shared clones + V', .legend = 'Shared clones'), vis.heatmap(crs2, .title = 'Number of shared clones + V'), nrow = 1))
+```
+
+### Number of shared clonotypes using V-segments
+
+#### -- without and with normalisation
+
+```{r aavcrosses, fig.width=13,warning=FALSE,message=F}
+crs1 <- intersect(immdata, 'ave', .norm=F, .verbose=F)
+crs2 <- intersect(immdata, 'ave', .norm=T, .verbose=F)
+do.call(grid.arrange, list(vis.heatmap(crs1, .title = 'Number of shared clonotypes + V'), vis.heatmap(crs2, .title = 'Number of shared clonotypes + V'), nrow = 1))
+```
+
+
+
+
+## Segments statistics
+
+### V-segments usage
+
+```{r vusagehist, fig.width=16, fig.height=10,warning=FALSE,message=F}
+vis.V.usage(immdata, .ncol = 2, .coord.flip = F)
+```
+
+### V-segments summary statistics
+
+```{r vseboxplot, fig.width = 13, fig.height=10,warning=FALSE,message=F}
+# Change the groups variable for plotting V-usage boxplot for groups.
+groups <- list(Group.A = names(immdata)[1:(length(immdata) / 2)],
+               Group.B = names(immdata)[(length(immdata) / 2 + 1) : length(immdata)])
+vis.group.boxplot(freq.Vb(immdata, .other = F), groups, .rotate.x = T)
+```
+
+### J-segments usage
+
+```{r jusagehist, fig.width=16, fig.height=10,warning=FALSE,message=F}
+vis.J.usage(immdata, .coord.flip=F, .ncol = 2)
+```
+
+
+
+
+## Jennsen - Shannon Divergence applied to the segments frequency of supplied data frames
+
+### V-segments Jennsen - Shannon Divergence among repertoires
+
+```{r vdiv, fig.width=13,warning=FALSE,message=F}
+res <- js.div.seg(immdata, .frame='all', .verbose = F)
+vis.heatmap(round(res, 5))
+```
+
+### V-segments Jennsen - Shannon Divergence radarplot
+
+```{r radars, fig.width=13,warning=FALSE,message=F}
+res <- js.div.seg(immdata, .frame='all', .verbose = F)
+vis.radarlike(res, .ncol = 2)
+```
+
+
+
+
+## PCA on segments' frequencies
+
+### PCA on V-segments statistics
+
+```{r pcav,warning=FALSE,message=F}
+pca.segments(immdata)
+```
+
+### PCA on V-J segments statistics
+
+```{r pcavj,warning=FALSE,message=F}
+pca.segments.2D(immdata)
+```
+
+
+
+
+## Top cross
+
+
+```{r topcross, fig.width=16, fig.height=16,warning=FALSE,message=F}
+top.cross.plot(top.cross(permutedf(immdata), seq(500, min(sapply(immdata, nrow)), 500), .verbose = F))
+```
+
+
+
+
+## Shared repertoire statistics by clonotypes using V-segments
+
+```{r shared,warning=FALSE,message=F}
+imm.sh <- shared.repertoire(immdata, 'av', .verbose = F)
+shared.clones.count(imm.sh)
+shared.representation(imm.sh)
+```
+
+
+
+
+
+## Rarefaction group analysis
+
+```{r muc, fig.width=11,warning=FALSE,message=F}
+clmn <- 'Read.count'
+if ('Barcode.count' %in% names(immdata)[[1]]) {
+  clmn <- 'Barcode.count'
+}
+vis.rarefaction(rarefaction(immdata, .col = clmn, .verbose = F), list(A = c("Subj.A", "Subj.B"), B = c("Subj.C", "Subj.D")), .log = T)
+```

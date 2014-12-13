@@ -1,0 +1,8 @@
+bibentry('Article',
+         title = 'tcR: an R package for T-cell receptor repertoire data analysis',
+         author = as.person("Vadim Nazarov [aut], Mikhail Pogorelyy [aut]"),
+         year = '2014',
+         url = 'imminfo.github.io/tcR',
+         journal = 'NOT YET',
+         pages = '100 - 101'
+         )
