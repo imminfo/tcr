@@ -527,21 +527,23 @@ bootstrap.tcr <- function (.data, .fun = entropy.seg, .n = 1000,
                            .postfun = function (x) { unlist(x) }, .verbose = T,
                            ...) {
   
+  .sample.fun <- function (d) {
+    d[sample(1:nrow(d), .size, T),]
+  }
+  
   if (.sim[1] == 'percentage') {
     .sample.fun <- function (d) {
-#       new.perc <- rmultinom(1, .size, d$Percentage)
-      d[rmultinom(1, .size, d$Percentage) > 0,]
-    }
-  } else {
-    .sample.fun <- function (d) {
-      d[sample(1:nrow(d), .size, T),]
+      new.reads <- rmultinom(1, .size, d$Percentage)
+      d$Read.count <- new.reads
+      d$Percentage <- new.reads / sum(new.reads)
+      d[new.reads > 0,]
     }
   }
   
   if (.verbose) { pb <- set.pb(.n) }
   res <- lapply(1:.n, function (n) {
     if (.verbose) { add.pb(pb) }
-    .fun(.sample.fun(.data))
+    .fun(.sample.fun(.data), ...)
   })
   if (.verbose) { close(pb) }
 
