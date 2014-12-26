@@ -561,7 +561,7 @@ get.n.barcodes <- function (.data, .n = -1, .col = 'Barcode.count') {
     if (length(.n) != length(.data)) {
       .n <- c(.n, rep.int(-1, length(.data) - length(.n)))
     }
-    return(lapply(.data, .n, .col))
+    return(lapply(.data, get.n.barcodes, .n = .n, .col = .col))
   }
   if (.n == -1) {
     .n <- sum(.data[, .col])
