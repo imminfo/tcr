@@ -22,6 +22,8 @@
 #' 
 #' - Chao1 estimator is a nonparameteric asymptotic estimator of species richness (number of species in a population).
 #' 
+#' - Chao-Shen estimator of Shannon entropy.
+#' 
 #' Functions will check if .data if a distribution of random variable (sum == 1) or not.
 #' To force normalisation and / or to prevent this, set .do.norm to TRUE (do normalisation)
 #' or FALSE (don't do normalisation), respectively.
@@ -34,6 +36,8 @@
 #' gini(.data, .do.norm = NA, .laplace = 0)
 #' 
 #' chao1(.data)
+#' 
+#' entropy.chaoshen(.data, .do.norm = NA, .laplace = 0)
 #' 
 #' @param .data Numeric vector of values for proportions or for numbers of individuals.
 #' @param .q q-parameter for the Diversity index.
@@ -87,6 +91,15 @@ chao1 <- function (.data) {
     v <- counts['2'] * (.5 * f12^2 + f12^3 * .25 * f12^4)
   }
   c(Chao1.est = e, Chao1.var = v)
+}
+
+entropy.chaoshen <- function (.data, .do.norm = NA, .laplace = 0) {
+  .data <- .data[.data > 0]
+  n <- sum(.data)
+  f1 <- sum(.data == 1)
+  C <- 1 - f1/n
+  p <- C * (.data / n)
+  -sum( p * log(p)/ (1 - (1 - p)^n) )
 }
 
 
