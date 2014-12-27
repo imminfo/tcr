@@ -101,6 +101,8 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 #' 
 #' - Morisita's overlap index is a statistical measure of dispersion of individuals in a population. It is used to compare overlap among samples (Morisita 1959). This formula is based on the assumption that increasing the size of the samples will increase the diversity because it will include different habitats (i.e. different faunas).
 #' 
+#' - Horn's overlap index based on Shannon's entropy.
+#' 
 #' @usage
 #' cosine.similarity(.alpha, .beta, .do.norm = NA, .laplace = 0)
 #' 
@@ -112,9 +114,11 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 #' 
 #' morisitas.index(.alpha, .beta, .do.unique = T)
 #' 
+#' horn.index(.alpha, .beta)
+#' 
 #' @param .alpha,.beta,x,y Vector of numeric values for cosine similarity, vector of any values
-#' (like characters) for tversky.index and overlap.coef, matrix or data.frame with 2 columns for morisitas.index,
-#' either sets or number of elements in sets for Jaccard index (see "Details" section).
+#' (like characters) for \code{tversky.index} and \code{overlap.coef}, matrix or data.frame with 2 columns for \code{morisitas.index} and \code{horn.index},
+#' either two sets or two numbers of elements in sets for \code{jaccard.index}.
 #' @param .a,.b Alpha and beta parameters for Tversky Index. Default values gives the Jaccard index measure.
 #' @param .do.norm One of the three values - NA, T or F. If NA than check for distrubution (sum(.data) == 1)
 #' and normalise if needed with the given laplace correction value. If T than do normalisation and laplace
@@ -126,8 +130,6 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 #' For \code{morisitas.index} input data are matrices or data.frames with two columns: first column is
 #' elements (species or individuals), second is a number of elements (species or individuals) in a population.
 #' 
-#' For \code{jaccard.index} there are two ways for computing the index. ???
-#' 
 #' Formulas:
 #' 
 #' Cosine similarity: \code{cos(a, b) = a * b / (||a|| * ||b||)}
@@ -138,7 +140,7 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 #' 
 #' Jaccard index: \code{J(A, B) = |A and B| / |A U B|}
 #' 
-#' Formual for Morisita's overlap index is quite complicated and can't be easily shown here, so just look at webpage: http://en.wikipedia.org/wiki/Morisita%27s_overlap_index
+#' Formula for Morisita's overlap index is quite complicated and can't be easily shown here, so just look at this webpage: http://en.wikipedia.org/wiki/Morisita%27s_overlap_index
 #' 
 #' 
 #' @return Value of similarity between the given sets or vectors.
@@ -190,4 +192,24 @@ morisitas.index <- function (.alpha, .beta, .do.unique = T) {
   sum.beta <- sum(.beta[,2])
   2 * sum(merged[,2] * merged[,3] / sum.alpha) / sum.beta / (
     (sum((.alpha[,2] / sum.alpha)^2) + sum((.beta[,2] / sum.beta)^2)))
+}
+
+horn.index <- function (.alpha, .beta, .do.unique = T) {
+  .alpha[,1] <- as.character(.alpha[,1])
+  .beta[,1] <- as.character(.beta[,1])
+  colnames(.alpha) <- c('Species', 'Count')
+  colnames(.beta) <- c('Species', 'Count')
+  if (.do.unique) {
+    .alpha <- .alpha[!duplicated(.alpha[,1]),]
+    .beta <- .beta[!duplicated(.beta[,1]),]
+  }
+  .alpha[,2] <- as.numeric(.alpha[,2]) / sum(.alpha[,2])
+  .beta[,2] <- as.numeric(.beta[,2]) / sum(.beta[,2])
+  merged <- merge(.alpha, .beta, by = 'Species', all = T)
+  merged[is.na(merged)] <- 0
+  rel.12 <- merged[,2] / merged[,3]
+  rel.12[merged[,3] == 0] <- 0
+  rel.21 <- merged[,3] / merged[,2]
+  rel.21[merged[,2] == 0] <- 0
+  1 / log(2) * sum(merged[,2] / 2 * log(1 + rel.21) + merged[,3] / 2 * log(1 + rel.12))
 }
