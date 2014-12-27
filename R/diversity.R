@@ -20,9 +20,11 @@
 #' has the same income). A Gini coefficient of one (or 100 percents ) expresses maximal inequality
 #' among values (for example where only one person has all the income).
 #' 
+#' - Chao1 estimator is a nonparameteric asymptotic estimator of species richness (number of species in a population).
+#' 
 #' Functions will check if .data if a distribution of random variable (sum == 1) or not.
 #' To force normalisation and / or to prevent this, set .do.norm to TRUE (do normalisation)
-#' or FALSE (don't do normalisation).
+#' or FALSE (don't do normalisation), respectively.
 #' 
 #' @usage
 #' inverse.simpson(.data, .do.norm = NA, .laplace = 0)
@@ -31,16 +33,25 @@
 #' 
 #' gini(.data, .do.norm = NA, .laplace = 0)
 #' 
-#' @param .data Vector of values.
+#' chao1(.data)
+#' 
+#' @param .data Numeric vector of values for proportions or for numbers of individuals.
 #' @param .q q-parameter for the Diversity index.
 #' @param .do.norm One of the three values - NA, T or F. If NA than check for distrubution (sum(.data) == 1)
 #' and normalise if needed with the given laplace correction value. If T than do normalisation and laplace
 #' correction. If F than don't do normalisaton and laplace correction.
 #' @param .laplace Value for Laplace correction which will be added to every value in the .data.
 #' 
-#' @return Numeric vector of length 1 with value.
+#' @return Numeric vector of length 1 with value for all functions except \code{chao1}, which returns two values:
+#' the first one for species richness and the second one for the variance of the estimatation.
 #' 
 #' @seealso \link{entropy}, \link{similarity}
+#' 
+#' @examples
+#' # Next two are equal calls:
+#' gini(twb[[1]]$Read.count, T, 0)
+#' gini(twb[[1]]$Percentage, F)
+#' chao1(twb[[1]]$Read.count)
 inverse.simpson <- function (.data, .do.norm = NA, .laplace = 0) {
   .data <- check.distribution(.data, .do.norm, .laplace)
   1 / sum(.data ^ 2)
@@ -55,6 +66,27 @@ gini <- function (.data, .do.norm = NA, .laplace = 0) {
   .data <- sort(check.distribution(.data, .do.norm, .laplace))
   n <- length(.data)
   1 / n * (n + 1 - 2 * sum((n + 1 - 1:n) * .data) / sum(.data))
+}
+
+chao1 <- function (.data) {
+  counts <- table(.data)
+  e <- NA
+  v <- NA
+  # f1 == 0 && f2 == 0
+  if (is.na(counts['1']) && is.na(counts['2'])) {
+    e <- length(.data)
+  }
+  # f2 == 0
+  else if (is.na(counts['2'])) {
+    e <- length(.data) + counts['1'] * (counts['1'] - 1) / 2
+  }
+  # f2 != 0
+  else {
+    e <- length(.data) + counts['1']^2 / (2 * counts['2'])
+    f12 <- counts['1'] / counts['2']
+    v <- counts['2'] * (.5 * f12^2 + f12^3 * .25 * f12^4)
+  }
+  c(Chao1.est = e, Chao1.var = v)
 }
 
 
