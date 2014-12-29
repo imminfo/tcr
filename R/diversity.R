@@ -22,8 +22,6 @@
 #' 
 #' - Chao1 estimator is a nonparameteric asymptotic estimator of species richness (number of species in a population).
 #' 
-#' - Chao-Shen estimator of Shannon entropy.
-#' 
 #' Functions will check if .data if a distribution of random variable (sum == 1) or not.
 #' To force normalisation and / or to prevent this, set .do.norm to TRUE (do normalisation)
 #' or FALSE (don't do normalisation), respectively.
@@ -37,8 +35,6 @@
 #' 
 #' chao1(.data)
 #' 
-#' entropy.chaoshen(.data, .do.norm = NA, .laplace = 0)
-#' 
 #' @param .data Numeric vector of values for proportions or for numbers of individuals.
 #' @param .q q-parameter for the Diversity index.
 #' @param .do.norm One of the three values - NA, T or F. If NA than check for distrubution (sum(.data) == 1)
@@ -46,8 +42,8 @@
 #' correction. If F than don't do normalisaton and laplace correction.
 #' @param .laplace Value for Laplace correction which will be added to every value in the .data.
 #' 
-#' @return Numeric vector of length 1 with value for all functions except \code{chao1}, which returns two values:
-#' the first one for species richness and the second one for the variance of the estimatation.
+#' @return Numeric vector of length 1 with value for all functions except \code{chao1}, which returns 4 values:
+#' estimated number of species, standart deviation of this number and two 95% confidence intervals for the species number.
 #' 
 #' @seealso \link{entropy}, \link{similarity}
 #' 
@@ -76,21 +72,43 @@ chao1 <- function (.data) {
   counts <- table(.data)
   e <- NA
   v <- NA
+  lo <- NA
+  hi <- NA
+  n <- sum(.data)
+  D <- length(.data)
+  f1 <- counts['1']
+  f2 <- counts['2']
   # f1 == 0 && f2 == 0
-  if (is.na(counts['1']) && is.na(counts['2'])) {
-    e <- length(.data)
+  if (is.na(f1) && is.na(f2)) {
+    e <- D
+    i <- 1:max(.data)
+    i <- i[unique(.data)]
+    v <- sum(sapply(i, function(i) sum(.data == i) * (exp(-i) - exp(-2 * i)))) - (sum(sapply(i, function(i) i * exp(-i) * sum(.data == i))))^2/n
+    P <- sum(sapply(i, function(i) sum(.data == i) * exp(-i)/D))
+    lo <- max(D, D/(1 - P) - qnorm(1 - .05/2) * sqrt(v)/(1 - P))
+    hi <- D/(1 - P) + qnorm(1 - .05/2) * sqrt(v)/(1 - P)
   }
-  # f2 == 0
-  else if (is.na(counts['2'])) {
-    e <- length(.data) + counts['1'] * (counts['1'] - 1) / 2
+  # f1 != 0 && f2 == 0
+  else if (is.na(f2)) {
+    e <- D + f1 * (f1 - 1) / 2 * (n - 1) / n
+    v <- (n-1)/n * f1 * (f1 - 1) /2  + ((n -1)/n)^2 * f1 * (2 * f1 - 1)^2/4 - ((n-1)/n)^2*f1^4/4/e
+    t <- e - D
+    K <- exp(qnorm(1 - .05/2) * sqrt(log(1 + v/t^2)))
+    lo <- D + t/K
+    hi <- D + t*K
   }
-  # f2 != 0
+  # f1 != && f2 != 0
   else {
-    e <- length(.data) + counts['1']^2 / (2 * counts['2'])
-    f12 <- counts['1'] / counts['2']
-    v <- counts['2'] * (.5 * f12^2 + f12^3 * .25 * f12^4)
+    const <- (n - 1) / n
+    e <- D + f1^2 / (2 * f1) * const
+    f12 <- f1 / f2
+    v <- f2 * (const * f12^2 / 2 + const^2 * f12^3 + const^2 * f12^4 / 4)
+    t <- e - D
+    K <- exp(qnorm(1 - .05/2) * sqrt(log(1 + v/t^2)))
+    lo <- D + t/K
+    hi <- D + t*K
   }
-  c(Chao1.est = e, Chao1.var = v)
+  c(Estimator = e, SD = sqrt(v), Conf.95.lo = lo, Conf.95.hi = hi)
 }
 
 
@@ -153,6 +171,61 @@ rarefaction <- function (.data, .n = 10, .step = 30000, .quantile = c(.025, .975
       muc <- apply(rmultinom(.n, sz, bc.vec / bc.sum), 2, function (col) sum(col > 0))
       res <- c(sz, quantile(muc, .quantile[1]), mean(muc), quantile(muc, .quantile[2]))
       names(res) <- c('Size', paste0('Q', .quantile[1]), 'Mean', paste0('Q', .quantile[2]))
+      if (.verbose) add.pb(pb)
+      res
+    }))
+    data.frame(muc.res, People = names(.data)[i], stringsAsFactors = F)
+  })
+  if (.verbose) close(pb)
+  
+  do.call(rbind, muc.list)
+}
+
+rarefaction2 <- function (.data, .n = 10, .step = 30000, .quantile = c(.025, .975), .col = 'Barcode.count', .verbose = T) {
+  if (has.class(.data, 'data.frame')) {
+    .data <- list(Data = .data)
+  }
+  
+  .alpha <- function (n, Xi, m) {
+    k <- Xi
+    if (k <= n - m) {
+      print(factorial(n - k))
+      print(factorial(n))
+      print(factorial(n - m))
+      print(factorial(n - k - m))
+      factorial(n - k) / factorial(n) * factorial(n - m) / factorial(n - k - m)
+    } else {
+      0
+    }
+  }
+  
+  if (.verbose) {
+    pb <- set.pb(sum(sapply(1:length(.data), function (i) {
+      bc.vec <- .data[[i]][, .col]
+      bc.sum <- sum(.data[[i]][, .col])
+      sizes <- seq(.step, bc.sum, .step)
+      if (sizes[length(sizes)] != bc.sum) {
+        sizes <- c(sizes, bc.sum)
+      }
+      length(sizes)
+    } )))
+  }
+  
+  muc.list <- lapply(1:length(.data), function (i) {
+    Sobs <- nrow(.data[[i]])
+    bc.vec <- .data[[i]][, .col]
+    Sest <- chao1(bc.vec)[1]
+    n <- sum(bc.vec)
+    sizes <- seq(.step, n, .step)
+    if (sizes[length(sizes)] != n) {
+      sizes <- c(sizes, n)
+    }
+    counts <- table(bc.vec)
+    muc.res <- t(sapply(sizes, function (sz) {
+      Sind <- Sobs - sum(sapply(counts, function (k) .alpha(n, k, sz)))
+      SD <- sqrt(sum(sapply(1:n, function (k) (1 - .alpha(n, k, sz))^2*counts[k] - Sind^2/Sest)))
+      res <- c(sz, Sind - SD, Sind, Sind + SD)
+      names(res) <- c('Size', paste0('Q', .quantile[1]), 'Mean', paste0('Q', .quantile[2]))      
       if (.verbose) add.pb(pb)
       res
     }))
