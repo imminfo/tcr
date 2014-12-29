@@ -93,15 +93,6 @@ chao1 <- function (.data) {
   c(Chao1.est = e, Chao1.var = v)
 }
 
-entropy.chaoshen <- function (.data, .do.norm = NA, .laplace = 0) {
-  .data <- .data[.data > 0]
-  n <- sum(.data)
-  f1 <- sum(.data == 1)
-  C <- 1 - f1/n
-  p <- C * (.data / n)
-  -sum( p * log(p)/ (1 - (1 - p)^n) )
-}
-
 
 #' Diversity evaluation using rarefaction.
 #' 
