@@ -429,7 +429,7 @@ find.clonotypes <- function (.data, .targets, .method = c('exact', 'hamm', 'lev'
 #' immdata.top <- top.cross(immdata)
 #' top.cross.plot(immdata.top)
 #' }
-top.cross <- function (.data, .n = NA, .data2 = NULL, .type = 'ave', .norm = F, .verbose = T) {  
+top.cross <- function (.data, .n = NA, .data2 = NULL, .type = 'ave', .norm = F, .verbose = T) {
   if (!is.null(.data2)) { .data <- list(.data, .data2) }
   
   if (is.na(.n)[1]) { .n <- seq(5000, min(sapply(.data, nrow)), 5000) }
