@@ -500,7 +500,7 @@ top.proportion <- function (.data, .head = 10, .col = 'Read.count') {
 
 clonal.proportion <- function (.data, .perc = 10, .col = 'Read.count') {
   if (has.class(.data, 'list')) {
-    return(sapply(.data, clonal.proportion, .perc = .perc, .col = .col))
+    return(t(sapply(.data, clonal.proportion, .perc = .perc, .col = .col)))
   }
   prop <- 0
   n <- 0
@@ -510,7 +510,7 @@ clonal.proportion <- function (.data, .perc = 10, .col = 'Read.count') {
     n <- n + 1
     prop <- prop + col[n]
   }
-  t(c(Clones = n, Percentage = 100 * signif((prop / col.sum), 3), Clonal.count.prop = n / nrow(.data)))
+  c(Clones = n, Percentage = 100 * signif((prop / col.sum), 3), Clonal.count.prop = n / nrow(.data))
 }
 
 
