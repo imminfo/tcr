@@ -104,7 +104,7 @@ chao1 <- function (.data) {
     f12 <- f1 / f2
     v <- f2 * (const * f12^2 / 2 + const^2 * f12^3 + const^2 * f12^4 / 4)
     t <- e - D
-    K <- exp(qnorm(1 - .05/2) * sqrt(log(1 + v/t^2)))
+    K <- exp(qnorm(.975) * sqrt(log(1 + v/t^2)))
     lo <- D + t/K
     hi <- D + t*K
   }
@@ -119,9 +119,9 @@ chao1 <- function (.data) {
 #' For more details on the procedure see "Details".
 #' 
 #' @param .data Data frame or a list with data frames.
-#' @param .n How many samples choose for each step.
 #' @param .step Step's size.
 #' @param .quantile Numeric vector of length 2 with quantiles for confidence intervals.
+#' @param .extrapolation If T than perform extrapolation of all samples to the size of the max one.
 #' @param .col Column's name from which choose frequency of each clone.
 #' @param .verbose If T than print progress bar.
 #' 
@@ -143,60 +143,26 @@ chao1 <- function (.data) {
 #' \dontrun{
 #' rarefaction(immdata, .col = "Read.count")
 #' }
-rarefaction <- function (.data, .n = 10, .step = 30000, .quantile = c(.025, .975), .col = 'Barcode.count', .verbose = T) {
+# extrapolated to max size
+rarefaction <- function (.data, .step = 30000, .quantile = c(.025, .975), .extrapolation = T, .col = 'Barcode.count', .verbose = T) {
   if (has.class(.data, 'data.frame')) {
     .data <- list(Data = .data)
   }
   
-  if (.verbose) {
-    pb <- set.pb(sum(sapply(1:length(.data), function (i) {
-      bc.vec <- .data[[i]][, .col]
-      bc.sum <- sum(.data[[i]][, .col])
-      sizes <- seq(.step, bc.sum, .step)
-      if (sizes[length(sizes)] != bc.sum) {
-        sizes <- c(sizes, bc.sum)
-      }
-      length(sizes)
-    } )))
-  }
-  
-  muc.list <- lapply(1:length(.data), function (i) {
-    bc.vec <- .data[[i]][, .col]
-    bc.sum <- sum(.data[[i]][, .col])
-    sizes <- seq(.step, bc.sum, .step)
-    if (sizes[length(sizes)] != bc.sum) {
-      sizes <- c(sizes, bc.sum)
-    }
-    muc.res <- t(sapply(sizes, function (sz) {
-      muc <- apply(rmultinom(.n, sz, bc.vec / bc.sum), 2, function (col) sum(col > 0))
-      res <- c(sz, quantile(muc, .quantile[1]), mean(muc), quantile(muc, .quantile[2]))
-      names(res) <- c('Size', paste0('Q', .quantile[1]), 'Mean', paste0('Q', .quantile[2]))
-      if (.verbose) add.pb(pb)
-      res
-    }))
-    data.frame(muc.res, People = names(.data)[i], stringsAsFactors = F)
-  })
-  if (.verbose) close(pb)
-  
-  do.call(rbind, muc.list)
-}
+  # multinom
+#   .alpha <- function (n, Xi, m) {
+#     k <- Xi
+#     if (k <= n - m) {
+#       prod((n - k):(n - m - k + 1) / n:(n - m + 1))
+#     } else {
+#       0
+#     }
+#   }
 
-rarefaction2 <- function (.data, .n = 10, .step = 30000, .quantile = c(.025, .975), .col = 'Barcode.count', .verbose = T) {
-  if (has.class(.data, 'data.frame')) {
-    .data <- list(Data = .data)
-  }
-  
+  # poisson
   .alpha <- function (n, Xi, m) {
     k <- Xi
-    if (k <= n - m) {
-      print(factorial(n - k))
-      print(factorial(n))
-      print(factorial(n - m))
-      print(factorial(n - k - m))
-      factorial(n - k) / factorial(n) * factorial(n - m) / factorial(n - k - m)
-    } else {
-      0
-    }
+    return((1 - m / n)^Xi)
   }
   
   if (.verbose) {
@@ -214,7 +180,7 @@ rarefaction2 <- function (.data, .n = 10, .step = 30000, .quantile = c(.025, .97
   muc.list <- lapply(1:length(.data), function (i) {
     Sobs <- nrow(.data[[i]])
     bc.vec <- .data[[i]][, .col]
-    Sest <- chao1(bc.vec)[1]
+    Sest <- chao1(bc.vec)
     n <- sum(bc.vec)
     sizes <- seq(.step, n, .step)
     if (sizes[length(sizes)] != n) {
@@ -222,14 +188,46 @@ rarefaction2 <- function (.data, .n = 10, .step = 30000, .quantile = c(.025, .97
     }
     counts <- table(bc.vec)
     muc.res <- t(sapply(sizes, function (sz) {
-      Sind <- Sobs - sum(sapply(counts, function (k) .alpha(n, k, sz)))
-      SD <- sqrt(sum(sapply(1:n, function (k) (1 - .alpha(n, k, sz))^2*counts[k] - Sind^2/Sest)))
-      res <- c(sz, Sind - SD, Sind, Sind + SD)
-      names(res) <- c('Size', paste0('Q', .quantile[1]), 'Mean', paste0('Q', .quantile[2]))      
+      freqs <- as.numeric(names(counts))
+      
+      # multinom
+      alphas <- sapply(freqs, function (k) .alpha(n, k, sz))
+#       Sind <- Sobs - sum(sapply(freqs, function (k) .alpha(n, k, sz) * counts[as.character(freqs)]))
+#       SD <- sqrt(sum(sapply(freqs, function (k) (1 - .alpha(n, k, sz))^2 * counts[as.character(freqs)])) - Sind^2/Sest[1])
+      
+      # poisson
+      Sind <- sum(sapply(1:length(freqs), function (k) (1 - alphas[k]) * counts[k]))
+      SD <- sqrt(sum(sapply(1:length(freqs), function (k) (1 - alphas[k])^2 * counts[k])) - Sind^2/Sest[1])
+      t <- Sind - Sobs
+      K <- exp(qnorm(.975) * sqrt(log(1 + (SD / t)^2)))
+      lo <- Sobs + t*K
+      hi <- Sobs + t/K
+      res <- c(sz, Sind, Sind, Sind)
+      names(res) <- c('Size', paste0('Q', .quantile[1]), 'Mean', paste0('Q', .quantile[2]))
       if (.verbose) add.pb(pb)
       res
     }))
-    data.frame(muc.res, People = names(.data)[i], stringsAsFactors = F)
+
+    if (.extrapolation) {
+      sizes <- seq(sum(.data[[i]][, .col]), 200000 + max(sapply(.data, function (x) sum(x[, .col]))), .step)
+      if (length(sizes) != 1) {        
+        ex.res <- t(sapply(sizes, function (sz) {
+          f0 <- Sest[1] - Sobs
+          Sind <- Sobs + f0 * (1 - exp(-(sz - n)/n * counts['1'] / f0))
+          res <- c(sz, Sind, Sind, Sind)
+          names(res) <- c('Size', paste0('Q', .quantile[1]), 'Mean', paste0('Q', .quantile[2]))
+          if (.verbose) add.pb(pb)
+          res
+        }))
+        df1 <- data.frame(muc.res, People = names(.data)[i], Type = 'interpolation', stringsAsFactors = F)
+        df2 <- data.frame(ex.res, People = names(.data)[i], Type = 'extrapolation', stringsAsFactors = F)
+        rbind(df1, df2)
+      } else {
+        df1 <- data.frame(muc.res, People = names(.data)[i], Type = 'interpolation', stringsAsFactors = F)
+      }
+    } else {
+      data.frame(muc.res, People = names(.data)[i], stringsAsFactors = F)
+    }
   })
   if (.verbose) close(pb)
   
