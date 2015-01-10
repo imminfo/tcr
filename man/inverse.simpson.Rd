@@ -57,8 +57,8 @@ or FALSE (don't do normalisation), respectively.
 \examples{
 data(twb)
 # Next two are equal calls:
-stopifnot(gini(twb[[1]]$Read.count, T, 0) == 0.7609971)
-stopifnot(gini(twb[[1]]$Percentage, F) == 0.7609971)
+stopifnot(gini(twb[[1]]$Read.count, TRUE, 0) - 0.7609971 < 1e-07)
+stopifnot(gini(twb[[1]]$Percentage, FALSE) - 0.7609971 < 1e-07)
 stopifnot(chao1(twb[[1]]$Read.count)[1] == 1e+04)
 }
 \seealso{

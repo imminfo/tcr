@@ -4,7 +4,7 @@
 if (getRversion() >= "2.15.1") {
   utils::globalVariables(c("Segment", 'Size', 'Freq', 'Subject', 'V.segments', 'J.segments', '..count..', 'Time.point', 'Percentage', 'Sequence',
                            'Lower', 'Upper', 'Lengths', 'Read.count', 'Var', 'Value', 'Group', 'variable', 'name', 'value', 'Kmers',
-                           'Count', 'People', 'First', 'Second', 'Var1', 'Q0.025', 'Q0.975', 'Mean'))
+                           'Count', 'People', 'First', 'Second', 'Var1', 'Q0.025', 'Q0.975', 'Mean', 'Type'))
 }
 
 
@@ -501,10 +501,12 @@ vis.top.proportions <- function (.data, .head = c(10, 100, 1000, 10000, 30000, 1
 #' @seealso \link{rarefaction}
 #' 
 #' @examples
+#' \dontrun{
 #' data(twb)
 #' names(twb)  # "Subj.A" "Subj.B" "Subj.C" "Subj.D"
 #' twb.rar <- rarefaction(twb, .col = "Read.count")
 #' vis.rarefaction(twb.rar, list(A = c("Subj.A", "Subj.B"), B = c("Subj.C", "Subj.D")))
+#' }
 vis.rarefaction <- function (.muc.res, .groups = NULL, .log = F) {
   .muc.res$Group <- .muc.res$People
   

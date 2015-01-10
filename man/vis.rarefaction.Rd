@@ -18,10 +18,12 @@ member is in the individual group.}
 Plot a line with mean unique clones.
 }
 \examples{
+\dontrun{
 data(twb)
 names(twb)  # "Subj.A" "Subj.B" "Subj.C" "Subj.D"
 twb.rar <- rarefaction(twb, .col = "Read.count")
 vis.rarefaction(twb.rar, list(A = c("Subj.A", "Subj.B"), B = c("Subj.C", "Subj.D")))
+}
 }
 \seealso{
 \link{rarefaction}
