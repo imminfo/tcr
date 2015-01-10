@@ -67,26 +67,26 @@
 #' \code{intersectLogic} returns logical vector of \code{length(x)} or \code{nrow(x)}, where TRUE at position \code{i} means that element with index {i} has been found in the \code{y}
 #' 
 #' @examples
-#' \dontrun{
-#' # Equivalent to intersect(immdata[[1]]$CDR3.nucleotide.sequence,
-#' #                         immdata[[2]]$CDR3.nucleotide.sequence)
-#' # or intersectCount(immdata[[1]]$CDR3.nucleotide.sequence,
-#' #                    immdata[[2]]$CDR3.nucleotide.sequence)
+#' data(twb)
+#' # Equivalent to intersect(twb[[1]]$CDR3.nucleotide.sequence,
+#' #                         twb[[2]]$CDR3.nucleotide.sequence)
+#' # or intersectCount(twb[[1]]$CDR3.nucleotide.sequence,
+#' #                    twb[[2]]$CDR3.nucleotide.sequence)
 #' # First "n" stands for a "CDR3.nucleotide.sequence" column, "e" for exact match.
-#' intersect(immdata[[1]], immdata[[2]], 'n0e')
+#' twb.12.n0e <- intersect(twb[[1]], twb[[2]], 'n0e')
+#' stopifnot(twb.12.n0e == 46)
 #' # First "a" stands for "CDR3.amino.acid.sequence" column.
 #' # Second "v" means that intersect should also use the "V.segments" column.
-#' intersect(immdata[[1]], immdata[[2]], 'ave')
+#' intersect(twb[[1]], twb[[2]], 'ave')
 #' # Works also on lists, performs all possible pairwise intersections.
-#' intersect(immdata, 'ave')
+#' intersect(twb, 'ave')
 #' # Plot results.
-#' vis.heatmap(intersect(immdata, 'ave'), .title = 'Immdata - (ave)-intersection', .labs = '')
-#' # Get elements which are in both immdata[[1]] and immdata[[2]].
+#' vis.heatmap(intersect(twb, 'ave'), .title = 'twb - (ave)-intersection', .labs = '')
+#' # Get elements which are in both twb[[1]] and twb[[2]].
 #' # Elements are tuples of CDR3 nucleotide sequence and corresponding V-segment
-#' imm.1.2 <- intersectLogic(immdata[[1]], immdata[[2]],
+#' imm.1.2 <- intersectLogic(twb[[1]], twb[[2]],
 #'                            .col = c('CDR3.amino.acid.sequence', 'V.segments'))  
-#' head(immdata[[1]][imm.1.2, c('CDR3.amino.acid.sequence', 'V.segments')])
-#' }
+#' head(twb[[1]][imm.1.2, c('CDR3.amino.acid.sequence', 'V.segments')])
 intersect <- function (.alpha = NULL, .beta = NULL, .type = '00e', .head = -1, .norm = F, .verbose = F, x = NULL, y = NULL) {
   if (class(.alpha) == 'list') {
     if (class(.beta) == 'character') {

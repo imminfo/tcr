@@ -2,6 +2,7 @@
 % Please edit documentation in R/measures.R
 \name{cosine.similarity}
 \alias{cosine.similarity}
+\alias{horn.index}
 \alias{jaccard.index}
 \alias{morisitas.index}
 \alias{overlap.coef}
@@ -19,7 +20,7 @@ jaccard.index(.alpha, .beta, .intersection.number = NA)
 
 morisitas.index(.alpha, .beta, .do.unique = T)
 
-horn.index(.alpha, .beta)
+horn.index(.alpha, .beta, .do.unique = T)
 }
 \arguments{
 \item{.alpha,.beta,x,y}{Vector of numeric values for cosine similarity, vector of any values

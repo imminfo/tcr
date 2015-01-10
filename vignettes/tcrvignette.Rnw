@@ -45,7 +45,7 @@
 \date{August 2014}
 \maketitle
 
-\abstract{Abstract?}
+\abstract{Abstract}
 High-throughput technologies has open new possibilities to analyse data of repertoires of immunological receptors (i.e., T-cell or B-cell receptors). Here we present a manual to an R package \Rpackage{tcR}. Paper is published in \href{m.pogorely@gmail.com}{Journal of Something}:
 \begin{quote}
 \texttt{\href{m.pogorely@gmail.com}{Nazarov et al tcR: an R package for T-cell repertoire data analysis.}}
@@ -368,7 +368,7 @@ top.cross.plot(twb.top)
 
 
 \subsection{Diversity evaluation}
-For assessing the distribution of clones in the given repertoire, \Rpackage{tcR} provides functions for evaluating the diversity (functions \code{diversity} and \code{inverse.simpson}) and the skewness of the clonal distribution (function \code{gini}). Function \code{diversity} computes the ecological diversity index (with parameter \code{.q} for penalties for clones with large count). Function \code{inverse.simpson} computes the Inverse Simpson Index (i.e., inverse probability of choosing two similar clones). Function \code{gini} computes the Gini index of clonal distribution.
+For assessing the distribution of clones in the given repertoire, \Rpackage{tcR} provides functions for evaluating the diversity (functions \code{diversity} and \code{inverse.simpson}) and the skewness of the clonal distribution (function \code{gini}). Function \code{diversity} computes the ecological diversity index (with parameter \code{.q} for penalties for clones with large count). Function \code{inverse.simpson} computes the Inverse Simpson Index (i.e., inverse probability of choosing two similar clones). Function \code{gini} computes the Gini index of clonal distribution. Function \code{chao1} computes Chao index, its SD and two 95 perc CI.
 
 <<eval=TRUE>>=
 # Evaluate the diversity of clones by the ecological diversity index.
@@ -377,6 +377,8 @@ sapply(twb, function (x) diversity(x$Read.count))
 sapply(twb, function (x) inverse.simpson(x$Read.count))
 # Evaluate the skewness of clonal distribution.
 sapply(twb, function (x) gini(x$Read.count))
+# Compute diversity of repertoire using Chao index.
+t(sapply(twb, function (x) chao1(x$Read.count)))
 @
 
 See also the \code{entropy} function for accessing the repertoire diversity, which is described in Subsection \ref{subsec:infomeasures}.

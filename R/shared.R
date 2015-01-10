@@ -45,6 +45,10 @@
 #' "c" for the "Read.count" column, "p" for the "Percentage" column, "r" for the "Rank" column or "i" for the "Index" column.
 #' If "Rank" or "Index" isn't in the given repertoire, than it will be created using \code{set.rank} function using default "Read.count" column.
 #' }
+#' 
+#' @return
+#' Data.table for \code{shared.repertoire}, matrix for \code{shared.matrix}.
+#' 
 #' @seealso \link{shared.representation}, \link{set.rank}
 #' 
 #' @examples
@@ -82,7 +86,7 @@ shared.repertoire <- function (.datalist, .type = 'avc', .min.ppl = 1, .head = -
 #     minidata <- as.data.table(.data[.bc])
     minidata <- as.data.table(.data[.bc])
     minidata$value <- .data[, .sc]
-    res <- as.data.table(dplyr::summarise(grouped_df(minidata, as.list(.bc)), value = value[1]))
+    res <- as.data.table(dplyr::summarise(grouped_df(minidata, lapply(.bc, as.name)), value = value[1]))
     class(res) <- c('data.table', 'data.frame')
     setnames(res, c(.bc, .sc))
     res

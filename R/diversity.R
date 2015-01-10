@@ -1,6 +1,6 @@
 #' Distribution evaluation.
 #' 
-#' @aliases inverse.simpson diversity gini
+#' @aliases inverse.simpson diversity gini chao1
 #' 
 #' @description
 #' Function for evaluating the diversity of species or objects in the given distribution.
@@ -48,10 +48,11 @@
 #' @seealso \link{entropy}, \link{similarity}
 #' 
 #' @examples
+#' data(twb)
 #' # Next two are equal calls:
-#' gini(twb[[1]]$Read.count, T, 0)
-#' gini(twb[[1]]$Percentage, F)
-#' chao1(twb[[1]]$Read.count)
+#' stopifnot(gini(twb[[1]]$Read.count, T, 0) == 0.7609971)
+#' stopifnot(gini(twb[[1]]$Percentage, F) == 0.7609971)
+#' stopifnot(chao1(twb[[1]]$Read.count)[1] == 1e+04)
 inverse.simpson <- function (.data, .do.norm = NA, .laplace = 0) {
   .data <- check.distribution(.data, .do.norm, .laplace)
   1 / sum(.data ^ 2)
@@ -121,7 +122,7 @@ chao1 <- function (.data) {
 #' @param .data Data frame or a list with data frames.
 #' @param .step Step's size.
 #' @param .quantile Numeric vector of length 2 with quantiles for confidence intervals.
-#' @param .extrapolation If T than perform extrapolation of all samples to the size of the max one.
+#' @param .extrapolation If T than perform extrapolation of all samples to the size of the max one + 200000 reads or barcodes.
 #' @param .col Column's name from which choose frequency of each clone.
 #' @param .verbose If T than print progress bar.
 #' 
@@ -143,7 +144,6 @@ chao1 <- function (.data) {
 #' \dontrun{
 #' rarefaction(immdata, .col = "Read.count")
 #' }
-# extrapolated to max size
 rarefaction <- function (.data, .step = 30000, .quantile = c(.025, .975), .extrapolation = T, .col = 'Barcode.count', .verbose = T) {
   if (has.class(.data, 'data.frame')) {
     .data <- list(Data = .data)

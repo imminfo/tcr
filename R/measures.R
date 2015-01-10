@@ -86,7 +86,7 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 
 #' Set and vector similarity measures.
 #' 
-#' @aliases similarity cosine.similarity tversky.index overlap.coef morisitas.index jaccard.index
+#' @aliases similarity cosine.similarity tversky.index overlap.coef morisitas.index jaccard.index horn.index
 #' 
 #' @description
 #' Functions for computing similarity between two vectors or sets. See "Details" for exact formulas.
@@ -114,7 +114,7 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 #' 
 #' morisitas.index(.alpha, .beta, .do.unique = T)
 #' 
-#' horn.index(.alpha, .beta)
+#' horn.index(.alpha, .beta, .do.unique = T)
 #' 
 #' @param .alpha,.beta,x,y Vector of numeric values for cosine similarity, vector of any values
 #' (like characters) for \code{tversky.index} and \code{overlap.coef}, matrix or data.frame with 2 columns for \code{morisitas.index} and \code{horn.index},
