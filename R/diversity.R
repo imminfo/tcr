@@ -197,7 +197,11 @@ rarefaction <- function (.data, .step = 30000, .quantile = c(.025, .975), .extra
       
       # poisson
       Sind <- sum(sapply(1:length(freqs), function (k) (1 - alphas[k]) * counts[k]))
-      SD <- sqrt(sum(sapply(1:length(freqs), function (k) (1 - alphas[k])^2 * counts[k])) - Sind^2/Sest[1])
+      if (Sest[1] == Sobs) {
+        SD <- 0
+      } else {
+        SD <- sqrt(sum(sapply(1:length(freqs), function (k) (1 - alphas[k])^2 * counts[k])) - Sind^2/Sest[1])
+      }
       t <- Sind - Sobs
       K <- exp(qnorm(.975) * sqrt(log(1 + (SD / t)^2)))
       lo <- Sobs + t*K
@@ -213,7 +217,12 @@ rarefaction <- function (.data, .step = 30000, .quantile = c(.025, .975), .extra
       if (length(sizes) != 1) {        
         ex.res <- t(sapply(sizes, function (sz) {
           f0 <- Sest[1] - Sobs
-          Sind <- Sobs + f0 * (1 - exp(-(sz - n)/n * counts['1'] / f0))
+          f1 <- counts['1']
+          if (is.na(f1) || f0 == 0) {
+            Sind <- Sobs
+          } else {
+            Sind <- Sobs + f0 * (1 - exp(-(sz - n)/n * f1 / f0))
+          }
           res <- c(sz, Sind, Sind, Sind)
           names(res) <- c('Size', paste0('Q', .quantile[1]), 'Mean', paste0('Q', .quantile[2]))
           if (.verbose) add.pb(pb)
