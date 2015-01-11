@@ -1,12 +1,10 @@
 ---
+title: "TCR beta repertoire intergroup analysis"
 output:
   html_document:
     theme: spacelab
     toc: yes
 ---
-
-TCR beta repertoire cross-analysis
-========================================================
 
 
 ## Before analysis

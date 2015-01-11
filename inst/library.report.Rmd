@@ -1,12 +1,10 @@
 ---
+title: "TCR beta repertoire exploratory analysis"
 output:
   html_document:
     theme: spacelab
     toc: yes
 ---
-
-TCR beta repertoire exploratory analysis
-========================================================
 
 
 ## Before analysis
