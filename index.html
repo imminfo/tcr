@@ -18,11 +18,11 @@
         <h1>tcR</h1>
 
         <h4>An R package for T-cell receptor repertoire data analysis </h4>
-        
+
         <p>T-cell receptor repertoire analysis, TCR, computational immunology</p>
 
         <p><a href="http://imminfo.github.io/tcR/">Paper in <i>Journal of Something</i> </a></p>
-        
+
         <p><a href="http://cran.r-project.org/web/packages/tcR/index.html">tcR at CRAN </a></p>
 
         <ul>
@@ -30,8 +30,8 @@
           <li><a href="https://github.com/imminfo/tcR/tarball/master">Download <strong>TAR Ball</strong></a></li>
           <li><a href="https://github.com/imminfo/tcR">View On <strong>GitHub</strong></a></li>
         </ul>
-        
-        <h2>Projects</h2>  
+
+        <h2>Projects</h2>
 
         <p class="view"><a href="http://imminfo.github.io/tcR/">tcR: an R package for T-cell receptor repertoire data analysis <small>imminfo/tcR</small></a></p>
 
@@ -47,8 +47,9 @@ procedures supported by <strong>tcR</strong> users can perform advanced statisti
 
 <ul>
   <li>Shared clones statistics<br>
-  <i>(number of shared clones, clonotypes, using V-segments or not; Jaccard index for number of
-  shared clones; sequential intersection among the most abundant clones ("top-cross"))</i></li>
+  <i>(number of shared clones / clonotypes, using V-segments or not; sequential intersection among the most abundant clones ("top-cross"))</i></li>
+  <li>Repertoire comparison</li>
+  <i>(Jaccard index, Morisita's overlap index, Horn's index, Tversky index, overlap coefficient)</i>
   <li>V- and J-segments usage and it's analysis<br>
   <i>(PCA, Shannon Entropy, Jensen-Shannon Divergence)</i></li>
   <li>Diversity evaluation<br>
@@ -62,9 +63,9 @@ procedures supported by <strong>tcR</strong> users can perform advanced statisti
 
 <h3>
 <a name="binaries" class="anchor" href="#binaries"><span class="octicon octicon-link"></span></a>Installation</h3>
-<p>The package is available through CRAN and through <i>devtools::install_github</i>. 
+<p>The package is available through CRAN and through <i>devtools::install_github</i>.
 <p>CRAN version: <strong>1.1</strong></p>
-<p>Dev version: <strong>1.1</strong></p>
+<p>Dev version: <strong>1.2</strong></p>
 <p>Install the latest release version from CRAN with:</p>
 <pre><code>install.packages("tcR")
 </code></pre>
@@ -142,6 +143,6 @@ vis.rarefaction(twb, .log = T)
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+
   </body>
 </html>
