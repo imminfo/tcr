@@ -93,7 +93,7 @@ std::vector<int> hamming_search(const std::vector<std::string>& vec, const std::
   res.reserve(patterns.size() * 4);
   for (int i = 0; i < vec.size(); i++) {
     for (int j = 0; j < patterns.size(); j++) {
-      if (hamming_distance_check(vec[i], patterns[j]), max_error) {
+      if (hamming_distance_check(vec[i], patterns[j], max_error)) {
         res.push_back(i + 1);
         res.push_back(j + 1);
       }
