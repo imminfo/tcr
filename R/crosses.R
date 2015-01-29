@@ -178,6 +178,11 @@ intersectIndices <- function (.alpha, .beta, .method = c('exact', 'hamm', 'lev')
   }
   
   res <- find.similar.sequences(.alpha, .beta, .method, 1, F)
+  
+  if (is.na(res[1,1])) {
+    return(res)
+  }
+  
   if (!is.null(.col) && length(.col) > 1) {
     for (i in 1:ncol(alpha.cols)) {
       res <- res[alpha.cols[res[,1], i] == beta.cols[res[,2], i], ]
