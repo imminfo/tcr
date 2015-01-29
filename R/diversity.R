@@ -1,6 +1,6 @@
 #' Distribution evaluation.
 #' 
-#' @aliases inverse.simpson diversity gini chao1
+#' @aliases inverse.simpson diversity gini chao1 gini.simpson
 #' 
 #' @description
 #' Function for evaluating the diversity of species or objects in the given distribution.
@@ -20,6 +20,9 @@
 #' has the same income). A Gini coefficient of one (or 100 percents ) expresses maximal inequality
 #' among values (for example where only one person has all the income).
 #' 
+#' - The Gini-Simpson index is the probability of interspecific encounter, i.e., probability that two entities
+#' represent different types.
+#' 
 #' - Chao1 estimator is a nonparameteric asymptotic estimator of species richness (number of species in a population).
 #' 
 #' Functions will check if .data if a distribution of random variable (sum == 1) or not.
@@ -32,6 +35,8 @@
 #' diversity(.data, .q = 5, .do.norm = NA, .laplace = 0)
 #' 
 #' gini(.data, .do.norm = NA, .laplace = 0)
+#' 
+#' gini.simpson(.data, .do.norm = NA, .laplace = 0)
 #' 
 #' chao1(.data)
 #' 
@@ -60,13 +65,25 @@ inverse.simpson <- function (.data, .do.norm = NA, .laplace = 0) {
 
 diversity <- function (.data, .q = 5, .do.norm = NA, .laplace = 0) {
   .data <- check.distribution(.data, .do.norm, .laplace)
-  1 / (sum(.data ^ .q) ^ (1 / (.q - 1)))
+  if (.q == 0) {
+    length(.data)
+  } else if (.q == 1) {
+    1 / prod(.data ^ .data)
+  } else if (.q > 1) {
+    1 / (sum(.data ^ .q) ^ (1 / (.q - 1)))
+  } else {
+    NA
+  }
 }
 
 gini <- function (.data, .do.norm = NA, .laplace = 0) {
   .data <- sort(check.distribution(.data, .do.norm, .laplace))
   n <- length(.data)
   1 / n * (n + 1 - 2 * sum((n + 1 - 1:n) * .data) / sum(.data))
+}
+
+gini.simpson <- function (.data, .do.norm = NA, .laplace = 0) {
+  1 - 1 / inverse.simpson(.data, .do.norm, .laplace)
 }
 
 chao1 <- function (.data) {
@@ -122,7 +139,7 @@ chao1 <- function (.data) {
 #' @param .data Data frame or a list with data frames.
 #' @param .step Step's size.
 #' @param .quantile Numeric vector of length 2 with quantiles for confidence intervals.
-#' @param .extrapolation If T than perform extrapolation of all samples to the size of the max one + 200000 reads or barcodes.
+#' @param .extrapolation If N > 0 than perform extrapolation of all samples to the size of the max one +N reads or barcodes.
 #' @param .col Column's name from which choose frequency of each clone.
 #' @param .verbose If T than print progress bar.
 #' 
@@ -144,7 +161,7 @@ chao1 <- function (.data) {
 #' \dontrun{
 #' rarefaction(immdata, .col = "Read.count")
 #' }
-rarefaction <- function (.data, .step = 30000, .quantile = c(.025, .975), .extrapolation = T, .col = 'Barcode.count', .verbose = T) {
+rarefaction <- function (.data, .step = 30000, .quantile = c(.025, .975), .extrapolation = 200000, .col = 'Barcode.count', .verbose = T) {
   if (has.class(.data, 'data.frame')) {
     .data <- list(Data = .data)
   }
@@ -212,8 +229,8 @@ rarefaction <- function (.data, .step = 30000, .quantile = c(.025, .975), .extra
       res
     }))
 
-    if (.extrapolation) {
-      sizes <- seq(sum(.data[[i]][, .col]), 200000 + max(sapply(.data, function (x) sum(x[, .col]))), .step)
+    if (.extrapolation > 0) {
+      sizes <- seq(sum(.data[[i]][, .col]), .extrapolation + max(sapply(.data, function (x) sum(x[, .col]))), .step)
       if (length(sizes) != 1) {        
         ex.res <- t(sapply(sizes, function (sz) {
           f0 <- Sest[1] - Sobs
