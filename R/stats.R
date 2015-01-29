@@ -549,3 +549,20 @@ bootstrap.tcr <- function (.data, .fun = entropy.seg, .n = 1000,
 
   .postfun(res)
 }
+
+
+# mean + IQR
+clonal.space.homeostasis <- function (.data, .clone.types = list(Rare = 0, Small = .0001, Medium = .001, Large = .01, Hyperexpanded = 1)) {
+  .clone.types <- c(list(None = 0), .clone.types)
+  
+  if (has.class(.data, 'data.frame')) {
+    .data <- list(Data = .data)
+  }
+  
+  mat <- matrix(0, length(.data), length(.clone.types) - 1, dimnames = list(names(.data), names(.clone.types)[-1]))
+  for (i in 2:length(.clone.types)) {
+    mat[,i-1] <- sapply(.data, function (x) sum(subset(x, x$Percentage > .clone.types[i-1] & x$Percentage <= .clone.types[i])$Percentage))
+  }
+  
+  mat
+}

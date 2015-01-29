@@ -478,7 +478,7 @@ vis.top.proportions <- function (.data, .head = c(10, 100, 1000, 10000, 30000, 1
   res$People <- factor(row.names(res), levels = row.names(res))
   res <- melt(res)
   #   res$variable <- factor(as.character(res$variable), labels = paste0('[', c(1, .head[-length(.head)] + 1), ':', .head, ')'), ordered = T)
-  ggplot() + geom_bar(aes(x = People, y = value, fill = variable),data = res, stat = 'identity', position = 'stack', colour = 'black')+ 
+  ggplot() + geom_bar(aes(x = People, y = value, fill = variable), data = res, stat = 'identity', position = 'stack', colour = 'black')+ 
     theme_linedraw()  + 
     theme(axis.text.x  = element_text(angle=90)) +
     ylab("Clonal percentage") + 
@@ -513,7 +513,7 @@ vis.rarefaction <- function (.muc.res, .groups = NULL, .log = F) {
   if (!is.null(.groups)) { 
     for (i in 1:length(.groups)) {
       for (j in 1:length(.groups[[i]])) {
-        .muc.res$Group[ .muc.res$People == .groups[[i]][j] ] <- names(.groups)[i]
+        .muc.res$Group[.muc.res$People == .groups[[i]][j] ] <- names(.groups)[i]
       }
     }
   }
@@ -608,4 +608,55 @@ vis.clonal.dynamics <- function (.changed, .lower, .upper, .log = T) {
     p <- p + scale_y_log10()
   }
   p
+}
+
+
+#' Visualise occupied by clones homeostatic space among subjects or groups.
+#' 
+#' @description
+#' Visualise clonal dynamics (i.e., changes in frequency or count) with error bars of given
+#' clones among time points.
+#' 
+#' @param .clonal.space.data from the \code{find.clonotypes} function, i.e. data frame with first
+#' columns with sequences (nucleotide or amino acid) and other columns are columns with frequency / count
+#' for each time point for each clone.
+#' @param .groups
+#' 
+#' @seealso \link{clonal.space.homeostasis}
+#' 
+#' @return ggplot object.
+vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
+  melted <- melt(.clonal.space.data)
+  colnames(melted) <- c('Subject', 'Clone.size', 'Percentage')
+  melted$Subject <- as.character(melted$Subject)
+  melted$Percentage <- as.numeric(as.character(melted$Percentage))
+  melted$Group <- melted$Subject
+  
+  if (!is.null(.groups)) { 
+    for (i in 1:length(.groups)) {
+      for (j in 1:length(.groups[[i]])) {
+        melted$Group[melted$Subject == .groups[[i]][j] ] <- names(.groups)[i]
+      }
+    }
+    
+    perc <- melt(tapply(melted$Percentage, list(melted$Group, melted$Clone.size), function (x) c(quantile(x, probs = .25), mean(x), quantile(x, probs = .75))))
+    return(perc)
+    perc <- data.frame(row.names(perc), perc, stringsAsFactors = F)
+    colnames(perc) <- c('Group', 'Q1', 'Mean', 'Q2')
+    
+    p <- ggplot() +
+      geom_bar(aes(x = Group, y = Mean, fill = Clone.size), data = melted, colour = 'black', stat = 'identity') +
+      geom_errorbar(aes(x = Group, ymin = Q1, ymax = Q2), data = melted, colour = 'black') +
+      xlab("Subject")
+  } else {
+    p <- ggplot() +
+      geom_bar(aes(x = Group, y = Percentage, fill = Clone.size), data = melted, colour = 'black', stat = 'identity', position = 'stack') +
+      xlab("Subject")
+      
+  }
+    
+  p + theme_linedraw() + 
+    theme(axis.text.x = element_text(angle=90)) +ylab("Occupied homeostatic space, percentage") + 
+    ggtitle("Clonal space homeostasis") + 
+    guides(fill = guide_legend("Clone size")) + .colourblind.discrete(length(unique(melted$Clone.size)))
 }
