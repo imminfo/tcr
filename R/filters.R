@@ -44,7 +44,7 @@ decontamination <- function (.data1, .data2, .limit = 20, .col = 'Read.count', .
   .filter <- function (.data1, .data2, .limit, .col) {    
     inds <- intersectIndices(.data1$CDR3.nucleotide.sequence, .data2$CDR3.nucleotide.sequence, 'exact')
     logic <- .data2[inds[,2], .col] / .data1[inds[,1], .col] >= .limit
-    .data1[logic, ]
+    .data1[!logic, ]
   }
   
   if (has.class(.data1, 'list') && has.class(.data2, 'list')) {
