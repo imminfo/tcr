@@ -159,8 +159,8 @@ parse.file <- function (.filepath, .barcode.flag = F, .i = 1, .all = 1) {
 parse.file.list <- function (.filenames, .barcode.flag = F) {
   # Remove full paths and extension from the given string.
   .remove.ext <- function (.str) {
-#     gsub(pattern = '.*/|[.].*$', replacement = '', x = .str)
-    .str
+    gsub(pattern = '.*/|[.].*$', replacement = '', x = .str)
+#     .str
   }
   
   .filenames <- as.list(.filenames)

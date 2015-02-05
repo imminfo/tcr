@@ -273,6 +273,7 @@ find.clonotypes <- function (.data, .targets, .method = c('exact', 'hamm', 'lev'
     if (length(.target.col) ==  1) {
       inds <- intersectIndices(.targets, .data[[i]][, .target.col], .method)
     } else {
+      colnames(.targets) <- .target.col
       inds <- intersectIndices(.targets, .data[[i]][, .target.col], .method, .target.col)
     }
 
