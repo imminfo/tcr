@@ -4,6 +4,7 @@
 \alias{chao1}
 \alias{diversity}
 \alias{gini}
+\alias{gini.simpson}
 \alias{inverse.simpson}
 \title{Distribution evaluation.}
 \usage{
@@ -12,6 +13,8 @@ inverse.simpson(.data, .do.norm = NA, .laplace = 0)
 diversity(.data, .q = 5, .do.norm = NA, .laplace = 0)
 
 gini(.data, .do.norm = NA, .laplace = 0)
+
+gini.simpson(.data, .do.norm = NA, .laplace = 0)
 
 chao1(.data)
 }
@@ -47,6 +50,9 @@ of a frequency distribution (for example levels of income). A Gini coefficient o
 expresses perfect equality, where all values are the same (for example, where everyone
 has the same income). A Gini coefficient of one (or 100 percents ) expresses maximal inequality
 among values (for example where only one person has all the income).
+
+- The Gini-Simpson index is the probability of interspecific encounter, i.e., probability that two entities
+represent different types.
 
 - Chao1 estimator is a nonparameteric asymptotic estimator of species richness (number of species in a population).
 

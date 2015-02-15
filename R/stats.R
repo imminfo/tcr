@@ -349,7 +349,7 @@ find.clonotypes <- function (.data, .targets, .method = c('exact', 'hamm', 'lev'
   }
   for (i in 1:length(.col.name)) {
     if (.col.name[i] %in% names(res)) {
-      setnames(res, .col.name[i], paste0(names(dt.list)[length(dt.list)], '.', .col.name[i]))
+      setnames(res, .col.name[i], paste0(.col.name[i], '.', names(dt.list)[length(dt.list)]))
     }
   }
   res <- as.data.frame(res, stringsAsFactors = F)
