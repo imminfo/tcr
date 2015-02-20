@@ -252,7 +252,7 @@ generate.kmers.prob <- function (.k, .probs, .count = 1, .alphabet = c('A', 'C',
 #' and other columns with names "1", "2", ... for each position with percentage for each symbol.
 kmer.profile <- function (.data, .names = rep('Noname', times=length(.data)), .meat = T, .verbose = F) {
   .get.nth.letter.stats <- function (.data, .n) {
-    res <- summarise(grouped_df(data.frame(Letter = substr(.data[, 1], .n, .n), Count = .data[,2]), as.list("Letter")), Sum.count = sum(Count))
+    res <- summarise(grouped_df(data.frame(Letter = substr(.data[, 1], .n, .n), Count = .data[,2]), list(as.name("Letter"))), Sum.count = sum(Count))
     res$Sum.count <- res$Sum.count / sum(res$Sum.count)
     names(res) <- c("Sequence", as.character(.n))
     res
@@ -283,7 +283,7 @@ kmer.profile <- function (.data, .names = rep('Noname', times=length(.data)), .m
     
     aa.profiles <- merge(aa.profiles, tmp, all=T, by = 'Sequence')
 #       aa.profiles <- merge(aa.profiles, as.data.frame(prop.table(table(substr(kmers[,1], i, i))), stringsAsFactors=F), all=T, by = 'Var1')
-    setnames(aa.profiles, c('Sequence', 1:i))
+    names(aa.profiles) <- c('Sequence', 1:i)
   }
   aa.profiles <- as.data.frame(aa.profiles)
   names(aa.profiles)[1] <- 'Symbol'
