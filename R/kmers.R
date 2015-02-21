@@ -250,6 +250,8 @@ generate.kmers.prob <- function (.k, .probs, .count = 1, .alphabet = c('A', 'C',
 #' 
 #' @return Return data frame with first column "Symbol" with all possible symbols in the given sequences
 #' and other columns with names "1", "2", ... for each position with percentage for each symbol.
+#' 
+#' @seealso \link{vis.logo}
 kmer.profile <- function (.data, .names = rep('Noname', times=length(.data)), .meat = T, .verbose = F) {
   .get.nth.letter.stats <- function (.data, .n) {
     res <- summarise(grouped_df(data.frame(Letter = substr(.data[, 1], .n, .n), Count = .data[,2]), list(as.name("Letter"))), Sum.count = sum(Count))

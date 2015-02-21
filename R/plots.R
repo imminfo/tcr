@@ -660,3 +660,36 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
     ggtitle("Clonal space homeostasis") + 
     guides(fill = guide_legend("Clone size")) + .colourblind.discrete(length(unique(melted$Clone.size)))
 }
+
+
+#' Logo - plots for amino acid and nucletide profiles.
+#' 
+#' @description
+#' Plot logo-like graphs for visualising of nucleotide or amino acid motif sequences / profiles.
+#' 
+#' @param .data Output from the \code{kmer.profile} function.
+#' @param .replace.zero.with.na If T than replace all zeros with NAs, therefore letters with
+#' zero frequency wont appear at the plot.
+#' @param .jitter.width,.jitter.height,.dodge.width Parameters to \code{position_jitterdodge}
+#' for aligning text labels of letters.
+#' 
+#' @return ggplot2 object
+#' 
+#' @examples
+#' \dontrun {
+#' d <- kmer.profile(c('CASLL', 'CASSQ', 'CASGL'))
+#' vis.logo(d)
+#' }
+vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .jitter.height = .01, .dodge.width = .15) {
+  .data <- melt(.data)
+  if (.replace.zero.with.na) {
+    .data$value[.data$value == 0] <- NA
+  }
+  ggplot(aes(x = variable, y = value, fill = Symbol, colour = Symbol), data = .data) + 
+    geom_point(colour = 'black') + 
+    geom_text(aes(label = Symbol), size = 5, 
+              position = position_jitterdodge(jitter.width = .jitter.width, 
+                                              jitter.height = .jitter.height, 
+                                              dodge.width = .dodge.width)) +
+    theme_linedraw()
+}
