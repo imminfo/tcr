@@ -617,10 +617,9 @@ vis.clonal.dynamics <- function (.changed, .lower, .upper, .log = T) {
 #' Visualise clonal dynamics (i.e., changes in frequency or count) with error bars of given
 #' clones among time points.
 #' 
-#' @param .clonal.space.data from the \code{find.clonotypes} function, i.e. data frame with first
-#' columns with sequences (nucleotide or amino acid) and other columns are columns with frequency / count
-#' for each time point for each clone.
-#' @param .groups
+#' @param .clonal.space.data Data from the \code{fclonal.space.homeostasis} function.
+#' @param .groups List of named character vector with names of subjects 
+#' in \code{.clonal.space.data} for grouping them together.
 #' 
 #' @seealso \link{clonal.space.homeostasis}
 #' 
