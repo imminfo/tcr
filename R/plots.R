@@ -676,7 +676,7 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
 #' @return ggplot2 object
 #' 
 #' @examples
-#' \dontrun {
+#' \dontrun{
 #' d <- kmer.profile(c('CASLL', 'CASSQ', 'CASGL'))
 #' vis.logo(d)
 #' }

@@ -25,4 +25,7 @@ and other columns with names "1", "2", ... for each position with percentage for
 Return profile for the given character vector or a data frame with sequences
 of equal length or list with them.
 }
+\seealso{
+\link{vis.logo}
+}
 
