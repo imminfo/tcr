@@ -26,12 +26,18 @@
 #' @param .frame Which *-frames to choose.
 #' @param .head Parameter to the head() function. Supply 0 to get all elements. \code{head} applied before subsetting, i.e.
 #' if .head == 500, you will get in-frames from the top 500 clonotypes.
+#' @param .coding If T than return only coding sequences, i.e. with stop-codon.
 #' 
 #' @return Filtered data.frame or a list with such data.frames.
-get.inframes <- function (.data, .head = 0) { 
+get.inframes <- function (.data, .head = 0, .coding = T) { 
   if (class(.data) == 'list') { return(lapply(.data, get.inframes, .head = .head)) }
   .data <- head(.data, if (.head == 0) {nrow(.data)} else {.head})
-  subset(.data, nchar(.data$CDR3.nucleotide.sequence) %% 3 == 0)
+  if (.coding) {
+    d <- subset(.data, nchar(.data$CDR3.nucleotide.sequence) %% 3 == 0)
+    d[grep('[*, ~]', d$CDR3.amino.acid.sequence, invert = T), ]
+  } else {
+    subset(.data, nchar(.data$CDR3.nucleotide.sequence) %% 3 == 0)
+  }
 }
 
 get.outframes <- function (.data, .head = 0) {
@@ -40,8 +46,8 @@ get.outframes <- function (.data, .head = 0) {
   subset(.data, nchar(.data$CDR3.nucleotide.sequence) %% 3 != 0)
 }
 
-count.inframes <- function (.data, .head = 0) {
-  if (class(.data) == 'list') { sapply(get.inframes(.data, .head), nrow) }
+count.inframes <- function (.data, .head = 0, .coding = T) {
+  if (class(.data) == 'list') { sapply(get.inframes(.data, .head, .coding), nrow) }
   else { nrow(get.inframes(.data, .head)) }
 }
 
@@ -50,14 +56,14 @@ count.outframes <- function (.data, .head = 0) {
   else { nrow(get.outframes(.data, .head)) }
 }
 
-get.frames <- function (.data, .frame = c('in', 'out', 'all'), .head = 0) {
-  if (.frame[1] == 'in') { get.inframes(.data, .head) }
+get.frames <- function (.data, .frame = c('in', 'out', 'all'), .head = 0, .coding = T) {
+  if (.frame[1] == 'in') { get.inframes(.data, .head, .coding) }
   else if (.frame[1] == 'out') { get.outframes(.data, .head) }
   else { head(.data, if (.head == 0) {nrow(.data)} else {.head}) }
 }
 
-count.frames <- function (.data, .frame = c('in', 'out', 'all'), .head = 0) {
-  if (.frame[1] == 'in') { count.inframes(.data, .head) }
+count.frames <- function (.data, .frame = c('in', 'out', 'all'), .head = 0, .coding) {
+  if (.frame[1] == 'in') { count.inframes(.data, .head, .coding) }
   else if (.frame[1] == 'out') { count.outframes(.data, .head) }
   else { nrow(head(.data, if (.head == 0) {nrow(.data)} else {.head})) }
 }
