@@ -193,7 +193,7 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
   p + ggtitle(.title) + 
     guides(fill = guide_legend(title=.legend)) +
     xlab(.labs) + ylab(.labs) + coord_equal() +
-    theme(axis.text.x  = element_text(angle=90)) + theme_linedraw() +
+    theme_linedraw() + theme(axis.text.x  = element_text(angle=90)) +
     scale_x_discrete(expand=c(0,0)) + scale_y_discrete(expand=c(0,0))
 }
 
