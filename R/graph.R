@@ -9,7 +9,7 @@
 #' 
 #' @param .data Either character vector of sequences, data frame with \code{.label.col}
 #' or shared repertoire (result from the \code{shared.repertoire} function) constructed based on \code{.label.col}.
-#' @param .method Passed to the \code{find.similar.sequences} function.
+#' @param .method Either "hamm" (for hamming distance) or "lev" (for edit distance). Passed to the \code{find.similar.sequences} function.
 #' @param .max.errors Passed to the \code{find.similar.sequences} function.
 #' @param .label.col 
 #' @param .seg.col
@@ -25,11 +25,11 @@
 make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.errors = 1,
                                    .label.col = 'CDR3.amino.acid.sequence', .seg.col = 'V.segments', .prob.col = 'Probability') {
   # Make vertices and edges.
-  G <- graph.empty(n = nrow(.data), directed=F)
   if (has.class(.data, 'character')) {
     .data <- data.frame(A = .data, stringsAsFactors = F)
     colnames(.data) <- .label.col
   }
+  G <- graph.empty(n = nrow(.data), directed=F)
   G <- add.edges(G, t(find.similar.sequences(.data[[.label.col]], .method = .method[1], .max.errors = .max.errors)))
   G <- simplify(G)
   
@@ -58,6 +58,7 @@ make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.error
     attr(G, 'people') <- colnames(.data)[-(1:match('People', colnames(.data)))]
     G <- set.people.vector(G, .data)
   } else {
+    attr(G, 'people') <- "Individual"
     G <- set.vertex.attribute(G, 'people', V(G), 1)
     G <- set.vertex.attribute(G, 'npeople', V(G), 1)
   }
