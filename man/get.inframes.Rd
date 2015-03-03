@@ -28,6 +28,8 @@ count.frames(.data, .frame = c('in', 'out', 'all'), .head = 0)
 \item{.head}{Parameter to the head() function. Supply 0 to get all elements. \code{head} applied before subsetting, i.e.
 if .head == 500, you will get in-frames from the top 500 clonotypes.}
 
+\item{.coding}{If T than return only coding sequences, i.e. with stop-codon.}
+
 \item{.frame}{Which *-frames to choose.}
 }
 \value{

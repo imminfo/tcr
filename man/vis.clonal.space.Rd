@@ -7,11 +7,10 @@
 vis.clonal.space(.clonal.space.data, .groups = NULL)
 }
 \arguments{
-\item{.clonal.space.data}{from the \code{find.clonotypes} function, i.e. data frame with first
-columns with sequences (nucleotide or amino acid) and other columns are columns with frequency / count
-for each time point for each clone.}
+\item{.clonal.space.data}{Data from the \code{fclonal.space.homeostasis} function.}
 
-\item{.groups}{}
+\item{.groups}{List of named character vector with names of subjects
+in \code{.clonal.space.data} for grouping them together.}
 }
 \value{
 ggplot object.
