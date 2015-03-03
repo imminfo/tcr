@@ -7,6 +7,6 @@ Author: Vadim Nazarov, Mikhail Pogorelyy
 Maintainer: Vadim Nazarov <vdm.nazarov@gmail.com>
 Description: Platform for the advanced analysis of T-cell receptor repertoires data and visualisation of the analysis results.
 License: Apache License 2.0
-Depends: R (>= 2.10), ggplot2 (>= 1.0.0), dplyr (>= 0.4.0), gridExtra (>= 0.9.0), reshape2 (>= 1.2.0)
+Depends: R (>= 2.10), ggplot2 (>= 1.0.0), dplyr (>= 0.4.0), gridExtra (>= 0.9.0), reshape2 (>= 1.2.0), igraph (>= 0.7.1)
 Imports: utils (>= 3.1.0), Rcpp (>= 0.11.1), grid (>= 3.0.0), data.table (>= 1.9.0), gtable (>= 0.1.2), roxygen2 (>= 3.0.0), stringdist (>= 0.7.3)
 LinkingTo: Rcpp
