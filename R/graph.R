@@ -110,7 +110,7 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 } 
 
 
-#' Set group of a repertoire graph
+#' Set group for vertices of a repertoire graph
 #' 
 #' @description
 #' asdasd
@@ -131,8 +131,8 @@ set.group.vector <- function (.shared.rep, .G, .target, .control) {
   illonly <- illvec & !healthyvec
   healthyonly <- !illvec & healthyvec
   illplushealthy <- illvec & healthyvec
-  V(.G)[illonly]$health <- "target"
-  V(.G)[healthyonly]$health <- "control"
-  V(.G)[illplushealthy]$health <- "mixed"
+  V(.G)[illonly]$group <- "target"
+  V(.G)[healthyonly]$group <- "control"
+  V(.G)[illplushealthy]$group <- "mixed"
   .G
 }
