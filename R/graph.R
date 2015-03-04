@@ -67,7 +67,7 @@ make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.error
 }
 
 
-#' Set and get attributes of repertoire graph related to source people.
+#' Set and get attributes of a repertoire graph related to source people.
 #' 
 #' @aliases set.people.vector get.people.names
 #' 
@@ -107,4 +107,32 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
       paste0(ppl[l == '1'], collapse='|')
     }, USE.NAMES = F)
   }
+} 
+
+
+#' Set group of a repertoire graph
+#' 
+#' @description
+#' asdasd
+#' 
+#' @param .shared.rep Shared repertiore of sequences.
+#' @param .G Graph that was created based on \code{.shared.rep}.
+#' @param .target Vector of indices of people related to the target group (e.g., people with some illness)
+#' @param .control Vector of indices of people related to the control group (e.g., people with some illness)
+#' 
+#' @return igraph object with new vertex attribute "health" with 3 possible values:
+#' "target", "control" or "mixed".
+set.group.vector <- function (.shared.rep, .G, .target, .control) {
+  .data <- shared.matrix(.shared.rep)
+  .data[is.na(.data)]<-0
+  tempdata <- .data != 0
+  illvec <- rowSums(tempdata[, ])>0
+  healthyvec <- rowSums(tempdata[, .control])>0
+  illonly <- illvec & !healthyvec
+  healthyonly <- !illvec & healthyvec
+  illplushealthy <- illvec & healthyvec
+  V(.G)[illonly]$health <- "target"
+  V(.G)[healthyonly]$health <- "control"
+  V(.G)[illplushealthy]$health <- "mixed"
+  .G
 }
