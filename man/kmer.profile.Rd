@@ -5,15 +5,13 @@
 \alias{kmers.profile}
 \title{Profile of sequences of equal length.}
 \usage{
-kmer.profile(.data, .names = rep('Noname', times=length(.data)), .meat = T, .verbose = F)
+kmer.profile(.data, .names = rep('Noname', times=length(.data)), .verbose = F)
 }
 \arguments{
 \item{.data}{Either list with elements of one of the allowed classes or object with one of the class:
-data.frame with first column with character sequences and second column with number of sequences if .meat = T; character vector,}
+data.frame with first column with character sequences and second column with number of sequences or character vector.}
 
 \item{.names}{Names for each sequence / row in the \code{.data}.}
-
-\item{.meat}{Use number of sequences (second column of \code{.data} data frame) or not.}
 
 \item{.verbose}{If T than print processing output.}
 }

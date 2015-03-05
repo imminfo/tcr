@@ -30,6 +30,6 @@ or a vector of generated kmers for \code{generate.kmers.prob}.
 }
 \description{
 Generate all k-mers. starting with the given sequence on the given alphabet
-Generate k-mers with the given k and probabilities of nucleotides next to each other.
+Generate k-mers with the given k and probabilities of nucleotides next to each other (markov chain).
 }
 
