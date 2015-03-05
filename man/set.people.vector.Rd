@@ -3,7 +3,7 @@
 \name{set.people.vector}
 \alias{get.people.names}
 \alias{set.people.vector}
-\title{Set and get attributes of repertoire graph related to source people.}
+\title{Set and get attributes of a repertoire graph related to source people.}
 \usage{
 set.people.vector(.G, .shared.rep)
 }
@@ -11,9 +11,11 @@ set.people.vector(.G, .shared.rep)
 \item{.G}{Repertoire graph.}
 
 \item{.shared.rep}{Shared repertoire.}
+
+\item{.paste}{If TRUE than concatenate people names to one string, else get a character vector of names.}
 }
 \value{
-New graph with 'people' and 'npeople' vertex attributes.
+New graph with 'people' and 'npeople' vertex attributes or character vector of length .V or list of length .V.
 }
 \description{
 Set vertice attributes 'people' and 'npeople' for every vertex in the given graph.

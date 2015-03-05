@@ -55,7 +55,7 @@ make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.error
   
   # Add people to vertices.
   if ('People' %in% colnames(.data)) {
-    attr(G, 'people') <- colnames(.data)[-(1:match('People', colnames(.data)))]
+    attr(G, 'people') <- colnames(shared.matrix(.data))
     G <- set.people.vector(G, .data)
   } else {
     attr(G, 'people') <- "Individual"
@@ -79,7 +79,9 @@ make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.error
 #' 
 #' @param .G Repertoire graph.
 #' @param .shared.rep Shared repertoire.
-#' @return New graph with 'people' and 'npeople' vertex attributes.
+#' @param .paste If TRUE than concatenate people names to one string, else get a character vector of names.
+#' 
+#' @return New graph with 'people' and 'npeople' vertex attributes or character vector of length .V or list of length .V.
 set.people.vector <- function (.G, .shared.rep) {
   .shared.rep[is.na(.shared.rep)] <- 0
   .G <- set.vertex.attribute(.G, 'people', V(.G),
@@ -89,13 +91,6 @@ set.people.vector <- function (.G, .shared.rep) {
   set.vertex.attribute(.G, 'npeople', V(.G), .shared.rep[['People']])
 }
 
-
-#' Get people names of the given vertices.
-#' 
-#' @param .G Repertoire graph.
-#' @param .V Indices of vertices.
-#' @param .paste If TRUE than concatenate people names to one string, else get a character vector of names.
-#' @return Character vector of length .V or list of length .V.
 get.people.names <- function (.G, .V = V(.G), .paste = T) {
   ppl <- attr(.G, 'people')
   if (!.paste) {
@@ -110,29 +105,53 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 } 
 
 
-#' Set group for vertices of a repertoire graph
+#' Set group attribute for vertices of a repertoire graph
 #' 
 #' @description
 #' asdasd
 #' 
 #' @param .shared.rep Shared repertiore of sequences.
 #' @param .G Graph that was created based on \code{.shared.rep}.
-#' @param .target Vector of indices of people related to the target group (e.g., people with some illness)
-#' @param .control Vector of indices of people related to the control group (e.g., people with some illness)
+#' @param .attr.name Name of the new vertex attribute.
+#' @param .groups List with integer vector with indices of subjects for each group.
 #' 
-#' @return igraph object with new vertex attribute "health" with 3 possible values:
-#' "target", "control" or "mixed".
-set.group.vector <- function (.shared.rep, .G, .target, .control) {
-  .data <- shared.matrix(.shared.rep)
-  .data[is.na(.data)]<-0
-  tempdata <- .data != 0
-  illvec <- rowSums(tempdata[, ])>0
-  healthyvec <- rowSums(tempdata[, .control])>0
-  illonly <- illvec & !healthyvec
-  healthyonly <- !illvec & healthyvec
-  illplushealthy <- illvec & healthyvec
-  V(.G)[illonly]$group <- "target"
-  V(.G)[healthyonly]$group <- "control"
-  V(.G)[illplushealthy]$group <- "mixed"
+#' @return igraph object with new vertex attribute \code{.attr.name} with binary strings.
+#' 
+#' @examples
+#' \dontrun{
+#' data(twb)
+#' twb.shared <- shared.repertoire(twb)
+#' G <- make.repertoire.graph(twb.shared)
+#' G <- set.group.vector(twb.shared, G, "twins", list(A = c(1,2), B = c(3,4)))
+#' get.group.names(G, "twins", 1)  # A|B
+#' get.group.names(G, "twins", 300)  # A
+#' }
+set.group.vector <- function (.shared.rep, .G, .attr.name, .groups) {
+  attr(.G, .attr.name) <- sort(names(.groups))
+  d <- shared.matrix(.shared.rep)
+  
+  group.vec <- rep('nogroup', times = max(unlist(.groups)))
+  for (gr.i in 1:length(.groups)) {
+    for (elem in .groups[[gr.i]]) {
+      group.vec[elem] <- names(.groups)[gr.i]
+    }
+  }
+  
+  .G <- set.vertex.attribute(.G, .attr.name, V(.G),
+                            apply(d, 1, function (row) { paste0(as.integer(attr(.G, .attr.name) %in% sort(group.vec[row > 0])), collapse='') }))
+  
   .G
+}
+
+get.group.names <- function (.G, .attr.name, .V = V(.G), .paste = T) {
+  grs <- attr(.G, .attr.name)
+  if (!.paste) {
+    lapply(strsplit(get.vertex.attribute(.G, .attr.name, .V), '', fixed=T, useBytes=T), function (l) {
+      grs[l == '1']
+    })
+  } else {
+    sapply(strsplit(get.vertex.attribute(.G, .attr.name, .V), '', fixed=T, useBytes=T), function (l) {
+      paste0(grs[l == '1'], collapse='|')
+    }, USE.NAMES = F)
+  }
 }
