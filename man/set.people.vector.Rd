@@ -23,4 +23,13 @@ Attribute 'people' is a binary string indicating in which repertoire sequence ar
 found. Attribute 'npeople' is a integer indicating number of repertoires, in which
 this sequence has been found.
 }
+\examples{
+\dontrun{
+data(twb)
+twb.shared <- shared.repertoire(twb)
+G <- make.repertoire.graph(twb.shared)
+get.people.names(G, 300, T)  # "Subj.A|Subj.B"
+get.people.names(G, 300, F)  # list(c("Subj.A", "Subj.B"))
+}
+}
 

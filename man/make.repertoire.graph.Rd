@@ -32,6 +32,11 @@ no more than specified in the \code{.max.errors} function parameter.
 }
 \examples{
 \dontrun{
+data(twb)
+twb.shared <- shared.repertoire(twb)
+G <- make.repertoire.graph(twb.shared)
+get.people.names(G, 300, T)  # "Subj.A|Subj.B"
+get.people.names(G, 300, F)  # list(c("Subj.A", "Subj.B"))
 }
 }
 \seealso{

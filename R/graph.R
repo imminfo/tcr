@@ -21,6 +21,11 @@
 #' 
 #' @examples
 #' \dontrun{
+#' data(twb)
+#' twb.shared <- shared.repertoire(twb)
+#' G <- make.repertoire.graph(twb.shared)
+#' get.people.names(G, 300, T)  # "Subj.A|Subj.B"
+#' get.people.names(G, 300, F)  # list(c("Subj.A", "Subj.B"))
 #' }
 make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.errors = 1,
                                    .label.col = 'CDR3.amino.acid.sequence', .seg.col = 'V.segments', .prob.col = 'Probability') {
@@ -82,6 +87,15 @@ make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.error
 #' @param .paste If TRUE than concatenate people names to one string, else get a character vector of names.
 #' 
 #' @return New graph with 'people' and 'npeople' vertex attributes or character vector of length .V or list of length .V.
+#' 
+#' @examples
+#' \dontrun{
+#' data(twb)
+#' twb.shared <- shared.repertoire(twb)
+#' G <- make.repertoire.graph(twb.shared)
+#' get.people.names(G, 300, T)  # "Subj.A|Subj.B"
+#' get.people.names(G, 300, F)  # list(c("Subj.A", "Subj.B"))
+#' }
 set.people.vector <- function (.G, .shared.rep) {
   .shared.rep[is.na(.shared.rep)] <- 0
   .G <- set.vertex.attribute(.G, 'people', V(.G),
