@@ -24,7 +24,9 @@ if (getRversion() >= "2.15.1") {
 .colourblind.gradient <- function (.min = NA, .max = NA) {
   #   cs <- c("#FFFFD9", "#41B6C4", "#225EA8")
 #   cs <- c("#FFFFBB", "#41B6C4", "#225EA8")
-  cs <- c("#FFBB00", "#41B6C4", "#225EA8")
+#   cs <- c("#FFBB00", "#41B6C4", "#225EA8") <- old version
+#   cs <- c("#FF4B20", "#FFB433", "#C6EDEC", "#85CFFF", "#0348A6")
+  cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
   if (!is.na(.min)) {
     scale_fill_gradientn(limits = c(.min, .max), colours = cs, na.value = 'grey60')
   } else {
@@ -38,7 +40,8 @@ if (getRversion() >= "2.15.1") {
 .colourblind.discrete <- function (.n, .colour = F) {
   #   cs <- c("#FFFFD9", "#41B6C4", "#225EA8")
   #   cs <- c("#FFFFBB", "#41B6C4", "#225EA8")
-  cs <- c("#FFBB00", "#41B6C4", "#225EA8")
+#   cs <- c("#FFBB00", "#41B6C4", "#225EA8") <- old version
+  cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
   if (.colour) {
     scale_colour_manual(values = colorRampPalette(cs)(.n))
   } else {
@@ -287,7 +290,8 @@ vis.V.usage <- function (.data, .cast.freq = T, .main = 'V-usage', .ncol = 3, .c
       res <- melt(freq.Vb(.data))
       colnames(res) <- c('Segment', 'Subject', 'Freq')
       p <- ggplot(res, aes(x = Segment, y = Freq, fill = Subject)) + geom_bar(stat = 'identity', position = position_dodge(), colour = 'black') +
-        theme_linedraw() + theme(axis.text.x  = element_text(angle=90)) + scale_fill_brewer(palette = 'YlGnBu')
+#         theme_linedraw() + theme(axis.text.x  = element_text(angle=90)) + scale_fill_brewer(palette = 'YlGnBu')
+        theme_linedraw() + theme(axis.text.x  = element_text(angle=90)) + .colourblind.discrete(length(.data))
       return(p)
     } else {
       return(grid.arrange(do.call(arrangeGrob, c(lapply(1:length(.data), function (i) vis.V.usage(.data[[i]], .cast.freq, names(.data)[i], 0, .coord.flip, ...)), ncol = .ncol)), 
@@ -328,7 +332,9 @@ vis.J.usage <- function (.data, .cast.freq = T, .main = 'J-usage', .ncol = 3, .c
       p <- ggplot(res, aes(x = Segment, y = Freq, fill = Subject)) + geom_bar(stat = 'identity', position = position_dodge(), colour = 'black') +
         theme_linedraw() + 
         theme(axis.text.x  = element_text(angle=90)) +
-        scale_fill_brewer(palette = 'YlGnBu')
+        .colourblind.discrete(length(.data))
+      #  scale_fill_brewer(palette = 'YlGnBu')
+      
       return(p)
     } else {
       return(grid.arrange(do.call(arrangeGrob, c(lapply(1:length(.data), function (i) vis.J.usage(.data[[i]], .cast.freq, names(.data)[i], 0, .coord.flip, ...)), ncol = .ncol)), 
