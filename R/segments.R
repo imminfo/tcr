@@ -40,16 +40,16 @@ if (getRversion() >= "2.15.1") {
 #' 
 #' @return Data.frame with columns Segments and their frequencies in the column Freq.
 #' 
-#' @seealso \code{\link{vis.V.usage}} \code{\link{vis.J.usage}} \code{\link{pca.segments}}
+#' @seealso \code{\link{genesegment}}, \code{\link{vis.V.usage}} \code{\link{vis.J.usage}} \code{\link{pca.segments}}
 #' 
 #' @examples
 #' \dontrun{
 #' # Load your data
 #' data(twb)
-#' # Load human alphabets
-#' data(human.alphabets)
-#' # compute V-segments frequencies
-#' seg <- freq.segments(twb)
+#' # compute V-segments frequencies of human TCR beta.
+#' seg <- freq.segments(twb, "TRBV")
+#' # equivalent to the previos one
+#' seg <- freq.segments(twb, HUMAN_TRBV_ALPHABET, .column = "V.segments")
 #' # plot V-segments frequencies as a grid
 #' vis.grid.stats(seg)
 #' # plot V-segments frequencies from the data
@@ -67,10 +67,10 @@ freq.segments <- function (.data, .alphabet='TRBV', .count=F, .meat=F, .other=T,
     return(res)
   }
   
-  if (.alphabet == "TRBV")      { .column <- 'V.segments'; alphabet <- V_BETA_ALPHABET }
-  else if (.alphabet == "TRAV") { .column <- 'V.segments'; alphabet <- V_ALPHA_ALPHABET }
-  else if (.alphabet == "TRBJ") { .column <- 'J.segments'; alphabet <- J_BETA_ALPHABET }
-  else if (.alphabet == "TRAJ") { .column <- 'J.segments'; alphabet <- J_ALPHA_ALPHABET }
+  if (.alphabet == "TRBV")      { .column <- 'V.segments'; alphabet <- HUMAN_TRBV_ALPHABET_MITCR }
+  else if (.alphabet == "TRAV") { .column <- 'V.segments'; alphabet <- HUMAN_TRAV_ALPHABET }
+  else if (.alphabet == "TRBJ") { .column <- 'J.segments'; alphabet <- HUMAN_TRBJ_ALPHABET }
+  else if (.alphabet == "TRAJ") { .column <- 'J.segments'; alphabet <- HUMAN_TRAJ_ALPHABET }
   else                          { alphabet <- .alphabet }
   seg <- .data[[.column]]
   

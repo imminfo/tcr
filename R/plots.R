@@ -317,7 +317,7 @@ vis.V.usage <- function (.data, .cast.freq = T, .main = 'V-usage', .ncol = 3, .c
   }
   
   if (.coord.flip) { p <- p + coord_flip() }
-  
+
   p + theme_linedraw() + theme(axis.text.x  = element_text(angle=90)) + ggtitle(.main) +
 #     .colourblind.gradient()
    .colourblind.gradient()

@@ -53,10 +53,10 @@ Get frequencies or counts of segments (V / J - usage).
 \dontrun{
 # Load your data
 data(twb)
-# Load human alphabets
-data(human.alphabets)
-# compute V-segments frequencies
-seg <- freq.segments(twb)
+# compute V-segments frequencies of human TCR beta.
+seg <- freq.segments(twb, "TRBV")
+# equivalent to the previos one
+seg <- freq.segments(twb, HUMAN_TRBV_ALPHABET, .column = "V.segments")
 # plot V-segments frequencies as a grid
 vis.grid.stats(seg)
 # plot V-segments frequencies from the data
@@ -64,6 +64,6 @@ vis.V.usage(twb)
 }
 }
 \seealso{
-\code{\link{vis.V.usage}} \code{\link{vis.J.usage}} \code{\link{pca.segments}}
+\code{\link{genesegment}}, \code{\link{vis.V.usage}} \code{\link{vis.J.usage}} \code{\link{pca.segments}}
 }
 
