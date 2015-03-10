@@ -1,13 +1,6 @@
 ########## Data processing functions ##########
 
 
-.onLoad <- function (libname, pkgname) {
-  human.alphabets <- NULL
-  utils::data(human.alphabets, package = pkgname)
-}
-
-
-
 #' Parse input file with the given filename to a data frame.
 #'
 #' @description

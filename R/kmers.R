@@ -141,7 +141,7 @@ get.kmers <- function (.data, .head = -1, .k = 5, .clean = T, .meat = F, .verbos
 #' \code{get.kmer.column} - data frame with first column with kmers and other columns named as a names of data frames, from which \code{.kmer.table.list}
 #' was generated.
 #' 
-#' \examples{
+#' @examples{
 #' twb.kmers <- kmer.table(twb, .heads = c(5000, 10000), .meat = T)
 #' head(get.kmer.column(twb.kmers, 10000))
 #' }
