@@ -35,7 +35,7 @@ in \code{.by.col} and \code{.sum.col} will be used.}
 \item{.shared.rep}{Shared repertoire.}
 }
 \value{
-Data.table for \code{shared.repertoire}, matrix for \code{shared.matrix}.
+Data frame for \code{shared.repertoire}, matrix for \code{shared.matrix}.
 }
 \description{
 Generate a repertoire of shared sequences - sequences presented in more than one subject. If sequence is appeared more than once in the one

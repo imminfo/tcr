@@ -99,7 +99,7 @@ make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.error
 set.people.vector <- function (.G, .shared.rep) {
   .shared.rep[is.na(.shared.rep)] <- 0
   .G <- set.vertex.attribute(.G, 'people', V(.G),
-                             apply(as.matrix(.shared.rep[, -(1:(match('People', colnames(.shared.rep)))), with=F]),
+                             apply(as.matrix(.shared.rep[, -(1:(match('People', colnames(.shared.rep))))]),
                                    1,
                                    function (row) { paste0(as.integer(row > 0), collapse='') }))
   set.vertex.attribute(.G, 'npeople', V(.G), .shared.rep[['People']])

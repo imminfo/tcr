@@ -47,7 +47,7 @@
 #' }
 #' 
 #' @return
-#' Data.table for \code{shared.repertoire}, matrix for \code{shared.matrix}.
+#' Data frame for \code{shared.repertoire}, matrix for \code{shared.matrix}.
 #' 
 #' @seealso \link{shared.representation}, \link{set.rank}
 #' 
@@ -146,11 +146,11 @@ shared.repertoire <- function (.datalist, .type = 'avc', .min.ppl = 1, .head = -
   res <- res[People >= .min.ppl & People <= .max.ppl][order(People, decreasing=T)][, c(1:(ncol(res) - length(l) - 1), ncol(res), (ncol(res) - length(l)) : (ncol(res) - 1)), with = F]
   setattr(res, 'by.col', .by.col)
   setattr(res, 'sum.col', .sum.col)
-  res
+  as.data.frame(res, stringsAsFactors = F, row.names = F)
 }
 
 shared.matrix <- function (.shared.rep) {
-  as.matrix(.shared.rep[, -(1:(match('People', colnames(.shared.rep)))), with=F])
+  as.matrix(.shared.rep[, -(1:(match('People', colnames(.shared.rep))))])
 }
 
 
