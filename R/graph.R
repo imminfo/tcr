@@ -1,5 +1,6 @@
 ######### REPERTOIRE GRAPH MANAGING ##########
 
+
 #' Make repertoire graph for the given repertoire.
 #' 
 #' @description
@@ -120,6 +121,8 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 
 
 #' Set group attribute for vertices of a repertoire graph
+#' 
+#' @aliases set.group.vector get.group.names
 #' 
 #' @description
 #' asdasd
