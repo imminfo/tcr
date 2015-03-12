@@ -294,7 +294,9 @@ kmer.profile <- function (.data, .names = rep('Noname', times=length(.data)), .v
   aa.profiles <- as.data.frame(aa.profiles)
   names(aa.profiles)[1] <- 'Symbol'
   aa.profiles[is.na(aa.profiles)] <- 0
-  aa.profiles[order(aa.profiles[,1]),]
+  aa.profiles <- aa.profiles[order(aa.profiles[,1]),]
+  row.names(aa.profiles) <- aa.profiles[,1]
+  aa.profiles
 }
 
 

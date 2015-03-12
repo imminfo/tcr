@@ -83,6 +83,11 @@ make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.error
 #' found. Attribute 'npeople' is a integer indicating number of repertoires, in which
 #' this sequence has been found.
 #' 
+#' @usage
+#' set.people.vector(.G, .shared.rep)
+#' 
+#' get.people.names(.G, .V = V(.G), .paste = T)
+#' 
 #' @param .G Repertoire graph.
 #' @param .shared.rep Shared repertoire.
 #' @param .paste If TRUE than concatenate people names to one string, else get a character vector of names.
