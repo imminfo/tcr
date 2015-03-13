@@ -6,7 +6,15 @@
 #' @aliases entropy js.div kl.div
 #' 
 #' @description
-#' Functions for information measures of and between distributions of values:
+#' Functions for information measures of and between distributions of values.
+#' 
+#' Warning!
+#' Functions will check if \code{.data} if a distribution of random variable (sum == 1) or not.
+#' To force normalisation and / or to prevent this, set \code{.do.norm} to TRUE (do normalisation)
+#' or FALSE (don't do normalisation). For \code{js.div} and \code{kl.div} vectors of values must have
+#' equal length.
+#' 
+#' Functions:
 #' 
 #' - The Shannon entropy quantifies the uncertainty (entropy or degree of surprise)
 #' associated with this prediction.
@@ -18,11 +26,6 @@
 #' 
 #' - Jensen-Shannon divergence is a symmetric version of KLIC. Square root of this
 #' is a metric often referred to as Jensen-Shannon distance.
-#' 
-#' Functions will check if \code{.data} if a distribution of random variable (sum == 1) or not.
-#' To force normalisation and / or to prevent this, set \code{.do.norm} to TRUE (do normalisation)
-#' or FALSE (don't do normalisation). For \code{js.div} and \code{kl.div} vectors of values must have
-#' equal length.
 #' 
 #' @usage
 #' entropy(.data, .norm = F, .do.norm = NA, .laplace = 1e-12)

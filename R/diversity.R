@@ -3,7 +3,12 @@
 #' @aliases inverse.simpson diversity gini chao1 gini.simpson
 #' 
 #' @description
-#' Function for evaluating the diversity of species or objects in the given distribution.
+#' Functions for evaluating the diversity of species or objects in the given distribution.
+#' 
+#' Warning!
+#' Functions will check if .data if a distribution of random variable (sum == 1) or not.
+#' To force normalisation and / or to prevent this, set .do.norm to TRUE (do normalisation)
+#' or FALSE (don't do normalisation), respectively.
 #' 
 #' - True diversity, or the effective number of types, refers to the number
 #' of equally-abundant types needed for the average proportional abundance
@@ -24,10 +29,6 @@
 #' represent different types.
 #' 
 #' - Chao1 estimator is a nonparameteric asymptotic estimator of species richness (number of species in a population).
-#' 
-#' Functions will check if .data if a distribution of random variable (sum == 1) or not.
-#' To force normalisation and / or to prevent this, set .do.norm to TRUE (do normalisation)
-#' or FALSE (don't do normalisation), respectively.
 #' 
 #' @usage
 #' inverse.simpson(.data, .do.norm = NA, .laplace = 0)
@@ -79,6 +80,7 @@ diversity <- function (.data, .q = 5, .do.norm = NA, .laplace = 0) {
 gini <- function (.data, .do.norm = NA, .laplace = 0) {
   .data <- sort(check.distribution(.data, .do.norm, .laplace))
   n <- length(.data)
+  print(head(.data))
   1 / n * (n + 1 - 2 * sum((n + 1 - 1:n) * .data) / sum(.data))
 }
 

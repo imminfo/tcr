@@ -28,8 +28,12 @@ data(twb)
 twb.shared <- shared.repertoire(twb)
 G <- make.repertoire.graph(twb.shared)
 G <- set.group.vector(twb.shared, G, "twins", list(A = c(1,2), B = c(3,4)))
-get.group.names(G, "twins", 1)  # A|B
-get.group.names(G, "twins", 300)  # A
+get.group.names(G, "twins", 1)  # "A|B"
+get.group.names(G, "twins", 300)  # "A"
+# Because we have only two groups, we can assign more readable attribute.
+V(G)$twin.names <- get.group.names(G, "twins")
+V(G)$twin.names[1]  # "A|B"
+V(G)$twin.names[300]  # "A"
 }
 }
 

@@ -34,7 +34,12 @@ Numeric vector of length 1 with value for all functions except \code{chao1}, whi
 estimated number of species, standart deviation of this number and two 95% confidence intervals for the species number.
 }
 \description{
-Function for evaluating the diversity of species or objects in the given distribution.
+Functions for evaluating the diversity of species or objects in the given distribution.
+
+Warning!
+Functions will check if .data if a distribution of random variable (sum == 1) or not.
+To force normalisation and / or to prevent this, set .do.norm to TRUE (do normalisation)
+or FALSE (don't do normalisation), respectively.
 
 - True diversity, or the effective number of types, refers to the number
 of equally-abundant types needed for the average proportional abundance
@@ -55,10 +60,6 @@ among values (for example where only one person has all the income).
 represent different types.
 
 - Chao1 estimator is a nonparameteric asymptotic estimator of species richness (number of species in a population).
-
-Functions will check if .data if a distribution of random variable (sum == 1) or not.
-To force normalisation and / or to prevent this, set .do.norm to TRUE (do normalisation)
-or FALSE (don't do normalisation), respectively.
 }
 \examples{
 data(twb)

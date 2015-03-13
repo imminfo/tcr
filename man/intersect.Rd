@@ -61,7 +61,7 @@ given object is similar to an element with index M[i, 2] in the second given obj
 is found in the second given data frame.
 }
 \details{
-Parameter \code{.type} of the \code{cross} function is a string of length 3
+Parameter \code{.type} of the \code{intersect} function is a string of length 3
 [0an][0vja][ehl], where:
 \enumerate{
  \item First character defines which elements intersect ("a" for elements from the column "CDR3.amino.acid.sequence",

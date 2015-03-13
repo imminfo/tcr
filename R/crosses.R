@@ -42,7 +42,7 @@
 #' @param x,y Parameters leaved for compatability with code which uses \code{base::intersect}. If provided than replaces \code{.alpha} and \code{.beta} respectively.
 #' 
 #' @details
-#' Parameter \code{.type} of the \code{cross} function is a string of length 3
+#' Parameter \code{.type} of the \code{intersect} function is a string of length 3
 #' [0an][0vja][ehl], where:
 #' \enumerate{
 #'  \item First character defines which elements intersect ("a" for elements from the column "CDR3.amino.acid.sequence", 

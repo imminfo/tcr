@@ -6,6 +6,8 @@
 \title{Set and get attributes of a repertoire graph related to source people.}
 \usage{
 set.people.vector(.G, .shared.rep)
+
+get.people.names(.G, .V = V(.G), .paste = T)
 }
 \arguments{
 \item{.G}{Repertoire graph.}
