@@ -146,7 +146,7 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 #' data(twb)
 #' twb.shared <- shared.repertoire(twb)
 #' G <- mutation.network(twb.shared)
-#' G <- set.group.vector(twb.shared, G, "twins", list(A = c(1,2), B = c(3,4)))
+#' G <- set.group.vector(twb.shared, G, "twins", list(A = c(1,2), B = c(3,4)))  # <= refactor this
 #' get.group.names(G, "twins", 1)  # "A|B"
 #' get.group.names(G, "twins", 300)  # "A"
 #' # Because we have only two groups, we can assign more readable attribute.
@@ -182,4 +182,16 @@ get.group.names <- function (.G, .attr.name, .V = V(.G), .paste = T) {
       paste0(grs[l == '1'], collapse='|')
     }, USE.NAMES = F)
   }
+}
+
+
+mutated.neighbors <- function (.G, .V, .order = 1) {
+  neis <- neighborhood(.G, .order, .V, mode = 'all')
+  do.call(rbind, lapply(neis, function (l) { 
+    res <- as.data.frame(lapply(list.vertex.attributes(G), function (vattr) { 
+      get.vertex.attribute(.G, vattr, l) } ),
+      stringsAsFactors = F)
+    colnames(res) <- list.vertex.attributes(G)
+    res
+    } ))
 }
