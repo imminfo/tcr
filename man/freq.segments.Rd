@@ -9,19 +9,19 @@
 \alias{freq.segments.2D}
 \title{V- and J-segments frequency.}
 \usage{
-freq.segments(.data, .alphabet = 'TRBV', .count = F, .meat = F, .other = T,
-              .laplace = 1, .column = NULL, .sum.col = "Read.count")
+freq.segments(.data, .alphabet = 'TRBV', .count = F, .meat = F, .other = F,
+              .laplace = 0, .column = NULL, .sum.col = "Read.count")
 
 freq.segments.2D(.data, .alphabet = 'beta', .count = F, .meat = F,
-                 .laplace = 1, .columns = NULL, .sum.col = "Read.count", ...)
+                 .laplace = 0, .columns = NULL, .sum.col = "Read.count", ...)
 
-freq.Va(.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count")
+freq.Va(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
 
-freq.Vb(.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count")
+freq.Vb(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
 
-freq.Ja(.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count")
+freq.Ja(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
 
-freq.Jb(.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count")
+freq.Jb(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
 }
 \arguments{
 \item{.data}{Mitcr data.frame or list with data.frames.}

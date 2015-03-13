@@ -13,19 +13,19 @@ if (getRversion() >= "2.15.1") {
 #' @description Get frequencies or counts of segments (V / J - usage).
 #' 
 #' @usage
-#' freq.segments(.data, .alphabet = 'TRBV', .count = F, .meat = F, .other = T,
-#'               .laplace = 1, .column = NULL, .sum.col = "Read.count")
+#' freq.segments(.data, .alphabet = 'TRBV', .count = F, .meat = F, .other = F,
+#'               .laplace = 0, .column = NULL, .sum.col = "Read.count")
 #' 
 #' freq.segments.2D(.data, .alphabet = 'beta', .count = F, .meat = F,
-#'                  .laplace = 1, .columns = NULL, .sum.col = "Read.count", ...)
+#'                  .laplace = 0, .columns = NULL, .sum.col = "Read.count", ...)
 #' 
-#' freq.Va(.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count")
+#' freq.Va(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
 #' 
-#' freq.Vb(.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count")
+#' freq.Vb(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
 #' 
-#' freq.Ja(.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count")
+#' freq.Ja(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
 #' 
-#' freq.Jb(.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count")
+#' freq.Jb(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
 #' 
 #' @param .data Mitcr data.frame or list with data.frames.
 #' @param .alphabet Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using V_BETA_ALPHABET variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
@@ -55,7 +55,7 @@ if (getRversion() >= "2.15.1") {
 #' # plot V-segments frequencies from the data
 #' vis.V.usage(twb)
 #' }
-freq.segments <- function (.data, .alphabet='TRBV', .count=F, .meat=F, .other=T, .laplace=1, .column = NULL, .sum.col = "Read.count") {
+freq.segments <- function (.data, .alphabet='TRBV', .count=F, .meat=F, .other=F, .laplace=0, .column = NULL, .sum.col = "Read.count") {
   if (class(.data) == 'list') {
     res <- freq.segments(.data[[1]], .alphabet=.alphabet, .count=.count, .meat = .meat, .other = .other, .laplace=.laplace, .column = .column)
     names(res)[2] <- names(.data)[1]
@@ -89,12 +89,12 @@ freq.segments <- function (.data, .alphabet='TRBV', .count=F, .meat=F, .other=T,
   res[order(res$Segment),]
 }
 
-freq.Va <- function (.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRAV', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
-freq.Vb <- function (.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRBV', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
-freq.Ja <- function (.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRAJ', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
-freq.Jb <- function (.data, .count = F, .meat = F, .other = T, .laplace = 1, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRBJ', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
+freq.Va <- function (.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRAV', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
+freq.Vb <- function (.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRBV', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
+freq.Ja <- function (.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRAJ', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
+freq.Jb <- function (.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRBJ', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
 
-freq.segments.2D <- function (.data, .alphabet = "beta", .count = F, .meat = F, .laplace = 1, .columns = NULL, .sum.col = "Read.count", ...) {
+freq.segments.2D <- function (.data, .alphabet = "beta", .count = F, .meat = F, .laplace = 0, .columns = NULL, .sum.col = "Read.count", ...) {
   if (has.class(.data, 'list')) {
     return(lapply(.data, freq.segments.2D, .alphabet = .alphabet, .count = .count, .meat = .meat, .laplace = .laplace, .columns = .columns, .sum.col = .sum.col, ...))
   }
