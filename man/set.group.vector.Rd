@@ -3,7 +3,7 @@
 \name{set.group.vector}
 \alias{get.group.names}
 \alias{set.group.vector}
-\title{Set group attribute for vertices of a repertoire graph}
+\title{Set group attribute for vertices of a mutation network}
 \usage{
 set.group.vector(.shared.rep, .G, .attr.name, .groups)
 }
@@ -26,7 +26,7 @@ asdasd
 \dontrun{
 data(twb)
 twb.shared <- shared.repertoire(twb)
-G <- make.repertoire.graph(twb.shared)
+G <- mutation.network(twb.shared)
 G <- set.group.vector(twb.shared, G, "twins", list(A = c(1,2), B = c(3,4)))
 get.group.names(G, "twins", 1)  # "A|B"
 get.group.names(G, "twins", 300)  # "A"

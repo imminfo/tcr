@@ -3,14 +3,14 @@
 \name{set.people.vector}
 \alias{get.people.names}
 \alias{set.people.vector}
-\title{Set and get attributes of a repertoire graph related to source people.}
+\title{Set and get attributes of a mutation network related to source people.}
 \usage{
 set.people.vector(.G, .shared.rep)
 
 get.people.names(.G, .V = V(.G), .paste = T)
 }
 \arguments{
-\item{.G}{Repertoire graph.}
+\item{.G}{Mutation network.}
 
 \item{.shared.rep}{Shared repertoire.}
 
@@ -29,7 +29,7 @@ this sequence has been found.
 \dontrun{
 data(twb)
 twb.shared <- shared.repertoire(twb)
-G <- make.repertoire.graph(twb.shared)
+G <- mutation.network(twb.shared)
 get.people.names(G, 300, T)  # "Subj.A|Subj.B"
 get.people.names(G, 300, F)  # list(c("Subj.A", "Subj.B"))
 }

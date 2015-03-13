@@ -1,10 +1,10 @@
-######### REPERTOIRE GRAPH MANAGING ##########
+######### MUTATION NETWORK MANAGING ##########
 
 
-#' Make repertoire graph for the given repertoire.
+#' Make mutation network for the given repertoire.
 #' 
 #' @description
-#' Repertoire graph is a graph with vertices representing nucleotide or in-frame amino acid sequences (out-of-frame amino acid sequences
+#' Mutation network (or a mutation graph) is a graph with vertices representing nucleotide or in-frame amino acid sequences (out-of-frame amino acid sequences
 #' will automatically filtered out) and edges are connecting pairs of sequences with hamming distance or edit distance between them
 #' no more than specified in the \code{.max.errors} function parameter.
 #' 
@@ -16,7 +16,7 @@
 #' @param .seg.col
 #' @param .prob.col
 #' 
-#' @return Repertoire graph, i.e. igraph object with input sequences as vertices labels, ???
+#' @return Mutation network, i.e. igraph object with input sequences as vertices labels, ???
 #' 
 #' @seealso \link{shared.repertoire}, \link{find.similar.sequences}, \link{set.people.vector}, \link{get.people.names}
 #' 
@@ -24,11 +24,11 @@
 #' \dontrun{
 #' data(twb)
 #' twb.shared <- shared.repertoire(twb)
-#' G <- make.repertoire.graph(twb.shared)
+#' G <- mutation.network(twb.shared)
 #' get.people.names(G, 300, T)  # "Subj.A|Subj.B"
 #' get.people.names(G, 300, F)  # list(c("Subj.A", "Subj.B"))
 #' }
-make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.errors = 1,
+mutation.network <- function (.data, .method = c('hamm', 'lev'), .max.errors = 1,
                                    .label.col = 'CDR3.amino.acid.sequence', .seg.col = 'V.segments', .prob.col = 'Probability') {
   # Make vertices and edges.
   if (has.class(.data, 'character')) {
@@ -72,8 +72,10 @@ make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.error
   G
 }
 
+make.repertoire.graph <- mutation.network
 
-#' Set and get attributes of a repertoire graph related to source people.
+
+#' Set and get attributes of a mutation network related to source people.
 #' 
 #' @aliases set.people.vector get.people.names
 #' 
@@ -88,7 +90,7 @@ make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.error
 #' 
 #' get.people.names(.G, .V = V(.G), .paste = T)
 #' 
-#' @param .G Repertoire graph.
+#' @param .G Mutation network.
 #' @param .shared.rep Shared repertoire.
 #' @param .paste If TRUE than concatenate people names to one string, else get a character vector of names.
 #' 
@@ -98,7 +100,7 @@ make.repertoire.graph <- function (.data, .method = c('hamm', 'lev'), .max.error
 #' \dontrun{
 #' data(twb)
 #' twb.shared <- shared.repertoire(twb)
-#' G <- make.repertoire.graph(twb.shared)
+#' G <- mutation.network(twb.shared)
 #' get.people.names(G, 300, T)  # "Subj.A|Subj.B"
 #' get.people.names(G, 300, F)  # list(c("Subj.A", "Subj.B"))
 #' }
@@ -125,7 +127,7 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 } 
 
 
-#' Set group attribute for vertices of a repertoire graph
+#' Set group attribute for vertices of a mutation network
 #' 
 #' @aliases set.group.vector get.group.names
 #' 
@@ -143,7 +145,7 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 #' \dontrun{
 #' data(twb)
 #' twb.shared <- shared.repertoire(twb)
-#' G <- make.repertoire.graph(twb.shared)
+#' G <- mutation.network(twb.shared)
 #' G <- set.group.vector(twb.shared, G, "twins", list(A = c(1,2), B = c(3,4)))
 #' get.group.names(G, "twins", 1)  # "A|B"
 #' get.group.names(G, "twins", 300)  # "A"
