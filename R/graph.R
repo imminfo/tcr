@@ -134,7 +134,6 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 #' @description
 #' asdasd
 #' 
-#' @param .shared.rep Shared repertiore of sequences.
 #' @param .G Graph that was created based on \code{.shared.rep}.
 #' @param .attr.name Name of the new vertex attribute.
 #' @param .groups List with integer vector with indices of subjects for each group.
@@ -146,7 +145,7 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 #' data(twb)
 #' twb.shared <- shared.repertoire(twb)
 #' G <- mutation.network(twb.shared)
-#' G <- set.group.vector(twb.shared, G, "twins", list(A = c(1,2), B = c(3,4)))  # <= refactor this
+#' G <- set.group.vector(G, "twins", list(A = c(1,2), B = c(3,4)))  # <= refactor this
 #' get.group.names(G, "twins", 1)  # "A|B"
 #' get.group.names(G, "twins", 300)  # "A"
 #' # Because we have only two groups, we can assign more readable attribute.
@@ -154,9 +153,9 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 #' V(G)$twin.names[1]  # "A|B"
 #' V(G)$twin.names[300]  # "A"
 #' }
-set.group.vector <- function (.shared.rep, .G, .attr.name, .groups) {
-  attr(.G, .attr.name) <- sort(names(.groups))
-  d <- shared.matrix(.shared.rep)
+set.group.vector <- function (.G, .attr.name, .groups) {  
+  d <- get.vertex.attribute(.G, 'people', V(.G))
+  d <- do.call(rbind, lapply(strsplit(d, '', T, useBytes = T), as.integer))
   
   group.vec <- rep('nogroup', times = max(unlist(.groups)))
   for (gr.i in 1:length(.groups)) {
