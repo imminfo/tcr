@@ -10,7 +10,7 @@ if (getRversion() >= "2.15.1") {
 #' 
 #' @aliases freq.segments freq.segments.2D freq.Va freq.Vb freq.Ja freq.Jb
 #' 
-#' @description Get frequencies or counts of segments (V / J - usage).
+#' @description Get frequencies or counts of gene segments ("V / J - usage").
 #' 
 #' @usage
 #' freq.segments(.data, .alphabet = 'TRBV', .count = F, .meat = F, .other = F,

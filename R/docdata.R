@@ -46,7 +46,7 @@ AA_TABLE_REVERSED <- sapply(unique(AA_TABLE), function (aa) { names(AA_TABLE)[AA
 AA_TABLE_REVERSED <- AA_TABLE_REVERSED[order(names(AA_TABLE_REVERSED))]
 
 
-#' Alphabets of T-cell receptor gene segments.
+#' Alphabets of TCR and Ig gene segments.
 #' 
 #' @docType data
 #' 
