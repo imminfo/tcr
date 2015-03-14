@@ -4,97 +4,19 @@
 #' Parse input table files with immune receptor repertoire data.
 #'
 #' @description
-#' Load the MITCR TCR data from the file with the given filename
-#' to a data frame.
+#' General parser for cloneset table files. 
 #'
-#' @param .filepath Path to the input file with TCR data.
-#' @param .barcode.flag If T than load MiTCR data.frames with new column Barcode.count
-#' and without column Min.quality.
-#' @param .i,.all Don't supply it, they are just for the output.
-#' @return Data.frame with TCR data.
+#' @param .filepath Path to the input file with cloneset data.
 #' 
-#' @seealso \link{parse.file.list}, \link{parse.folder}
+#' @return Data frame with immune receptor repertoire data. See \link{\code{parse.file}} for more details.
+#' 
+#' @seealso \link{\code{parse.file}}
 #' 
 #' @examples
 #' \dontrun{
-#' # Parse file in "~/data/immdata1.txt".
-#' immdata1 <- parse.file("~/data/immdata1.txt")
+#' # Parse file in "~/mitcr/immdata1.txt" as a MiTCR file.
+#' immdata1 <- parse.file("~/mitcr/immdata1.txt", 'mitcr')
 #' }
-NULL
-
-
-#' Parse files from the given vector or list with filepaths
-#' and return list with data.frames.
-#' 
-#' @description
-#' Given the vector or list with filepaths, parse each file to a data frame
-#' and combine them in a list. List items have names similar to names in the
-#' given vector if filenames.
-#' 
-#' @param .filenames Vector or list with paths to files with TCR data.
-#' @param .barcode.flag If T than load MiTCR data.frames with new column Barcode.count
-#' and without column Min.quality.
-#' @return List with data frame for the each name in the given filepaths.
-#' 
-#' @seealso \link{parse.file}, \link{parse.folder}
-#' 
-#' @examples
-#' \dontrun{
-#' # Parse files "~/data/immdata1.txt" and "~/data/immdat2.txt".
-#' immdata12 <- parse.file.list(c("~/data/immdata1.txt", "~/data/immdata2.txt"))
-#' }
-parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA) {
-  # Remove full paths and extension from the given string.
-  .remove.ext <- function (.str) {
-    gsub(pattern = '.*/|[.].*$', replacement = '', x = .str)
-#     .str
-  }
-  
-  .filenames <- as.list(.filenames)
-  
-  datalist <- lapply(X = 1:length(.filenames), FUN = function (i) parse.file(.filenames[[i]], .format) )
-  if (is.na(.namelist)) {
-    namelist <- lapply(X = .filenames, FUN = .remove.ext)
-    names(datalist) <- unlist(namelist)
-  }
-  datalist
-}
-
-
-#' Parse all files to dataframes from the given path to folder.
-#' 
-#' @description
-#' Given the path to a folder with files with TCR data, parse all of them
-#' to a list and return it. List items have names similar to names in the
-#' given vector if filenames.
-#' 
-#' @param .folderpath Path to the folder with files with TCR data.
-#' @param .barcode.flag If T than load MiTCR data.frames with new column Barcode.count
-#' and without column Min.quality.
-#' @return List with data frame for the each file in the given folder.
-#' 
-#' @seealso \link{parse.file}, \link{parse.file.list}
-#' 
-#' @examples
-#' \dontrun{
-#' # Parse all files in "~/data/".
-#' immdata <- parse.folder("~/data/")
-#' }
-parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec')) {
-  parse.file.list(list.files(.folderpath, full.names = T), .format)
-}
-
-
-parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec')) {
-  
-  parse.fun <- switch(.format[1], 
-                      mitcr = parse.mitcr,
-                      mitcrbc = parse.mitcrbc,
-                      migec = parse.migec)
-  
-  parse.fun(.filename)
-}
-
 parse.cloneset <- function (.filename,
                             .nuc.seq,
                             .aa.seq,
@@ -136,12 +58,11 @@ parse.cloneset <- function (.filename,
   col.classes <- unlist(sapply(table.colnames, function (x) {
     do.call(switch, c(x, swlist))
   }, USE.NAMES = F))
-#   print(rbind(table.colnames, col.classes))
   
   suppressWarnings(df <- read.table(file = .filename, header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T))
-
+  
   if(is.na(.events)) {
-    .events <- "Events"
+    .events <- "Event.count"
     df$Events <- -1
   }
   
@@ -162,24 +83,85 @@ parse.cloneset <- function (.filename,
       df$Total.insertions <- -1
     }
   }
-
+  
   if (!(.vd.insertions %in% table.colnames)) { df$VD.insertions <- -1 }
   
   if (!(.dj.insertions %in% table.colnames)) { df$DJ.insertions <- -1 }
-
+  
   df <- df[, make.names(c(.count, .proportion, .nuc.seq, .aa.seq,
-             .vgenes, .jgenes, .dgenes,
-             .vend, .jstart, .dalignments,
-             .vd.insertions, .dj.insertions, .total.insertions,
-             .reads, .events))]
+                          .vgenes, .jgenes, .dgenes,
+                          .vend, .jstart, .dalignments,
+                          .vd.insertions, .dj.insertions, .total.insertions,
+                          .reads, .events))]
   
   colnames(df) <- c('Count', 'Proportion', 'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
                     'V.segments', 'J.segments', 'D.segments',
                     'V.end', 'J.start', 'D5.end', 'D3.end',
                     'VD.insertions', 'DJ.insertions', 'Total.insertions',
-                    'Reads', 'Events')
+                    'Read.count', 'Event.count')
   
   df
+}
+
+
+#' Parse input table files with immune receptor repertoire data.
+#'
+#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec
+#'
+#' @description
+#' Load the MITCR TCR data from the file with the given filename
+#' to a data frame. For general parser see \code{\link{parse.cloneset}}.
+#'
+#' @param .filepath Path to the input file with cloneset data.
+#' @param .filenames Vector or list with paths to files with cloneset data.
+#' @param .folderpath Path to the folder with text cloneset files.
+#' @param .format String specifing input format of files. Parsers for MiTCR output and MiGEC output are available.
+#' @param ... Parameters passed to \code{parse.cloneset}.
+#' 
+#' @return Data frame with immune receptor repertoire data and following columns:
+#' 
+#' @seealso \link{\code{parse.cloneset}}
+#' 
+#' @examples
+#' \dontrun{
+#' # Parse file in "~/mitcr/immdata1.txt" as a MiTCR file.
+#' immdata1 <- parse.file("~/mitcr/immdata1.txt", 'mitcr')
+#' # Parse files "~/data/immdata1.txt" and "~/data/immdat2.txt" as MiGEC files.
+#' immdata12 <- parse.file.list(c("~/data/immdata1.txt",
+#'                              "~/data/immdata2.txt"), 'migec')
+#' # Parse all files in "~/data/" as MiGEC files.
+#' immdata <- parse.folder("~/data/", 'migec')
+#' }
+parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec'), ...) {
+  parse.file.list(list.files(.folderpath, full.names = T), .format)
+}
+
+parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA) {
+  # Remove full paths and extension from the given string.
+  .remove.ext <- function (.str) {
+    gsub(pattern = '.*/|[.].*$', replacement = '', x = .str)
+    #     .str
+  }
+  
+  .filenames <- as.list(.filenames)
+  
+  datalist <- lapply(X = 1:length(.filenames), FUN = function (i) parse.file(.filenames[[i]], .format) )
+  if (is.na(.namelist)) {
+    namelist <- lapply(X = .filenames, FUN = .remove.ext)
+    names(datalist) <- unlist(namelist)
+  }
+  datalist
+}
+
+parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...) {
+  
+  parse.fun <- switch(.format[1], 
+                      mitcr = parse.mitcr,
+                      mitcrbc = parse.mitcrbc,
+                      migec = parse.migec,
+                      parse.cloneset)
+  
+  parse.fun(.filename, ...)
 }
 
 parse.mitcr <- function (.filename) {
