@@ -1,7 +1,7 @@
 ########## Data processing functions ##########
 
 
-#' Parse input file with the given filename to a data frame.
+#' Parse input table files with immune receptor repertoire data.
 #'
 #' @description
 #' Load the MITCR TCR data from the file with the given filename
@@ -20,113 +20,7 @@
 #' # Parse file in "~/data/immdata1.txt".
 #' immdata1 <- parse.file("~/data/immdata1.txt")
 #' }
-parse.file <- function (.filepath, .barcode.flag = F, .i = 1, .all = 1) {
-  # Level without header and some columns
-  LEVEL_1_NAMES <- c('Read.count', 'Percentage', 'CDR3.nucleotide.sequence',
-                     'CDR3.amino.acid.sequence', 'V.segments', 'J.segments', 'D.segments')
-  LEVEL_1_CLASSES <- c('integer', 'numeric', 'character',
-                       'character', 'character', 'character', 'character')
-  
-  # Level without header and some columns
-  LEVEL_2_NAMES <- c('Read.count', 'Percentage', 'CDR3.nucleotide.sequence',
-                     'CDR3.amino.acid.sequence', 'V.segments', 'J.segments', 'D.segments',
-                     'Last.V.nucleotide.position', 'First.D.nucleotide.position',
-                     'Last.D.nucleotide.position', 'First.J.nucleotide.position',
-                     'VD.insertions', 'DJ.insertions', 'Total.insertions')
-  LEVEL_2_CLASSES <- c('integer', 'numeric', 'character',
-                       'character', 'character', 'character', 'character',
-                       'integer', 'integer',
-                       'integer', 'integer',
-                       'integer', 'integer', 'integer')
-  
-  # Level with all columns.
-  if (.barcode.flag) {
-    LEVEL_3_NAMES <- c('Barcode.count', 'Read.count', 'Percentage', 'CDR3.nucleotide.sequence',
-                       'CDR3.nucleotide.quality',
-                       'CDR3.amino.acid.sequence', 'V.alleles', 'V.segments', 
-                       'J.alleles', 'J.segments', 'D.alleles', 'D.segments',
-                       'Last.V.nucleotide.position', 'First.D.nucleotide.position',
-                       'Last.D.nucleotide.position', 'First.J.nucleotide.position',
-                       'VD.insertions', 'DJ.insertions', 'Total.insertions')
-    LEVEL_3_CLASSES <- c('integer', 'integer', 'numeric', 'character',
-                         'character', 
-                         'character', 'character', 'character', 
-                         'character', 'character', 'character', 'character',
-                         'integer', 'integer',
-                         'integer', 'integer',
-                         'integer', 'integer', 'integer')
-  } else {
-    LEVEL_3_NAMES <- c('Read.count', 'Percentage', 'CDR3.nucleotide.sequence',
-                       'CDR3.nucleotide.quality', 'Min.quality', 
-                       'CDR3.amino.acid.sequence', 'V.alleles', 'V.segments', 
-                       'J.alleles', 'J.segments', 'D.alleles', 'D.segments',
-                       'Last.V.nucleotide.position', 'First.D.nucleotide.position',
-                       'Last.D.nucleotide.position', 'First.J.nucleotide.position',
-                       'VD.insertions', 'DJ.insertions', 'Total.insertions')
-    LEVEL_3_CLASSES <- c('integer', 'numeric', 'character',
-                         'character', 'integer', 
-                         'character', 'character', 'character', 
-                         'character', 'character', 'character', 'character',
-                         'integer', 'integer',
-                         'integer', 'integer',
-                         'integer', 'integer', 'integer')
-  }
-  
-  # Vector with all levels
-  LEVEL_NAME_LIST <- list(LEVEL_1_NAMES, LEVEL_2_NAMES, LEVEL_3_NAMES)
-  LEVEL_CLASS_LIST <- list(LEVEL_1_CLASSES, LEVEL_2_CLASSES, LEVEL_3_CLASSES)
-  # ===========================================
-  
-  
-  # Check if the given string is a MiTCR header.
-  .header.check <- function (.str) {
-    length(unlist(strsplit(.str, '\t'))) < length(LEVEL_1_NAMES)
-  }
-  
-  cat('Parsing file', .i, '/', .all, .filepath, '...\t')
-  
-  input.file <- file(.filepath, 'r')
-  
-  first.line <- readLines(input.file, n = 1)[1]
-  header.flag <- F
-  if (.header.check(first.line)) {
-    first.line <- readLines(input.file, n = 1)[1]
-    header.flag <- T
-  }
-  
-  level <- -1
-  words <- unlist(strsplit(first.line, '\t'))
-  if (length(words) == length(LEVEL_1_NAMES) || (length(words) - 1) == length(LEVEL_1_NAMES)) {
-    level <- 1
-  } else {
-    if (length(words) == length(LEVEL_2_NAMES) || (length(words) - 1) == length(LEVEL_2_NAMES)) {
-      level <- 2
-    } else {
-      level <- 3
-    }
-  }
-  close(input.file)
-  
-  input.data <- NA
-  if (header.flag) {
-    input.data <- read.csv(file = .filepath,
-                           header = T,
-                           sep = '\t',
-                           skip = 1,
-                           colClasses = LEVEL_CLASS_LIST[[level]])
-  } else {
-    input.data <- read.csv(file = .filepath,
-                           header = T,
-                           sep = '\t',
-                           colClasses = LEVEL_CLASS_LIST[[level]])
-  }
-  names(input.data) <- LEVEL_NAME_LIST[[level]]
-  input.data$Rank <- rank(1 / input.data$Read.count, ties.method = 'average')
-  
-  cat('Done. Data.frame with', nrow(input.data), 'rows.\n')
-  
-  input.data
-}
+NULL
 
 
 #' Parse files from the given vector or list with filepaths
@@ -149,7 +43,7 @@ parse.file <- function (.filepath, .barcode.flag = F, .i = 1, .all = 1) {
 #' # Parse files "~/data/immdata1.txt" and "~/data/immdat2.txt".
 #' immdata12 <- parse.file.list(c("~/data/immdata1.txt", "~/data/immdata2.txt"))
 #' }
-parse.file.list <- function (.filenames, .barcode.flag = F) {
+parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA) {
   # Remove full paths and extension from the given string.
   .remove.ext <- function (.str) {
     gsub(pattern = '.*/|[.].*$', replacement = '', x = .str)
@@ -158,9 +52,11 @@ parse.file.list <- function (.filenames, .barcode.flag = F) {
   
   .filenames <- as.list(.filenames)
   
-  datalist <- lapply(X = 1:length(.filenames), FUN = function (i) parse.file(.filenames[[i]], .barcode.flag, i, length(.filenames)) )
-  namelist <- lapply(X = .filenames, FUN = .remove.ext)
-  names(datalist) <- unlist(namelist)
+  datalist <- lapply(X = 1:length(.filenames), FUN = function (i) parse.file(.filenames[[i]], .format) )
+  if (is.na(.namelist)) {
+    namelist <- lapply(X = .filenames, FUN = .remove.ext)
+    names(datalist) <- unlist(namelist)
+  }
   datalist
 }
 
@@ -184,15 +80,12 @@ parse.file.list <- function (.filenames, .barcode.flag = F) {
 #' # Parse all files in "~/data/".
 #' immdata <- parse.folder("~/data/")
 #' }
-parse.folder <- function (.folderpath, .barcode.flag = F) {
-  flist <- list.files(.folderpath, full.names = T)
-  
-  parse.file.list(flist, .barcode.flag)
+parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec')) {
+  parse.file.list(list.files(.folderpath, full.names = T), .format)
 }
 
 
-parse.file <- (.filename,
-               .format = c('mitcr', 'mitcrbc', 'migec')) {
+parse.file <- (.filename, .format = c('mitcr', 'mitcrbc', 'migec')) {
   
   parse.fun <- switch(.format[1], 
                       mitcr = parse.file.mitcr,
@@ -201,7 +94,6 @@ parse.file <- (.filename,
   
   parse.fun(.filename)
 }
-
 
 parse.file.table <- (.filename,
                      .nuc.seq,
@@ -213,8 +105,8 @@ parse.file.table <- (.filename,
                      .vgenes,
                      .jgenes,
                      .dgenes,
-                     .vstart,
-                     .jend,
+                     .vend,
+                     .jstart,
                      .dalignments,
                      .vd.insertions,
                      .dj.insertions,
@@ -230,16 +122,29 @@ parse.file.table <- (.filename,
   # ???
   # ???
   # ???
+  if (is.na(.aa.seq)) {
+    df$CDR3.amino.acid.sequence <- bunch.translate(df$CDR3.nucleotide.sequence)
+  }
   if (is.na(.percentage)) {
     df$Percentage <- df$Count / sum(df$Count)
   }
-  c('Count', 'Percentage', 'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
-    'V.segments', 'J.segments', 'D.segments',
-    'V.end', 'J.start', 'D5.end', 'D3.end',
-    'VD.insertions', 'DJ.insertions', 'Total.insertions',
-    'Reads', 'Events')
+  
+  
+  
+  df <- df[c(.count, .percentage, .nuc.seq, .aa.seq,
+             .vgenes, .jgenes, .dgenes,
+             .vend, .jstart, .dalignments,
+             .vd.insertions, .dj.insertions, .total.insertions,
+             .reads, .events), ]
+  
+  colnames(.df) <-  c('Count', 'Percentage', 'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
+                      'V.segments', 'J.segments', 'D.segments',
+                      'V.end', 'J.start', 'D5.end', 'D3.end',
+                      'VD.insertions', 'DJ.insertions', 'Total.insertions',
+                      'Reads', 'Events')
+  
+  df
 }
-
 
 parse.file.mitcr <- function (.filename) {
   
@@ -252,12 +157,13 @@ parse.file.mitcr <- function (.filename) {
   vgenes <- 'V segments'
   jgenes <- 'J segments'
   dgenes <- 'D segments'
-  vstart <- 'Last V nucleotide position'
-  jend <- 'First J nucleotide position'
+  vend <- 'Last V nucleotide position'
+  jstart <- 'First J nucleotide position'
   dalignments <- c('First D nucleotide position', 'Last D nucleotide position')
   vd.insertions <- 'VD insertions'
   dj.insertions <- 'DJ insertions'
   total.insertions <- 'Total insertions'
+  .skip = 1
     
   parse.file.table(.filename = filename, 
                    .nuc.seq = nuc.seq,
@@ -269,15 +175,14 @@ parse.file.mitcr <- function (.filename) {
                    .vgenes = vgenes,
                    .jgenes = jgenes,
                    .dgenes = dgenes,
-                   .vstart = vstart,
-                   .jend = jend,
+                   .vend = vend,
+                   .jstart = jstart,
                    .dalignments = dalignments,
                    .vd.insertions = vd.insertions,
                    .dj.insertions = dj.insertions,
                    .total.insertions = total.insertions,
                    .skip = .skip)
 }
-
 
 parse.file.mitcrbc <- function (.filename) {
   
@@ -290,12 +195,13 @@ parse.file.mitcrbc <- function (.filename) {
   vgenes <- 'V segments'
   jgenes <- 'J segments'
   dgenes <- 'D segments'
-  vstart <- 'Last V nucleotide position'
-  jend <- 'First J nucleotide position'
+  vend <- 'Last V nucleotide position'
+  jstart <- 'First J nucleotide position'
   dalignments <- c('First D nucleotide position', 'Last D nucleotide position')
   vd.insertions <- 'VD insertions'
   dj.insertions <- 'DJ insertions'
   total.insertions <- 'Total insertions'
+  .skip = 1
   
   parse.file.table(.filename = filename, 
                    .nuc.seq = nuc.seq,
@@ -307,15 +213,14 @@ parse.file.mitcrbc <- function (.filename) {
                    .vgenes = vgenes,
                    .jgenes = jgenes,
                    .dgenes = dgenes,
-                   .vstart = vstart,
-                   .jend = jend,
+                   .vend = vend,
+                   .jstart = jstart,
                    .dalignments = dalignments,
                    .vd.insertions = vd.insertions,
                    .dj.insertions = dj.insertions,
                    .total.insertions = total.insertions,
                    .skip = .skip)
 }
-
 
 parse.file.migec <- function (.filename) {
   
@@ -328,12 +233,13 @@ parse.file.migec <- function (.filename) {
   vgenes <- 'V segments'
   jgenes <- 'J segments'
   dgenes <- 'D segments'
-  vstart <- 'Last V nucleotide position'
-  jend <- 'First J nucleotide position'
+  vend <- 'Last V nucleotide position'
+  jstart <- 'First J nucleotide position'
   dalignments <- c('First D nucleotide position', 'Last D nucleotide position')
   vd.insertions <- 'VD insertions'
   dj.insertions <- 'DJ insertions'
   total.insertions <- 'Total insertions'
+  .skip = 0
   
   parse.file.table(.filename = filename, 
                    .nuc.seq = nuc.seq,
@@ -345,8 +251,8 @@ parse.file.migec <- function (.filename) {
                    .vgenes = vgenes,
                    .jgenes = jgenes,
                    .dgenes = dgenes,
-                   .vstart = vstart,
-                   .jend = jend,
+                   .vend = vend,
+                   .jstart = jstart,
                    .dalignments = dalignments,
                    .vd.insertions = vd.insertions,
                    .dj.insertions = dj.insertions,
