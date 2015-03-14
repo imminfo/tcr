@@ -27,7 +27,7 @@ asdasd
 data(twb)
 twb.shared <- shared.repertoire(twb)
 G <- mutation.network(twb.shared)
-G <- set.group.vector(twb.shared, G, "twins", list(A = c(1,2), B = c(3,4)))
+G <- set.group.vector(twb.shared, G, "twins", list(A = c(1,2), B = c(3,4)))  # <= refactor this
 get.group.names(G, "twins", 1)  # "A|B"
 get.group.names(G, "twins", 300)  # "A"
 # Because we have only two groups, we can assign more readable attribute.

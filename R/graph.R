@@ -185,7 +185,7 @@ get.group.names <- function (.G, .attr.name, .V = V(.G), .paste = T) {
 }
 
 
-mutated.neighbors <- function (.G, .V, .order = 1) {
+mutated.neighbours <- function (.G, .V, .order = 1) {
   neis <- neighborhood(.G, .order, .V, mode = 'all')
   lapply(neis, function (l) { 
     res <- as.data.frame(lapply(list.vertex.attributes(G), function (vattr) { 

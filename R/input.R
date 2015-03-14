@@ -189,3 +189,167 @@ parse.folder <- function (.folderpath, .barcode.flag = F) {
   
   parse.file.list(flist, .barcode.flag)
 }
+
+
+parse.file <- (.filename,
+               .format = c('mitcr', 'mitcrbc', 'migec')) {
+  
+  parse.fun <- switch(.format[1], 
+                      mitcr = parse.file.mitcr,
+                      mitcrbc = parse.file.mitcrbc,
+                      migec = parse.file.migec)
+  
+  parse.fun(.filename)
+}
+
+
+parse.file.table <- (.filename,
+                     .nuc.seq,
+                     .aa.seq,
+                     .count,
+                     .percentage,
+                     .reads,
+                     .events,
+                     .vgenes,
+                     .jgenes,
+                     .dgenes,
+                     .vstart,
+                     .jend,
+                     .dalignments,
+                     .vd.insertions,
+                     .dj.insertions,
+                     .total.insertions,
+                     .skip = 0) {
+  
+  .replace.spaces <- function (.s) {
+    gsub(' ', '.', .s, fixed = T, useBytes = T)
+  }
+  
+  .nuc.seq <- .replace.spaces(.nuc.seq)
+  .aa.seq <- .replace.spaces(.aa.seq)
+  # ???
+  # ???
+  # ???
+  if (is.na(.percentage)) {
+    df$Percentage <- df$Count / sum(df$Count)
+  }
+  c('Count', 'Percentage', 'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
+    'V.segments', 'J.segments', 'D.segments',
+    'V.end', 'J.start', 'D5.end', 'D3.end',
+    'VD.insertions', 'DJ.insertions', 'Total.insertions',
+    'Reads', 'Events')
+}
+
+
+parse.file.mitcr <- function (.filename) {
+  
+  nuc.seq <- 'CDR3 nucleotide sequence'
+  aa.seq <- 'CDR3 amino acid sequence'
+  count <- 'Read count'
+  percentage <- 'Percentage'
+  reads <- 'Read count'
+  events <- NA
+  vgenes <- 'V segments'
+  jgenes <- 'J segments'
+  dgenes <- 'D segments'
+  vstart <- 'Last V nucleotide position'
+  jend <- 'First J nucleotide position'
+  dalignments <- c('First D nucleotide position', 'Last D nucleotide position')
+  vd.insertions <- 'VD insertions'
+  dj.insertions <- 'DJ insertions'
+  total.insertions <- 'Total insertions'
+    
+  parse.file.table(.filename = filename, 
+                   .nuc.seq = nuc.seq,
+                   .aa.seq = aa.seq,
+                   .count = count,
+                   .percentage = percentage,
+                   .reads = reads,
+                   .events = events,
+                   .vgenes = vgenes,
+                   .jgenes = jgenes,
+                   .dgenes = dgenes,
+                   .vstart = vstart,
+                   .jend = jend,
+                   .dalignments = dalignments,
+                   .vd.insertions = vd.insertions,
+                   .dj.insertions = dj.insertions,
+                   .total.insertions = total.insertions,
+                   .skip = .skip)
+}
+
+
+parse.file.mitcrbc <- function (.filename) {
+  
+  nuc.seq <- 'CDR3 nucleotide sequence'
+  aa.seq <- 'CDR3 amino acid sequence'
+  count <- 'Barcode.count'
+  percentage <- NA
+  reads <- 'Read count'
+  events <- 'Barcode.count'
+  vgenes <- 'V segments'
+  jgenes <- 'J segments'
+  dgenes <- 'D segments'
+  vstart <- 'Last V nucleotide position'
+  jend <- 'First J nucleotide position'
+  dalignments <- c('First D nucleotide position', 'Last D nucleotide position')
+  vd.insertions <- 'VD insertions'
+  dj.insertions <- 'DJ insertions'
+  total.insertions <- 'Total insertions'
+  
+  parse.file.table(.filename = filename, 
+                   .nuc.seq = nuc.seq,
+                   .aa.seq = aa.seq,
+                   .count = count,
+                   .percentage = percentage,
+                   .reads = reads,
+                   .events = events,
+                   .vgenes = vgenes,
+                   .jgenes = jgenes,
+                   .dgenes = dgenes,
+                   .vstart = vstart,
+                   .jend = jend,
+                   .dalignments = dalignments,
+                   .vd.insertions = vd.insertions,
+                   .dj.insertions = dj.insertions,
+                   .total.insertions = total.insertions,
+                   .skip = .skip)
+}
+
+
+parse.file.migec <- function (.filename) {
+  
+  nuc.seq <- 'CDR3 nucleotide sequence'
+  aa.seq <- 'CDR3 amino acid sequence'
+  count <- 'Count'
+  percentage <- NA
+  reads <- 'Good reads'
+  events <- 'Good events'
+  vgenes <- 'V segments'
+  jgenes <- 'J segments'
+  dgenes <- 'D segments'
+  vstart <- 'Last V nucleotide position'
+  jend <- 'First J nucleotide position'
+  dalignments <- c('First D nucleotide position', 'Last D nucleotide position')
+  vd.insertions <- 'VD insertions'
+  dj.insertions <- 'DJ insertions'
+  total.insertions <- 'Total insertions'
+  
+  parse.file.table(.filename = filename, 
+                   .nuc.seq = nuc.seq,
+                   .aa.seq = aa.seq,
+                   .count = count,
+                   .percentage = percentage,
+                   .reads = reads,
+                   .events = events,
+                   .vgenes = vgenes,
+                   .jgenes = jgenes,
+                   .dgenes = dgenes,
+                   .vstart = vstart,
+                   .jend = jend,
+                   .dalignments = dalignments,
+                   .vd.insertions = vd.insertions,
+                   .dj.insertions = dj.insertions,
+                   .total.insertions = total.insertions,
+                   .skip = .skip)
+}
