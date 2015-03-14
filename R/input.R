@@ -85,73 +85,110 @@ parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec'))
 }
 
 
-parse.file <- (.filename, .format = c('mitcr', 'mitcrbc', 'migec')) {
+parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec')) {
   
   parse.fun <- switch(.format[1], 
-                      mitcr = parse.file.mitcr,
-                      mitcrbc = parse.file.mitcrbc,
-                      migec = parse.file.migec)
+                      mitcr = parse.mitcr,
+                      mitcrbc = parse.mitcrbc,
+                      migec = parse.migec)
   
   parse.fun(.filename)
 }
 
-parse.file.table <- (.filename,
-                     .nuc.seq,
-                     .aa.seq,
-                     .count,
-                     .percentage,
-                     .reads,
-                     .events,
-                     .vgenes,
-                     .jgenes,
-                     .dgenes,
-                     .vend,
-                     .jstart,
-                     .dalignments,
-                     .vd.insertions,
-                     .dj.insertions,
-                     .total.insertions,
-                     .skip = 0) {
+parse.cloneset <- function (.filename,
+                            .nuc.seq,
+                            .aa.seq,
+                            .count,
+                            .proportion,
+                            .reads,
+                            .events,
+                            .vgenes,
+                            .jgenes,
+                            .dgenes,
+                            .vend,
+                            .jstart,
+                            .dalignments,
+                            .vd.insertions,
+                            .dj.insertions,
+                            .total.insertions,
+                            .skip = 0,
+                            .sep = '\t') {
   
-  .replace.spaces <- function (.s) {
-    gsub(' ', '.', .s, fixed = T, useBytes = T)
+  .dalignments1 <- .dalignments[1]
+  .dalignments2 <- .dalignments[2]
+  
+  table.colnames <- read.table(.filename, sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T)[1,]
+  
+  swlist <- list('character', 'character',
+                 'integer', 'numeric',
+                 'integer', 'integer',
+                 'character', 'character', 'character',
+                 'integer', 'integer', 'integer', 'integer',
+                 'integer', 'integer', 'integer')
+  names(swlist) <- c(.nuc.seq, .aa.seq,
+                     .count, .proportion,
+                     .reads, .events,
+                     .vgenes, .jgenes, .dgenes,
+                     .vend, .jstart, .dalignments,
+                     .vd.insertions, .dj.insertions, .total.insertions)
+  swlist <- c(swlist, 'NULL')
+  
+  col.classes <- unlist(sapply(table.colnames, function (x) {
+    do.call(switch, c(x, swlist))
+  }, USE.NAMES = F))
+#   print(rbind(table.colnames, col.classes))
+  
+  suppressWarnings(df <- read.table(file = .filename, header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T))
+
+  if(is.na(.events)) {
+    .events <- "Events"
+    df$Events <- -1
   }
   
-  .nuc.seq <- .replace.spaces(.nuc.seq)
-  .aa.seq <- .replace.spaces(.aa.seq)
-  # ???
-  # ???
-  # ???
   if (is.na(.aa.seq)) {
     df$CDR3.amino.acid.sequence <- bunch.translate(df$CDR3.nucleotide.sequence)
-  }
-  if (is.na(.percentage)) {
-    df$Percentage <- df$Count / sum(df$Count)
+    .aa.seq <- 'CDR3 amino acid sequence'
   }
   
+  if (is.na(.proportion)) {
+    df$Proportion <- df$Count / sum(df$Count)
+    .proportion <- 'Proportion'
+  }
   
+  if (!(.total.insertions %in% table.colnames)) {
+    if (.vd.insertions %in% table.colnames && .dj.insertions %in% table.colnames) {
+      df$Total.insertions <- df$VD.insertions + df$DJ.insertions
+    } else {
+      df$Total.insertions <- -1
+    }
+  }
+
+  if (!(.vd.insertions %in% table.colnames)) { df$VD.insertions <- -1 }
   
-  df <- df[c(.count, .percentage, .nuc.seq, .aa.seq,
+  if (!(.dj.insertions %in% table.colnames)) { df$DJ.insertions <- -1 }
+
+  df <- df[, make.names(c(.count, .proportion, .nuc.seq, .aa.seq,
              .vgenes, .jgenes, .dgenes,
              .vend, .jstart, .dalignments,
              .vd.insertions, .dj.insertions, .total.insertions,
-             .reads, .events), ]
+             .reads, .events))]
   
-  colnames(.df) <-  c('Count', 'Percentage', 'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
-                      'V.segments', 'J.segments', 'D.segments',
-                      'V.end', 'J.start', 'D5.end', 'D3.end',
-                      'VD.insertions', 'DJ.insertions', 'Total.insertions',
-                      'Reads', 'Events')
+  colnames(df) <- c('Count', 'Proportion', 'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
+                    'V.segments', 'J.segments', 'D.segments',
+                    'V.end', 'J.start', 'D5.end', 'D3.end',
+                    'VD.insertions', 'DJ.insertions', 'Total.insertions',
+                    'Reads', 'Events')
   
   df
 }
 
-parse.file.mitcr <- function (.filename) {
+parse.mitcr <- function (.filename) {
   
+  filename <- .filename
   nuc.seq <- 'CDR3 nucleotide sequence'
   aa.seq <- 'CDR3 amino acid sequence'
   count <- 'Read count'
-  percentage <- 'Percentage'
+  Proportion <- 'Percentage'
   reads <- 'Read count'
   events <- NA
   vgenes <- 'V segments'
@@ -164,34 +201,37 @@ parse.file.mitcr <- function (.filename) {
   dj.insertions <- 'DJ insertions'
   total.insertions <- 'Total insertions'
   .skip = 1
+  .sep = '\t'
     
-  parse.file.table(.filename = filename, 
-                   .nuc.seq = nuc.seq,
-                   .aa.seq = aa.seq,
-                   .count = count,
-                   .percentage = percentage,
-                   .reads = reads,
-                   .events = events,
-                   .vgenes = vgenes,
-                   .jgenes = jgenes,
-                   .dgenes = dgenes,
-                   .vend = vend,
-                   .jstart = jstart,
-                   .dalignments = dalignments,
-                   .vd.insertions = vd.insertions,
-                   .dj.insertions = dj.insertions,
-                   .total.insertions = total.insertions,
-                   .skip = .skip)
+  parse.cloneset(.filename = filename, 
+                 .nuc.seq = nuc.seq,
+                 .aa.seq = aa.seq,
+                 .count = count,
+                 .proportion = Proportion,
+                 .reads = reads,
+                 .events = events,
+                 .vgenes = vgenes,
+                 .jgenes = jgenes,
+                 .dgenes = dgenes,
+                 .vend = vend,
+                 .jstart = jstart,
+                 .dalignments = dalignments,
+                 .vd.insertions = vd.insertions,
+                 .dj.insertions = dj.insertions,
+                 .total.insertions = total.insertions,
+                 .skip = .skip,
+                 .sep = .sep)
 }
 
-parse.file.mitcrbc <- function (.filename) {
+parse.mitcrbc <- function (.filename) {
   
+  filename <- .filename
   nuc.seq <- 'CDR3 nucleotide sequence'
   aa.seq <- 'CDR3 amino acid sequence'
-  count <- 'Barcode.count'
-  percentage <- NA
-  reads <- 'Read count'
-  events <- 'Barcode.count'
+  count <- 'NNNs'
+  Proportion <- NA
+  reads <- 'Count'
+  events <- 'NNNs'
   vgenes <- 'V segments'
   jgenes <- 'J segments'
   dgenes <- 'D segments'
@@ -201,33 +241,36 @@ parse.file.mitcrbc <- function (.filename) {
   vd.insertions <- 'VD insertions'
   dj.insertions <- 'DJ insertions'
   total.insertions <- 'Total insertions'
-  .skip = 1
+  .skip = 0
+  .sep = '\t'
   
-  parse.file.table(.filename = filename, 
-                   .nuc.seq = nuc.seq,
-                   .aa.seq = aa.seq,
-                   .count = count,
-                   .percentage = percentage,
-                   .reads = reads,
-                   .events = events,
-                   .vgenes = vgenes,
-                   .jgenes = jgenes,
-                   .dgenes = dgenes,
-                   .vend = vend,
-                   .jstart = jstart,
-                   .dalignments = dalignments,
-                   .vd.insertions = vd.insertions,
-                   .dj.insertions = dj.insertions,
-                   .total.insertions = total.insertions,
-                   .skip = .skip)
+  parse.cloneset(.filename = filename, 
+                 .nuc.seq = nuc.seq,
+                 .aa.seq = aa.seq,
+                 .count = count,
+                 .proportion = Proportion,
+                 .reads = reads,
+                 .events = events,
+                 .vgenes = vgenes,
+                 .jgenes = jgenes,
+                 .dgenes = dgenes,
+                 .vend = vend,
+                 .jstart = jstart,
+                 .dalignments = dalignments,
+                 .vd.insertions = vd.insertions,
+                 .dj.insertions = dj.insertions,
+                 .total.insertions = total.insertions,
+                 .skip = .skip,
+                 .sep = .sep)
 }
 
-parse.file.migec <- function (.filename) {
+parse.migec <- function (.filename) {
   
+  filename <- .filename
   nuc.seq <- 'CDR3 nucleotide sequence'
   aa.seq <- 'CDR3 amino acid sequence'
   count <- 'Count'
-  percentage <- NA
+  Proportion <- NA
   reads <- 'Good reads'
   events <- 'Good events'
   vgenes <- 'V segments'
@@ -240,22 +283,24 @@ parse.file.migec <- function (.filename) {
   dj.insertions <- 'DJ insertions'
   total.insertions <- 'Total insertions'
   .skip = 0
+  .sep = '\t'
   
-  parse.file.table(.filename = filename, 
-                   .nuc.seq = nuc.seq,
-                   .aa.seq = aa.seq,
-                   .count = count,
-                   .percentage = percentage,
-                   .reads = reads,
-                   .events = events,
-                   .vgenes = vgenes,
-                   .jgenes = jgenes,
-                   .dgenes = dgenes,
-                   .vend = vend,
-                   .jstart = jstart,
-                   .dalignments = dalignments,
-                   .vd.insertions = vd.insertions,
-                   .dj.insertions = dj.insertions,
-                   .total.insertions = total.insertions,
-                   .skip = .skip)
+  parse.cloneset(.filename = filename, 
+                 .nuc.seq = nuc.seq,
+                 .aa.seq = aa.seq,
+                 .count = count,
+                 .proportion = Proportion,
+                 .reads = reads,
+                 .events = events,
+                 .vgenes = vgenes,
+                 .jgenes = jgenes,
+                 .dgenes = dgenes,
+                 .vend = vend,
+                 .jstart = jstart,
+                 .dalignments = dalignments,
+                 .vd.insertions = vd.insertions,
+                 .dj.insertions = dj.insertions,
+                 .total.insertions = total.insertions,
+                 .skip = .skip,
+                 .sep = .sep)
 }
