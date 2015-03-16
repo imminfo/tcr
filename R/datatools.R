@@ -16,14 +16,17 @@
 #' @description
 #' Get all unique clonotypes with merged counts. Unique clonotypes are those with
 #' either equal CDR3 sequence or with equal CDR3 sequence and equal gene segments.
+#' Counts of equal clonotypes will be summed up.
 #' 
 #' @param .data Either tcR data frame or a list with data frames.
 #' @param .gene.col Either name of the column with gene segments used to compare clonotypes
 #' or NA if you don't need comparing using gene segments.
 #' @param .count.col Name of the column with counts for each clonotype.
+#' @param .prop.col Name of the column with proportions for each clonotype.
 #' @param .seq.col Name of the column with clonotypes' CDR3 sequences.
 #' 
-#' @return Data frame or a list with data frames.
+#' @return Data frame or a list with data frames with updated counts and proportion columns
+#' and rows with unique clonotypes only.
 #' 
 #' @examples
 #' \dontrun{
@@ -53,7 +56,8 @@
 #' twb1.gr <- group.clonotypes(twb[[1]])
 #' twb.gr <- group.clonotypes(twb)
 #' }
-group.clonotypes <- function (.data, .gene.col = 'V.segments', .count.col = 'Read.count', .seq.col = 'CDR3.amino.acid.sequence') {
+group.clonotypes <- function (.data, .gene.col = 'V.segments', .count.col = 'Read.count',
+                              .prop.col = 'Read.proportion', .seq.col = 'CDR3.amino.acid.sequence') {
   if (has.class(.data, 'list')) {
     return(lapply(.data, group.clonotypes, .gene.col = .gene.col, .count.col = .count.col, .seq.col = .seq.col))
   }
@@ -65,6 +69,7 @@ group.clonotypes <- function (.data, .gene.col = 'V.segments', .count.col = 'Rea
   val <- dplyr::summarise_(dplyr::grouped_df(.data, lapply(namesvec, as.name)), value = paste0('sum(', .count.col, ')', sep = '', collapse = ''))$value
   .data <- .data[!duplicated(.data[, namesvec]), ]
   .data[, .count.col] <- val
+  .data[, .prop.col] <- val / sum(val)
   .data
 }
 
