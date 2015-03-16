@@ -187,10 +187,10 @@ get.group.names <- function (.G, .attr.name, .V = V(.G), .paste = T) {
 mutated.neighbours <- function (.G, .V, .order = 1) {
   neis <- neighborhood(.G, .order, .V, mode = 'all')
   lapply(neis, function (l) { 
-    res <- as.data.frame(lapply(list.vertex.attributes(G), function (vattr) { 
+    res <- as.data.frame(lapply(list.vertex.attributes(.G), function (vattr) { 
       get.vertex.attribute(.G, vattr, l) } ),
       stringsAsFactors = F)
-    colnames(res) <- list.vertex.attributes(G)
+    colnames(res) <- list.vertex.attributes(.G)
     res
     } )
 }
