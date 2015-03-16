@@ -6,7 +6,7 @@
 \usage{
 bootstrap.tcr(.data, .fun = entropy.seg, .n = 1000, .size = nrow(.data),
   .sim = c("uniform", "percentage"), .postfun = function(x) {     unlist(x)
-  }, .verbose = T, ...)
+  }, .verbose = T, .prop.col = "Read.proportion", ...)
 }
 \arguments{
 \item{.data}{Data frame.}
@@ -36,7 +36,7 @@ Resample rows (i.e., clones) in the given data frame and apply the given functio
 \details{
 Argument \code{.sim} can take two possible values: "uniform" (for uniform distribution), when
 each row can be taken with equal probability, and "perccentage" when each row can be taken with
-probability equal to its "Percentage" column.
+probability equal to its "Read.proportion" column.
 }
 \examples{
 \dontrun{

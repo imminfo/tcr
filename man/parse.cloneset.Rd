@@ -4,7 +4,7 @@
 \alias{parse.cloneset}
 \title{Parse input table files with immune receptor repertoire data.}
 \usage{
-parse.cloneset(.filename, .nuc.seq, .aa.seq, .count, .reads, .barcodes, .vgenes,
+parse.cloneset(.filename, .nuc.seq, .aa.seq, .reads, .barcodes, .vgenes,
   .jgenes, .dgenes, .vend, .jstart, .dalignments, .vd.insertions,
   .dj.insertions, .total.insertions, .skip = 0, .sep = "\\t")
 }

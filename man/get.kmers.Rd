@@ -25,7 +25,7 @@ get.kmers(.data, .head = -1, .k = 5, .clean = T, .meat = F,
 \item{.right.shift}{Cut all \code{.right.shift} symbols from the right side for each sequence.}
 }
 \value{
-Data.frame with 2 columns Kmers and Count / Rank / Percentage relatively to the .value param
+Data.frame with 2 columns Kmers and Count / Rank / Proportion relatively to the .value param
 or a list with such data.frames if .data is a list.
 }
 \description{

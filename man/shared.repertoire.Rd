@@ -54,7 +54,7 @@ for the letter 'n' for taking the "CDR3.nucleotide.sequence" column.
  \item Second character stands whether or not take the V.segments column. Possible values are '0' (zero) stands
 for taking no additional columns, 'v' stands for taking the "V.segments" column.
  \item Third character stands for name of the column to choose as numeric characteristic of sequences. Possible values are
-"c" for the "Read.count" column, "p" for the "Percentage" column, "r" for the "Rank" column or "i" for the "Index" column.
+"c" for the "Read.count" column, "p" for the "Read.proportion" column, "r" for the "Rank" column or "i" for the "Index" column.
 If "Rank" or "Index" isn't in the given repertoire, than it will be created using \code{set.rank} function using default "Read.count" column.
 }
 }

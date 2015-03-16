@@ -522,7 +522,7 @@ top.cross.plot <- function (.top.cross.res, .xlab = 'Top clones', .ylab = 'Norma
 #' @details
 #' Argument \code{.sim} can take two possible values: "uniform" (for uniform distribution), when
 #' each row can be taken with equal probability, and "perccentage" when each row can be taken with
-#' probability equal to its "Percentage" column.
+#' probability equal to its "Read.proportion" column.
 #' 
 #' @examples
 #' \dontrun{
@@ -531,7 +531,7 @@ top.cross.plot <- function (.top.cross.res, .xlab = 'Top clones', .ylab = 'Norma
 #' }
 bootstrap.tcr <- function (.data, .fun = entropy.seg, .n = 1000,
                            .size = nrow(.data), .sim = c('uniform', 'percentage'),
-                           .postfun = function (x) { unlist(x) }, .verbose = T,
+                           .postfun = function (x) { unlist(x) }, .verbose = T, .prop.col = 'Read.proportion',
                            ...) {
   
   .sample.fun <- function (d) {
@@ -540,9 +540,9 @@ bootstrap.tcr <- function (.data, .fun = entropy.seg, .n = 1000,
   
   if (.sim[1] == 'percentage') {
     .sample.fun <- function (d) {
-      new.reads <- rmultinom(1, .size, d$Percentage)
+      new.reads <- rmultinom(1, .size, d[, .prop.col])
       d$Read.count <- new.reads
-      d$Percentage <- new.reads / sum(new.reads)
+      d[, .prop.col] <- new.reads / sum(new.reads)
       d[new.reads > 0,]
     }
   }
@@ -559,7 +559,7 @@ bootstrap.tcr <- function (.data, .fun = entropy.seg, .n = 1000,
 
 
 # mean + IQR
-clonal.space.homeostasis <- function (.data, .clone.types = list(Rare = 0, Small = .0001, Medium = .001, Large = .01, Hyperexpanded = 1)) {
+clonal.space.homeostasis <- function (.data, .clone.types = list(Rare = 0, Small = .0001, Medium = .001, Large = .01, Hyperexpanded = 1), .prop.col = 'Read.proportion') {
   .clone.types <- c(list(None = 0), .clone.types)
   
   if (has.class(.data, 'data.frame')) {
@@ -568,7 +568,7 @@ clonal.space.homeostasis <- function (.data, .clone.types = list(Rare = 0, Small
   
   mat <- matrix(0, length(.data), length(.clone.types) - 1, dimnames = list(names(.data), names(.clone.types)[-1]))
   for (i in 2:length(.clone.types)) {
-    mat[,i-1] <- sapply(.data, function (x) sum(subset(x, x$Percentage > .clone.types[i-1] & x$Percentage <= .clone.types[i])$Percentage))
+    mat[,i-1] <- sapply(.data, function (x) sum(subset(x, x[, .prop.col] > .clone.types[i-1] & x[, .prop.col] <= .clone.types[i])[, .prop.col]))
   }
   
   mat

@@ -17,7 +17,7 @@
 #' @param .left.shift Cut all \code{.left.shift} symbols from the left side for each sequence.
 #' @param .right.shift Cut all \code{.right.shift} symbols from the right side for each sequence.
 #' 
-#' @return Data.frame with 2 columns Kmers and Count / Rank / Percentage relatively to the .value param
+#' @return Data.frame with 2 columns Kmers and Count / Rank / Proportion relatively to the .value param
 #' or a list with such data.frames if .data is a list.
 get.kmers <- function (.data, .head = -1, .k = 5, .clean = T, .meat = F, .verbose = T, .left.shift = 0, .right.shift = 0) {  
   if (class(.data) == 'list') {

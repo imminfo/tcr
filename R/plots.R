@@ -2,7 +2,7 @@
 
 
 if (getRversion() >= "2.15.1") {
-  utils::globalVariables(c("Segment", 'Size', 'Freq', 'Subject', 'V.segments', 'J.segments', '..count..', 'Time.point', 'Percentage', 'Sequence',
+  utils::globalVariables(c("Segment", 'Size', 'Freq', 'Subject', 'V.segments', 'J.segments', '..count..', 'Time.point', 'Proportion', 'Sequence',
                            'Lower', 'Upper', 'Lengths', 'Read.count', 'Var', 'Value', 'Group', 'variable', 'name', 'value', 'Kmers',
                            'Count', 'People', 'First', 'Second', 'Var1', 'Q0.025', 'Q0.975', 'Mean', 'Type'))
 }
@@ -604,10 +604,10 @@ vis.clonal.dynamics <- function (.changed, .lower, .upper, .log = T) {
   .changed <- melt(.changed, id.vars = names(.changed)[1])
   .lower <- melt(.lower, id.vars = names(.changed)[1])
   .upper <- melt(.upper, id.vars = names(.changed)[1])
-  names(.changed) <- c('Sequence', 'Time.point', 'Percentage')
+  names(.changed) <- c('Sequence', 'Time.point', 'Proportion')
   d <- cbind(.changed, Lower = .lower[,3], Upper = .upper[,3])
-  p <- ggplot() + geom_line(aes(x = Time.point, y = Percentage, colour = Sequence, group = Sequence), data = d) +
-    geom_errorbar(aes(x = Time.point, y = Percentage, colour = Sequence, ymin = Lower, ymax = Upper), data = d, width = .25) +
+  p <- ggplot() + geom_line(aes(x = Time.point, y = Proportion, colour = Sequence, group = Sequence), data = d) +
+    geom_errorbar(aes(x = Time.point, y = Proportion, colour = Sequence, ymin = Lower, ymax = Upper), data = d, width = .25) +
     theme_linedraw() + theme(axis.text.x  = element_text(angle=90)) +
     .colourblind.discrete(length(unique(.changed$Sequence)), .colour = T)
   if (.log) {
@@ -632,9 +632,9 @@ vis.clonal.dynamics <- function (.changed, .lower, .upper, .log = T) {
 #' @return ggplot object.
 vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
   melted <- melt(.clonal.space.data)
-  colnames(melted) <- c('Subject', 'Clone.size', 'Percentage')
+  colnames(melted) <- c('Subject', 'Clone.size', 'Proportion')
   melted$Subject <- as.character(melted$Subject)
-  melted$Percentage <- as.numeric(as.character(melted$Percentage))
+  melted$Proportion <- as.numeric(as.character(melted$Proportion))
   melted$Group <- melted$Subject
   
   if (!is.null(.groups)) { 
@@ -644,7 +644,7 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
       }
     }
     
-    perc <- melt(tapply(melted$Percentage, list(melted$Group, melted$Clone.size), function (x) c(quantile(x, probs = .25), mean(x), quantile(x, probs = .75))))
+    perc <- melt(tapply(melted$Proportion, list(melted$Group, melted$Clone.size), function (x) c(quantile(x, probs = .25), mean(x), quantile(x, probs = .75))))
     return(perc)
     perc <- data.frame(row.names(perc), perc, stringsAsFactors = F)
     colnames(perc) <- c('Group', 'Q1', 'Mean', 'Q2')
@@ -655,7 +655,7 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
       xlab("Subject")
   } else {
     p <- ggplot() +
-      geom_bar(aes(x = Group, y = Percentage, fill = Clone.size), data = melted, colour = 'black', stat = 'identity', position = 'stack') +
+      geom_bar(aes(x = Group, y = Proportion, fill = Clone.size), data = melted, colour = 'black', stat = 'identity', position = 'stack') +
       xlab("Subject")
       
   }
