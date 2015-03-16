@@ -10,7 +10,7 @@
 \alias{segment}
 \alias{segments}
 \alias{segments.alphabets}
-\title{Alphabets of T-cell receptor gene segments.}
+\title{Alphabets of TCR and Ig gene segments.}
 \format{Each \code{<SPECIES>_<GENES>_ALPHABET} is a character vector. <SPECIES> is an identifier of species, <GENES> is concatenated three
 identifiers of cell type ("TR**" for TCR, "IG**" for Ig), chain (e.g., "**A*" for alpha chains) and gene segment ("***V" for V(ariable) gene segment,
 "***J" for J(oining) gene segment, "***D" for D(iversity) gene segment).}

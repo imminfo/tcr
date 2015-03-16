@@ -5,11 +5,9 @@
 \alias{set.group.vector}
 \title{Set group attribute for vertices of a mutation network}
 \usage{
-set.group.vector(.shared.rep, .G, .attr.name, .groups)
+set.group.vector(.G, .attr.name, .groups)
 }
 \arguments{
-\item{.shared.rep}{Shared repertiore of sequences.}
-
 \item{.G}{Graph that was created based on \code{.shared.rep}.}
 
 \item{.attr.name}{Name of the new vertex attribute.}
@@ -27,7 +25,7 @@ asdasd
 data(twb)
 twb.shared <- shared.repertoire(twb)
 G <- mutation.network(twb.shared)
-G <- set.group.vector(twb.shared, G, "twins", list(A = c(1,2), B = c(3,4)))  # <= refactor this
+G <- set.group.vector(G, "twins", list(A = c(1,2), B = c(3,4)))  # <= refactor this
 get.group.names(G, "twins", 1)  # "A|B"
 get.group.names(G, "twins", 300)  # "A"
 # Because we have only two groups, we can assign more readable attribute.

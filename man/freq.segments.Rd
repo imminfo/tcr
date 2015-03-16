@@ -47,7 +47,7 @@ or one of the 'alpha' or 'beta' for freq.segments.2D or a list of length 2 with 
 Data.frame with columns Segments and their frequencies in the column Freq.
 }
 \description{
-Get frequencies or counts of segments (V / J - usage).
+Get frequencies or counts of gene segments ("V / J - usage").
 }
 \examples{
 \dontrun{

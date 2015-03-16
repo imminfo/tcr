@@ -21,9 +21,8 @@ parse.cloneset <- function (.filename,
                             .nuc.seq,
                             .aa.seq,
                             .count,
-                            .proportion,
                             .reads,
-                            .events,
+                            .barcodes,
                             .vgenes,
                             .jgenes,
                             .dgenes,
@@ -42,14 +41,14 @@ parse.cloneset <- function (.filename,
   table.colnames <- read.table(.filename, sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T)[1,]
   
   swlist <- list('character', 'character',
-                 'integer', 'numeric',
+                 'integer',
                  'integer', 'integer',
                  'character', 'character', 'character',
                  'integer', 'integer', 'integer', 'integer',
                  'integer', 'integer', 'integer')
   names(swlist) <- c(.nuc.seq, .aa.seq,
-                     .count, .proportion,
-                     .reads, .events,
+                     .count,
+                     .reads, .barcodes,
                      .vgenes, .jgenes, .dgenes,
                      .vend, .jstart, .dalignments,
                      .vd.insertions, .dj.insertions, .total.insertions)
@@ -61,19 +60,21 @@ parse.cloneset <- function (.filename,
   
   suppressWarnings(df <- read.table(file = .filename, header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T))
   
-  if(is.na(.events)) {
-    .events <- "Event.count"
-    df$Events <- -1
+  df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
+  .read.prop <- 'Read.proportion'
+  
+  if(is.na(.barcodes)) {
+    .barcodes <- "Barcode count"
+    df$Barcode.count <- NA
+    df$Barcode.proportion <- NA
+  } else {
+    df$Barcode.proportion <- df[, make.names(.barcodes)] / sum(df[, make.names(.barcodes)])
   }
+  .bc.prop <- 'Barcode.proportion'
   
   if (is.na(.aa.seq)) {
     df$CDR3.amino.acid.sequence <- bunch.translate(df$CDR3.nucleotide.sequence)
     .aa.seq <- 'CDR3 amino acid sequence'
-  }
-  
-  if (is.na(.proportion)) {
-    df$Proportion <- df$Count / sum(df$Count)
-    .proportion <- 'Proportion'
   }
   
   if (!(.total.insertions %in% table.colnames)) {
@@ -88,17 +89,17 @@ parse.cloneset <- function (.filename,
   
   if (!(.dj.insertions %in% table.colnames)) { df$DJ.insertions <- -1 }
   
-  df <- df[, make.names(c(.count, .proportion, .nuc.seq, .aa.seq,
+  df <- df[, make.names(c(.barcodes, .bc.prop, .reads, .read.prop, 
+                          .nuc.seq, .aa.seq,
                           .vgenes, .jgenes, .dgenes,
                           .vend, .jstart, .dalignments,
-                          .vd.insertions, .dj.insertions, .total.insertions,
-                          .reads, .events))]
+                          .vd.insertions, .dj.insertions, .total.insertions))]
   
-  colnames(df) <- c('Count', 'Proportion', 'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
+  colnames(df) <- c('Barcode.count', 'Barcode.proportion', 'Read.count', 'Read.proportion',
+                    'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
                     'V.segments', 'J.segments', 'D.segments',
                     'V.end', 'J.start', 'D5.end', 'D3.end',
-                    'VD.insertions', 'DJ.insertions', 'Total.insertions',
-                    'Read.count', 'Event.count')
+                    'VD.insertions', 'DJ.insertions', 'Total.insertions')
   
   df
 }
@@ -165,14 +166,12 @@ parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
 }
 
 parse.mitcr <- function (.filename) {
-  
   filename <- .filename
   nuc.seq <- 'CDR3 nucleotide sequence'
   aa.seq <- 'CDR3 amino acid sequence'
   count <- 'Read count'
-  Proportion <- 'Percentage'
   reads <- 'Read count'
-  events <- NA
+  barcodes <- NA
   vgenes <- 'V segments'
   jgenes <- 'J segments'
   dgenes <- 'D segments'
@@ -189,9 +188,8 @@ parse.mitcr <- function (.filename) {
                  .nuc.seq = nuc.seq,
                  .aa.seq = aa.seq,
                  .count = count,
-                 .proportion = Proportion,
                  .reads = reads,
-                 .events = events,
+                 .barcodes = barcodes,
                  .vgenes = vgenes,
                  .jgenes = jgenes,
                  .dgenes = dgenes,
@@ -206,14 +204,12 @@ parse.mitcr <- function (.filename) {
 }
 
 parse.mitcrbc <- function (.filename) {
-  
   filename <- .filename
   nuc.seq <- 'CDR3 nucleotide sequence'
   aa.seq <- 'CDR3 amino acid sequence'
   count <- 'NNNs'
-  Proportion <- NA
   reads <- 'Count'
-  events <- 'NNNs'
+  barcodes <- 'NNNs'
   vgenes <- 'V segments'
   jgenes <- 'J segments'
   dgenes <- 'D segments'
@@ -230,9 +226,8 @@ parse.mitcrbc <- function (.filename) {
                  .nuc.seq = nuc.seq,
                  .aa.seq = aa.seq,
                  .count = count,
-                 .proportion = Proportion,
                  .reads = reads,
-                 .events = events,
+                 .barcodes = barcodes,
                  .vgenes = vgenes,
                  .jgenes = jgenes,
                  .dgenes = dgenes,
@@ -247,14 +242,12 @@ parse.mitcrbc <- function (.filename) {
 }
 
 parse.migec <- function (.filename) {
-  
   filename <- .filename
   nuc.seq <- 'CDR3 nucleotide sequence'
   aa.seq <- 'CDR3 amino acid sequence'
   count <- 'Count'
-  Proportion <- NA
   reads <- 'Good reads'
-  events <- 'Good events'
+  barcodes <- 'Good events'
   vgenes <- 'V segments'
   jgenes <- 'J segments'
   dgenes <- 'D segments'
@@ -271,9 +264,8 @@ parse.migec <- function (.filename) {
                  .nuc.seq = nuc.seq,
                  .aa.seq = aa.seq,
                  .count = count,
-                 .proportion = Proportion,
                  .reads = reads,
-                 .events = events,
+                 .barcodes = barcodes,
                  .vgenes = vgenes,
                  .jgenes = jgenes,
                  .dgenes = dgenes,
