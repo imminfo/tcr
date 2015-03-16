@@ -20,7 +20,6 @@
 parse.cloneset <- function (.filename,
                             .nuc.seq,
                             .aa.seq,
-                            .count,
                             .reads,
                             .barcodes,
                             .vgenes,
@@ -41,13 +40,11 @@ parse.cloneset <- function (.filename,
   table.colnames <- read.table(.filename, sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T)[1,]
   
   swlist <- list('character', 'character',
-                 'integer',
                  'integer', 'integer',
                  'character', 'character', 'character',
                  'integer', 'integer', 'integer', 'integer',
                  'integer', 'integer', 'integer')
   names(swlist) <- c(.nuc.seq, .aa.seq,
-                     .count,
                      .reads, .barcodes,
                      .vgenes, .jgenes, .dgenes,
                      .vend, .jstart, .dalignments,
@@ -169,7 +166,6 @@ parse.mitcr <- function (.filename) {
   filename <- .filename
   nuc.seq <- 'CDR3 nucleotide sequence'
   aa.seq <- 'CDR3 amino acid sequence'
-  count <- 'Read count'
   reads <- 'Read count'
   barcodes <- NA
   vgenes <- 'V segments'
@@ -187,7 +183,6 @@ parse.mitcr <- function (.filename) {
   parse.cloneset(.filename = filename, 
                  .nuc.seq = nuc.seq,
                  .aa.seq = aa.seq,
-                 .count = count,
                  .reads = reads,
                  .barcodes = barcodes,
                  .vgenes = vgenes,
@@ -207,7 +202,6 @@ parse.mitcrbc <- function (.filename) {
   filename <- .filename
   nuc.seq <- 'CDR3 nucleotide sequence'
   aa.seq <- 'CDR3 amino acid sequence'
-  count <- 'NNNs'
   reads <- 'Count'
   barcodes <- 'NNNs'
   vgenes <- 'V segments'
@@ -225,7 +219,6 @@ parse.mitcrbc <- function (.filename) {
   parse.cloneset(.filename = filename, 
                  .nuc.seq = nuc.seq,
                  .aa.seq = aa.seq,
-                 .count = count,
                  .reads = reads,
                  .barcodes = barcodes,
                  .vgenes = vgenes,
@@ -245,7 +238,6 @@ parse.migec <- function (.filename) {
   filename <- .filename
   nuc.seq <- 'CDR3 nucleotide sequence'
   aa.seq <- 'CDR3 amino acid sequence'
-  count <- 'Count'
   reads <- 'Good reads'
   barcodes <- 'Good events'
   vgenes <- 'V segments'
@@ -263,7 +255,6 @@ parse.migec <- function (.filename) {
   parse.cloneset(.filename = filename, 
                  .nuc.seq = nuc.seq,
                  .aa.seq = aa.seq,
-                 .count = count,
                  .reads = reads,
                  .barcodes = barcodes,
                  .vgenes = vgenes,
