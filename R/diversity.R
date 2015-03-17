@@ -80,7 +80,6 @@ diversity <- function (.data, .q = 5, .do.norm = NA, .laplace = 0) {
 gini <- function (.data, .do.norm = NA, .laplace = 0) {
   .data <- sort(check.distribution(.data, .do.norm, .laplace))
   n <- length(.data)
-  print(head(.data))
   1 / n * (n + 1 - 2 * sum((n + 1 - 1:n) * .data) / sum(.data))
 }
 

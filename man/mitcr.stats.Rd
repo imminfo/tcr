@@ -5,19 +5,14 @@
 \alias{mitcr.stats}
 \title{MiTCR data frame basic statistics.}
 \usage{
-mitcr.stats(.data, .head = 0, .col = 'Read.count')
+mitcr.stats(.data, .head = 0)
 
-lib.mitcr.stats(.data, .head = 0, .umi = NA)
+lib.mitcr.stats(.data, .head = 0)
 }
 \arguments{
-\item{.data}{MiTCr data frames or a list with MiTCR data frames.}
+\item{.data}{tcR data frames or a list with tcR data frames.}
 
 \item{.head}{How many top clones use to comput summary.}
-
-\item{.col}{Which columns to use to compute statistics.}
-
-\item{.umi}{If T than use both "Barcode.count" and "Read.count" columns. If NA than check if
-"Barcode.count" in columns' names.}
 }
 \value{
 if \code{.data} is a data frame, than numeric vector with statistics. If \code{.data} is
@@ -25,7 +20,7 @@ a list with data frames, than matrix with statistics for each data frame.
 }
 \description{
 Compute basic statistics of TCR repertoires: number of clones, number of clonotypes,
-number of in-frame and out-of-frame sequences, summary of "Read.count" and other.
+number of in-frame and out-of-frame sequences, summary of "Read.count", "Barcode.count" and other.
 }
 \examples{
 \dontrun{

@@ -36,8 +36,8 @@ of correspondingly divided \code{.target.column}.
 # for each V-segment using all V-segments in the given data frame.
 column.summary(immdata[[1]], 'V.segments', 'Total.insertions')
 # Compute summary statistics of VD insertions for each V-segment using only V-segments
-# from the V_BETA_ALPHABET
-column.summary(immdata[[1]], 'V.segments', 'Total.insertions', V_BETA_ALPHABET)
+# from the HUMAN_TRBV_ALPHABET_MITCR
+column.summary(immdata[[1]], 'V.segments', 'Total.insertions', HUMAN_TRBV_ALPHABET_MITCR)
 }
 }
 \seealso{

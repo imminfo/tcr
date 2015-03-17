@@ -78,19 +78,16 @@ clonotypescount <- function(.data, .head = 0) {
 #' @aliases mitcr.stats lib.mitcr.stats
 #' 
 #' @usage
-#' mitcr.stats(.data, .head = 0, .col = 'Read.count')
+#' mitcr.stats(.data, .head = 0)
 #' 
-#' lib.mitcr.stats(.data, .head = 0, .umi = NA)
+#' lib.mitcr.stats(.data, .head = 0)
 #' 
 #' @description
 #' Compute basic statistics of TCR repertoires: number of clones, number of clonotypes, 
-#' number of in-frame and out-of-frame sequences, summary of "Read.count" and other.
+#' number of in-frame and out-of-frame sequences, summary of "Read.count", "Barcode.count" and other.
 #' 
-#' @param .data MiTCr data frames or a list with MiTCR data frames.
+#' @param .data tcR data frames or a list with tcR data frames.
 #' @param .head How many top clones use to comput summary.
-#' @param .col Which columns to use to compute statistics.
-#' @param .umi If T than use both "Barcode.count" and "Read.count" columns. If NA than check if 
-#' "Barcode.count" in columns' names.
 #' 
 #' @return if \code{.data} is a data frame, than numeric vector with statistics. If \code{.data} is 
 #' a list with data frames, than matrix with statistics for each data frame.
@@ -101,9 +98,9 @@ clonotypescount <- function(.data, .head = 0) {
 #' mitcr.stats(immdata)
 #' lib.mitcr.stats(immdata)
 #' }
-mitcr.stats <- function (.data, .head = 0, .col = 'Read.count') {
+mitcr.stats <- function (.data, .head = 0) {
   if (has.class(.data, 'list')) {
-    res <- t(do.call(cbind, lapply(.data, mitcr.stats, .head = .head, .col = .col)))
+    res <- t(do.call(cbind, lapply(.data, mitcr.stats, .head = .head)))
     row.names(res) <- names(.data)
     return(res)
   }
@@ -118,23 +115,25 @@ mitcr.stats <- function (.data, .head = 0, .col = 'Read.count') {
   names(res) <- c('#Nucleotide clones','#Aminoacid clonotypes', '%Aminoacid clonotypes', '#In-frames', '%In-frames', '#Out-of-frames', '%Out-of-frames')
   
   .data <- head(.data, .head)
-  res2 <- c(Sum = sum(.data[, .col]), summary(.data[, .col]))
+  res2 <- c(Sum = sum(.data$Read.count), summary(.data$Read.count))
   names(res2) <- sub('.', '', names(res2), fixed = T)
-  names(res2) <- paste0(names(res2), '.', .col)
+  names(res2) <- paste0(names(res2), '.reads')
+  if (!is.na(.data$Barcode.count)[1]) {
+    res3 <- c(Sum = sum(.data$Barcode.count), summary(.data$Barcode.count))
+    names(res3) <- sub('.', '', names(res3), fixed = T)
+    names(res3) <- paste0(names(res3), '.barcodes')
+    res2 <- c(res2, res3)
+  }
   c(res, res2)
 }
 
-lib.mitcr.stats = function(.data, .head=0, .umi = NA) {
-  ##returns #clones, #barcodes, #reads and reads-per-clone (default) or reads-per-barcode, barcode-per-clone (if .umi=T)
+lib.mitcr.stats = function(.data, .head=0) {
   if (has.class(.data, "list")) {
-    res=do.call(cbind, lapply(.data, lib.mitcr.stats, .head=.head, .umi = .umi))
+    res=do.call(cbind, lapply(.data, lib.mitcr.stats, .head=.head))
     dimnames(res)[[2]]=names(.data)
     return(t(res))
   }else{
-    if (is.na(.umi)) {
-      .umi <- 'Barcode.count' %in% names(.data)
-    }
-    
+    .umi <- !is.na(.data$Barcode.count[1])
     .head= if (.head==0){nrow(.data)} else {.head}
     .data=head(.data, .head)
     if (!.umi) {
@@ -182,8 +181,8 @@ lib.mitcr.stats = function(.data, .head=0, .umi = NA) {
 #' # for each V-segment using all V-segments in the given data frame.
 #' column.summary(immdata[[1]], 'V.segments', 'Total.insertions')
 #' # Compute summary statistics of VD insertions for each V-segment using only V-segments
-#' # from the V_BETA_ALPHABET
-#' column.summary(immdata[[1]], 'V.segments', 'Total.insertions', V_BETA_ALPHABET)
+#' # from the HUMAN_TRBV_ALPHABET_MITCR
+#' column.summary(immdata[[1]], 'V.segments', 'Total.insertions', HUMAN_TRBV_ALPHABET_MITCR)
 #' }
 column.summary <- function (.data, .factor.col, .target.col, .alphabet = NA, .remove.neg = T) {
   if (length(.alphabet) != 0 && !is.na(.alphabet[1])) {
@@ -205,11 +204,11 @@ insertion.stats <- function (.data) {
   if (class(.data) == 'list') {
     return(lapply(.data, insertion.stats))
   }
-  vd <- column.summary(.data, 'V.segments', 'VD.insertions', V_BETA_ALPHABET)
+  vd <- column.summary(.data, 'V.segments', 'VD.insertions', HUMAN_TRBV_ALPHABET_MITCR)
   names(vd)[-1] <- paste0('VD.', names(vd)[-1])
-  dj <- column.summary(.data, 'V.segments', 'DJ.insertions', V_BETA_ALPHABET)
+  dj <- column.summary(.data, 'V.segments', 'DJ.insertions', HUMAN_TRBV_ALPHABET_MITCR)
   names(dj)[-1] <- paste0('DJ.', names(dj)[-1])
-  tot <- column.summary(.data, 'V.segments', 'Total.insertions', V_BETA_ALPHABET)
+  tot <- column.summary(.data, 'V.segments', 'Total.insertions', HUMAN_TRBV_ALPHABET_MITCR)
   names(tot)[-1] <- paste0('Total.', names(tot)[-1])
   res <- merge(vd, dj, by = 'V.segments', all = T)
   res <- merge(res, tot, by = 'V.segments', all = T)
