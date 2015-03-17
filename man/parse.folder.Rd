@@ -21,6 +21,8 @@ parse.folder(.folderpath, .format = c("mitcr", "mitcrbc", "migec"), ...)
 \item{.filepath}{Path to the input file with cloneset data.}
 
 \item{.filenames}{Vector or list with paths to files with cloneset data.}
+
+\item{.namelist}{Either NA or character vector of length \code{.filenames} with names for output data frames.}
 }
 \value{
 Data frame with immune receptor repertoire data and following columns:

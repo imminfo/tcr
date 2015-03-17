@@ -52,7 +52,7 @@ AA_TABLE_REVERSED <- AA_TABLE_REVERSED[order(names(AA_TABLE_REVERSED))]
 #' 
 #' @name segments.alphabets
 #' 
-#' @aliases genesegment genesegments segments segment genes gene
+#' @aliases genesegment HUMAN_TRAV_ALPHABET HUMAN_TRAJ_ALPHABET HUMAN_TRBV_ALPHABET HUMAN_TRBD_ALPHABET HUMAN_TRBJ_ALPHABET HUMAN_TRBV_ALPHABET_MITCR HUMAN_TRGV_ALPHABET HUMAN_TRGJ_ALPHABET HUMAN_TRDV_ALPHABET HUMAN_TRDD_ALPHABET HUMAN_TRDJ_ALPHABET
 #' 
 #' @description
 #' Character vector with names for segments. With \code{tcR} we provided alphabets for all alpha, beta,

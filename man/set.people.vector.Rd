@@ -14,6 +14,8 @@ get.people.names(.G, .V = V(.G), .paste = T)
 
 \item{.shared.rep}{Shared repertoire.}
 
+\item{.V}{Indices of vertices.}
+
 \item{.paste}{If TRUE than concatenate people names to one string, else get a character vector of names.}
 }
 \value{

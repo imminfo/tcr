@@ -2,13 +2,18 @@
 % Please edit documentation in R/docdata.R
 \docType{data}
 \name{segments.alphabets}
+\alias{HUMAN_TRAJ_ALPHABET}
 \alias{HUMAN_TRAV_ALPHABET}
-\alias{gene}
-\alias{genes}
+\alias{HUMAN_TRBD_ALPHABET}
+\alias{HUMAN_TRBJ_ALPHABET}
+\alias{HUMAN_TRBV_ALPHABET}
+\alias{HUMAN_TRBV_ALPHABET_MITCR}
+\alias{HUMAN_TRDD_ALPHABET}
+\alias{HUMAN_TRDJ_ALPHABET}
+\alias{HUMAN_TRDV_ALPHABET}
+\alias{HUMAN_TRGJ_ALPHABET}
+\alias{HUMAN_TRGV_ALPHABET}
 \alias{genesegment}
-\alias{genesegments}
-\alias{segment}
-\alias{segments}
 \alias{segments.alphabets}
 \title{Alphabets of TCR and Ig gene segments.}
 \format{Each \code{<SPECIES>_<GENES>_ALPHABET} is a character vector. <SPECIES> is an identifier of species, <GENES> is concatenated three

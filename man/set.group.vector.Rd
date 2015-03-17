@@ -13,6 +13,8 @@ set.group.vector(.G, .attr.name, .groups)
 \item{.attr.name}{Name of the new vertex attribute.}
 
 \item{.groups}{List with integer vector with indices of subjects for each group.}
+
+\item{.V}{Indices of vertices.}
 }
 \value{
 igraph object with new vertex attribute \code{.attr.name} with binary strings.

@@ -7,10 +7,25 @@
 #' General parser for cloneset table files. 
 #'
 #' @param .filepath Path to the input file with cloneset data.
+#' @param .nuc.seq 
+#' @param .aa.seq 
+#' @param .reads 
+#' @param .barcodes 
+#' @param .vgenes 
+#' @param .jgenes 
+#' @param .dgenes 
+#' @param .vend 
+#' @param .jstart 
+#' @param .dalignments 
+#' @param .vd.insertions 
+#' @param .dj.insertions 
+#' @param .total.insertions 
+#' @param .skip
+#' @param .sep
 #' 
-#' @return Data frame with immune receptor repertoire data. See \link{\code{parse.file}} for more details.
+#' @return Data frame with immune receptor repertoire data. See \code{\link{parse.file}} for more details.
 #' 
-#' @seealso \link{\code{parse.file}}
+#' @seealso \code{\link{parse.file}}
 #' 
 #' @examples
 #' \dontrun{
@@ -109,11 +124,25 @@ parse.cloneset <- function (.filename,
 #' @description
 #' Load the MITCR TCR data from the file with the given filename
 #' to a data frame. For general parser see \code{\link{parse.cloneset}}.
+#' 
+#' @usage
+#' parse.file(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+#' 
+#' parse.file.list(.filenames, .format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA)
+#' 
+#' parse.folder(.folderpath, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+#' 
+#' parse.mitcr(.filename)
+#' 
+#' parse.mitcrbc(.filename)
+#' 
+#' parse.migec(.filename)
 #'
 #' @param .filepath Path to the input file with cloneset data.
 #' @param .filenames Vector or list with paths to files with cloneset data.
 #' @param .folderpath Path to the folder with text cloneset files.
 #' @param .format String specifing input format of files. Parsers for MiTCR output and MiGEC output are available.
+#' @param .namelist Either NA or character vector of length \code{.filenames} with names for output data frames.
 #' @param ... Parameters passed to \code{parse.cloneset}.
 #' 
 #' @return Data frame with immune receptor repertoire data and following columns:

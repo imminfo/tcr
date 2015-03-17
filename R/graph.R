@@ -12,9 +12,9 @@
 #' or shared repertoire (result from the \code{shared.repertoire} function) constructed based on \code{.label.col}.
 #' @param .method Either "hamm" (for hamming distance) or "lev" (for edit distance). Passed to the \code{find.similar.sequences} function.
 #' @param .max.errors Passed to the \code{find.similar.sequences} function.
-#' @param .label.col 
-#' @param .seg.col
-#' @param .prob.col
+#' @param .label.col Name of the column with CDR3 sequences (vertex labels).
+#' @param .seg.col Name of the column with V gene segments.
+#' @param .prob.col Name of the column with clonotype probability.
 #' 
 #' @return Mutation network, i.e. igraph object with input sequences as vertices labels, ???
 #' 
@@ -72,8 +72,6 @@ mutation.network <- function (.data, .method = c('hamm', 'lev'), .max.errors = 1
   G
 }
 
-make.repertoire.graph <- mutation.network
-
 
 #' Set and get attributes of a mutation network related to source people.
 #' 
@@ -92,6 +90,7 @@ make.repertoire.graph <- mutation.network
 #' 
 #' @param .G Mutation network.
 #' @param .shared.rep Shared repertoire.
+#' @param .V Indices of vertices.
 #' @param .paste If TRUE than concatenate people names to one string, else get a character vector of names.
 #' 
 #' @return New graph with 'people' and 'npeople' vertex attributes or character vector of length .V or list of length .V.
@@ -134,8 +133,14 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 #' @description
 #' asdasd
 #' 
-#' @param .G Graph that was created based on \code{.shared.rep}.
+#' @usage
+#' set.group.vector(.G, .attr.name, .groups)
+#' 
+#' get.group.names(.G, .attr.name, .V = V(.G), .paste = T)
+#' 
+#' @param .G Mutation network.
 #' @param .attr.name Name of the new vertex attribute.
+#' @param .V Indices of vertices.
 #' @param .groups List with integer vector with indices of subjects for each group.
 #' 
 #' @return igraph object with new vertex attribute \code{.attr.name} with binary strings.
@@ -184,6 +189,32 @@ get.group.names <- function (.G, .attr.name, .V = V(.G), .paste = T) {
 }
 
 
+#' Get vertex neighbours.
+#' 
+#' @description
+#' asdasd
+#' 
+#' @param .G Mutation network.
+#' @param .V Indices of vertices for which return neighbours.
+#' @param .order Neighbours of which order return.
+#' 
+#' @return List of length \code{.V} with data frames with vertex properties. First row in each data frame
+#' is the vertex for which neighbours was returned.
+#' 
+#' @examples
+#' \dontrun{
+#' data(twb)
+#' twb.shared <- shared.repertoire(twb)
+#' G <- mutation.network(twb.shared)
+#' head(mutated.neighbours(G, 1)[[1]])
+#' #           label             vseg repind prob people npeople
+#' # 1 CASSDRDTGELFF          TRBV6-4      1   -1   1111       4
+#' # 2 CASSDSDTGELFF          TRBV6-4     69   -1   1100       2
+#' # 3 CASSYRDTGELFF TRBV6-3, TRBV6-2    315   -1   1001       2
+#' # 4 CASKDRDTGELFF TRBV6-3, TRBV6-2   2584   -1   0100       1
+#' # 5 CASSDGDTGELFF          TRBV6-4   5653   -1   0010       1
+#' # 6 CASSDRETGELFF          TRBV6-4   5950   -1   0100       1
+#' }
 mutated.neighbours <- function (.G, .V, .order = 1) {
   neis <- neighborhood(.G, .order, .V, mode = 'all')
   lapply(neis, function (l) { 

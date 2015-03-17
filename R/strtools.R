@@ -10,9 +10,9 @@
   
   if (has.class(.str, 'data.frame')) {
     res <- .str
-    res$V.segments <- sapply(res$V.segments, .split.get, .alphabet = V_BETA_ALPHABET)
+    res$V.segments <- sapply(res$V.segments, .split.get, .alphabet = HUMAN_TRBV_ALPHABET_MITCR)
     res$D.segments <- sapply(res$D.segments, .split.get, .alphabet = c('TRBD1', 'TRBD2'))
-    res$J.segments <- sapply(res$J.segments, .split.get, .alphabet = J_BETA_ALPHABET)
+    res$J.segments <- sapply(res$J.segments, .split.get, .alphabet = HUMAN_TRBJ_ALPHABET)
     return(res)
   }
   .alphabet2 <- sub(' ', '', .alphabet, fixed = T)
