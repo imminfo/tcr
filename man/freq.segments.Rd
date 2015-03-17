@@ -26,7 +26,7 @@ freq.Jb(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read
 \arguments{
 \item{.data}{Mitcr data.frame or list with data.frames.}
 
-\item{.alphabet}{Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using V_BETA_ALPHABET variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
+\item{.alphabet}{Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_ALPHABET_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
 or one of the 'alpha' or 'beta' for freq.segments.2D or a list of length 2 with alphabets strings for freq.segments.2D.}
 
 \item{.count}{Should we return count or percentage?}

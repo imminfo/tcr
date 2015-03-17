@@ -38,9 +38,14 @@ load('immdata.rda')
 imm1.vs <- freq.Vb(immdata[[1]])
 # Two eqivalent calls for plotting the V-usage for all data frames on the one plot:
 vis.V.usage(immdata, .cast.freq = T, .main = 'Immdata V-usage [1]', .dodge = T)
+# Plot a histogram for one data frame using all gene segment data from V.segments column.
+vis.V.usage(immdata[[1]], .cast.freq = F, .main = 'Immdata V-usage [1]')
 vis.V.usage(imm1.vs, .cast.freq = F, .main = 'Immdata V-usage [2]', .dodge = T)
 # Plot a grid of histograms - one histogram for V-usage for each data frame in .data.
 vis.V.usage(immdata, .cast.freq = T, .main = 'Immdata V-usage [3]', .dodge = F, .other = F)
+# Plot alpha V-usage
+vis.V.usage(immdata[[1]], .cast.freq = T, .main = 'Immdata V-usage [4]',
+.dodge = F, .other = F, .alphabet = HUMAN_TRAV_ALPHABET)
 }
 }
 
