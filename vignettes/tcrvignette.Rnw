@@ -37,19 +37,17 @@
 \newcommand{\Rpackage}[1]{{\textit{#1}}}
 \newcommand{\code}[1]{\mbox{\texttt{#1}}}
 
-\title{tcR: a package for T-cell receptor repertoire data analysis}
-\author{Vadim Nazarov  \\ \href{mailto:vdm.nazarov@gmail.com}{vdm.nazarov@gmail.com} \\ 
-  \and Mikhail Pogorelyy \\ \href{mailto:m.pogorely@gmail.com}{m.pogorely@gmail.com}
-}
-% Laboratory of Comparative and Functional Genomics, Moscow, Russia
+\title{tcR: a package for T-cell receptor repertoire advanced data analysis}
+\author{Vadim Nazarov  \\ \href{mailto:vdm.nazarov@gmail.com}{vdm.nazarov@gmail.com} \\
+Laboratory of Comparative and Functional Genomics, IBCh RAS, Moscow, Russia }
 \date{August 2014}
 \maketitle
 
 \abstract{Abstract}
-High-throughput technologies has open new possibilities to analyse data of repertoires of immunological receptors (i.e., T-cell or B-cell receptors). Here we present a manual to an R package \Rpackage{tcR}. Paper is published in \href{m.pogorely@gmail.com}{Journal of Something}:
-\begin{quote}
-\texttt{\href{m.pogorely@gmail.com}{Nazarov et al tcR: an R package for T-cell repertoire data analysis.}}
-\end{quote}
+High-throughput technologies has open new possibilities to analyse data of repertoires of immune receptors (i.e., T-cell or B-cell receptors). Here we present a manual to an R package \Rpackage{tcR}. %Paper is published in \href{m.pogorely@gmail.com}{Journal of Something}:
+%\begin{quote}
+% \texttt{\href{m.pogorely@gmail.com}{Nazarov et al tcR: an R package for T-cell repertoire data analysis.}}
+%\end{quote}
 
 \tableofcontents
 
@@ -190,8 +188,6 @@ library(tcR)
 # Load additional packages for making this vignette.
 # Load the twins data, provided with the package.
 data(twb)
-# Load human alphabets of V-genes and J-genes, provided with the package.
-data(human.alphabets)
 mitcr.stats(twb)
 @
 

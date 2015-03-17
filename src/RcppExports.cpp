@@ -6,74 +6,58 @@
 using namespace Rcpp;
 
 // exact_search
-std::vector<int> exact_search(const std::vector<std::string>& vec, const std::vector<std::string>& patterns, int max_error = 1, bool verbose = true);
+std::vector<int> exact_search(const std::vector<std::string>& vec, const std::vector<std::string>& patterns, int max_error, bool verbose);
 RcppExport SEXP tcR_exact_search(SEXP vecSEXP, SEXP patternsSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< const std::vector<std::string>& >::type vec(vecSEXP );
-        Rcpp::traits::input_parameter< const std::vector<std::string>& >::type patterns(patternsSEXP );
-        Rcpp::traits::input_parameter< int >::type max_error(max_errorSEXP );
-        Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP );
-        std::vector<int> __result = exact_search(vec, patterns, max_error, verbose);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type vec(vecSEXP);
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type patterns(patternsSEXP);
+    Rcpp::traits::input_parameter< int >::type max_error(max_errorSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    __result = Rcpp::wrap(exact_search(vec, patterns, max_error, verbose));
+    return __result;
 END_RCPP
 }
 // exact_search_list
-List exact_search_list(const std::vector<std::string>& vec, const List patterns_list, int max_error = 1, bool verbose = true);
+List exact_search_list(const std::vector<std::string>& vec, const List patterns_list, int max_error, bool verbose);
 RcppExport SEXP tcR_exact_search_list(SEXP vecSEXP, SEXP patterns_listSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< const std::vector<std::string>& >::type vec(vecSEXP );
-        Rcpp::traits::input_parameter< const List >::type patterns_list(patterns_listSEXP );
-        Rcpp::traits::input_parameter< int >::type max_error(max_errorSEXP );
-        Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP );
-        List __result = exact_search_list(vec, patterns_list, max_error, verbose);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type vec(vecSEXP);
+    Rcpp::traits::input_parameter< const List >::type patterns_list(patterns_listSEXP);
+    Rcpp::traits::input_parameter< int >::type max_error(max_errorSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    __result = Rcpp::wrap(exact_search_list(vec, patterns_list, max_error, verbose));
+    return __result;
 END_RCPP
 }
 // hamming_search
-std::vector<int> hamming_search(const std::vector<std::string>& vec, const std::vector<std::string>& patterns, int max_error = 1, bool verbose = true);
+std::vector<int> hamming_search(const std::vector<std::string>& vec, const std::vector<std::string>& patterns, int max_error, bool verbose);
 RcppExport SEXP tcR_hamming_search(SEXP vecSEXP, SEXP patternsSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< const std::vector<std::string>& >::type vec(vecSEXP );
-        Rcpp::traits::input_parameter< const std::vector<std::string>& >::type patterns(patternsSEXP );
-        Rcpp::traits::input_parameter< int >::type max_error(max_errorSEXP );
-        Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP );
-        std::vector<int> __result = hamming_search(vec, patterns, max_error, verbose);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type vec(vecSEXP);
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type patterns(patternsSEXP);
+    Rcpp::traits::input_parameter< int >::type max_error(max_errorSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    __result = Rcpp::wrap(hamming_search(vec, patterns, max_error, verbose));
+    return __result;
 END_RCPP
 }
 // levenshtein_search
-std::vector<int> levenshtein_search(const std::vector<std::string>& vec, const std::vector<std::string>& patterns, int max_error = 1, bool verbose = true);
+std::vector<int> levenshtein_search(const std::vector<std::string>& vec, const std::vector<std::string>& patterns, int max_error, bool verbose);
 RcppExport SEXP tcR_levenshtein_search(SEXP vecSEXP, SEXP patternsSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< const std::vector<std::string>& >::type vec(vecSEXP );
-        Rcpp::traits::input_parameter< const std::vector<std::string>& >::type patterns(patternsSEXP );
-        Rcpp::traits::input_parameter< int >::type max_error(max_errorSEXP );
-        Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP );
-        std::vector<int> __result = levenshtein_search(vec, patterns, max_error, verbose);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type vec(vecSEXP);
+    Rcpp::traits::input_parameter< const std::vector<std::string>& >::type patterns(patternsSEXP);
+    Rcpp::traits::input_parameter< int >::type max_error(max_errorSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    __result = Rcpp::wrap(levenshtein_search(vec, patterns, max_error, verbose));
+    return __result;
 END_RCPP
 }
