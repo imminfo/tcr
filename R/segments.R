@@ -28,7 +28,7 @@ if (getRversion() >= "2.15.1") {
 #' freq.Jb(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
 #' 
 #' @param .data Mitcr data.frame or list with data.frames.
-#' @param .alphabet Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using V_BETA_ALPHABET variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
+#' @param .alphabet Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_ALPHABET_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
 #' or one of the 'alpha' or 'beta' for freq.segments.2D or a list of length 2 with alphabets strings for freq.segments.2D.
 #' @param .count Should we return count or percentage?
 #' @param .meat Compute statistics using counts of elements (e.g., Read.count) or not.
@@ -78,7 +78,7 @@ freq.segments <- function (.data, .alphabet='TRBV', .count=F, .meat=F, .other=F,
   if (.meat) { read.count <- .data[, .sum.col] }
   
   counts.l <- tapply(read.count, seg, sum)
-  freqs <- counts.l[alphabet]
+  freqs <- as.numeric(counts.l[alphabet])
   freqs[is.na(freqs)] <- 0
   res <- data.frame(Segment = alphabet, Freq = freqs, stringsAsFactors = F, row.names=NULL)
   if (.other) {
@@ -101,12 +101,12 @@ freq.segments.2D <- function (.data, .alphabet = "beta", .count = F, .meat = F, 
   
   if (.alphabet=="beta") {
     .columns <- c('V.segments', 'J.segments')
-    alphabetV <- V_BETA_ALPHABET
-    alphabetJ <- J_BETA_ALPHABET
+    alphabetV <- HUMAN_TRBV_ALPHABET_MITCR
+    alphabetJ <- HUMAN_TRBJ_ALPHABET
   } else if (.alphabet=="alpha") {
     .columns <- c('V.segments', 'J.segments')
-    alphabetV <- V_ALPHA_ALPHABET
-    alphabetJ <- J_ALPHA_ALPHABET
+    alphabetV <- HUMAN_TRAV_ALPHABET
+    alphabetJ <- HUMAN_TRAJ_ALPHABET
   } else {
     alphabetV <- .alphabet[[1]]
     alphabetJ <- .alphabet[[2]]
