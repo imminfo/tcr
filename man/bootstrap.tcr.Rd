@@ -25,6 +25,8 @@ For \code{.sim} == "percentage" stands for number of barcodes / read counts to t
 
 \item{.verbose}{If T than show progress bar.}
 
+\item{.prop.col}{Column with proportions for each clonotype.}
+
 \item{...}{Further values passed to \code{.fun}.}
 }
 \value{

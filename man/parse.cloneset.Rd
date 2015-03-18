@@ -9,6 +9,8 @@ parse.cloneset(.filename, .nuc.seq, .aa.seq, .reads, .barcodes, .vgenes,
   .dj.insertions, .total.insertions, .skip = 0, .sep = "\\t")
 }
 \arguments{
+\item{.filename}{Path to the input file with cloneset data.}
+
 \item{.nuc.seq}{Name of the column with CDR3 nucleotide sequences.}
 
 \item{.aa.seq}{Name of the column with CDR3 amino acid sequences.}
@@ -38,8 +40,6 @@ parse.cloneset(.filename, .nuc.seq, .aa.seq, .reads, .barcodes, .vgenes,
 \item{.skip}{How many lines from beginning to skip.}
 
 \item{.sep}{Separator character.}
-
-\item{.filepath}{Path to the input file with cloneset data.}
 }
 \value{
 Data frame with immune receptor repertoire data. See \link{parse.file} for more details.

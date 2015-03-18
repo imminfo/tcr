@@ -28,7 +28,7 @@ parse.migec(.filename)
 
 \item{...}{Parameters passed to \code{parse.cloneset}.}
 
-\item{.filepath}{Path to the input file with cloneset data.}
+\item{.filename}{Path to the input file with cloneset data.}
 
 \item{.filenames}{Vector or list with paths to files with cloneset data.}
 

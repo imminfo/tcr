@@ -142,8 +142,11 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 #' @param .attr.name Name of the new vertex attribute.
 #' @param .V Indices of vertices.
 #' @param .groups List with integer vector with indices of subjects for each group.
+#' @param .paste If T than return character string with concatenated group names, else return list with character vectors
+#' with group names.
 #' 
-#' @return igraph object with new vertex attribute \code{.attr.name} with binary strings.
+#' @return igraph object with new vertex attribute \code{.attr.name} with binary strings for \code{set.group.vector}.
+#' Return character vector for \code{get.group.names}.
 #' 
 #' @examples
 #' \dontrun{
@@ -151,8 +154,10 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 #' twb.shared <- shared.repertoire(twb)
 #' G <- mutation.network(twb.shared)
 #' G <- set.group.vector(G, "twins", list(A = c(1,2), B = c(3,4)))  # <= refactor this
-#' get.group.names(G, "twins", 1)  # "A|B"
-#' get.group.names(G, "twins", 300)  # "A"
+#' get.group.names(G, "twins", 1)       # "A|B"
+#' get.group.names(G, "twins", 300)     # "A"
+#' get.group.names(G, "twins", 1, F)    # list(c("A", "B"))
+#' get.group.names(G, "twins", 300, F)  # list(c("A"))
 #' # Because we have only two groups, we can assign more readable attribute.
 #' V(G)$twin.names <- get.group.names(G, "twins")
 #' V(G)$twin.names[1]  # "A|B"
@@ -168,10 +173,13 @@ set.group.vector <- function (.G, .attr.name, .groups) {
       group.vec[elem] <- names(.groups)[gr.i]
     }
   }
-  
+  grnames <- names(.groups)
   .G <- set.vertex.attribute(.G, .attr.name, V(.G),
-                            apply(d, 1, function (row) { paste0(as.integer(attr(.G, .attr.name) %in% sort(group.vec[row > 0])), collapse='') }))
+                            apply(d, 1, function (row) { 
+                              paste0(as.integer(grnames %in% sort(group.vec[row > 0])), collapse='')
+                              }))
   
+  attr(.G, .attr.name) <- names(.groups)
   .G
 }
 

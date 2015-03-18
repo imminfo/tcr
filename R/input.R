@@ -8,7 +8,7 @@
 #' CDR3 nucleotide sequence or aligned gene segments), so you need to supply column names which has this
 #' purpose in your input data.
 #'
-#' @param .filepath Path to the input file with cloneset data.
+#' @param .filename Path to the input file with cloneset data.
 #' @param .nuc.seq Name of the column with CDR3 nucleotide sequences.
 #' @param .aa.seq Name of the column with CDR3 amino acid sequences.
 #' @param .reads Name of the column with counts of reads for each clonotype.
@@ -140,7 +140,7 @@ parse.cloneset <- function (.filename,
 #' 
 #' parse.migec(.filename)
 #'
-#' @param .filepath Path to the input file with cloneset data.
+#' @param .filename Path to the input file with cloneset data.
 #' @param .filenames Vector or list with paths to files with cloneset data.
 #' @param .folderpath Path to the folder with text cloneset files.
 #' @param .format String specifing input format of files. Parsers for MiTCR output and MiGEC output are available.

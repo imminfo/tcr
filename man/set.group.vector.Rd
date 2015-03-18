@@ -17,9 +17,13 @@ get.group.names(.G, .attr.name, .V = V(.G), .paste = T)
 \item{.groups}{List with integer vector with indices of subjects for each group.}
 
 \item{.V}{Indices of vertices.}
+
+\item{.paste}{If T than return character string with concatenated group names, else return list with character vectors
+with group names.}
 }
 \value{
-igraph object with new vertex attribute \code{.attr.name} with binary strings.
+igraph object with new vertex attribute \code{.attr.name} with binary strings for \code{set.group.vector}.
+Return character vector for \code{get.group.names}.
 }
 \description{
 asdasd
@@ -30,8 +34,10 @@ data(twb)
 twb.shared <- shared.repertoire(twb)
 G <- mutation.network(twb.shared)
 G <- set.group.vector(G, "twins", list(A = c(1,2), B = c(3,4)))  # <= refactor this
-get.group.names(G, "twins", 1)  # "A|B"
-get.group.names(G, "twins", 300)  # "A"
+get.group.names(G, "twins", 1)       # "A|B"
+get.group.names(G, "twins", 300)     # "A"
+get.group.names(G, "twins", 1, F)    # list(c("A", "B"))
+get.group.names(G, "twins", 300, F)  # list(c("A"))
 # Because we have only two groups, we can assign more readable attribute.
 V(G)$twin.names <- get.group.names(G, "twins")
 V(G)$twin.names[1]  # "A|B"

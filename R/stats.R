@@ -513,6 +513,7 @@ top.cross.plot <- function (.top.cross.res, .xlab = 'Top clones', .ylab = 'Norma
 #' "uniform" or "percentage". See "Details" for more details of type of simulation.
 #' @param .postfun Function applied to the resulting list: list of results from each processed sample.
 #' @param .verbose If T than show progress bar.
+#' @param .prop.col Column with proportions for each clonotype.
 #' @param ... Further values passed to \code{.fun}.
 #' 
 #' @return
