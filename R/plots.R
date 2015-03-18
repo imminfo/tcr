@@ -635,7 +635,7 @@ vis.clonal.dynamics <- function (.changed, .lower, .upper, .log = T) {
 #' Visualise occupied by clones homeostatic space among subjects or groups.
 #' 
 #' @description
-#' Visualise 
+#' Visualise which clones how much space occupy.
 #' 
 #' @param .clonal.space.data Data from the \code{fclonal.space.homeostasis} function.
 #' @param .groups List of named character vector with names of subjects 
