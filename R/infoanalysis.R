@@ -32,11 +32,12 @@ assymetry<-function(.alpha, .beta = NULL, .by = 'CDR3.nucleotide.sequence'){
 #' 
 #' @usage
 #' entropy.seg(.data, .frame = c('all', 'in', 'out'),
-#'             .alphabet = if (.VJ) "beta" else 'TRBV', .meat = F, .other = T, .VJ = F)
+#'             .alphabet = if (.VJ) "beta" else 'TRBV',
+#'             .meat = F, .other = T, .VJ = F, .laplace = 1)
 #' 
 #' js.div.seg(.data, .data2 = NULL, .frame = c('all', 'in', 'out'), .norm.entropy = T,
 #'            .alphabet = if (.VJ) "beta" else 'TRBV', .meat = F, .other = T, .VJ = F,
-#'            .verbose = T)
+#'            .verbose = T, .laplace = 1)
 #' 
 #' @param .data Mitcr data.frame or a list with mitcr data.frames.
 #' @param .data2 NULL if .data is a list, or a second mitcr data.frame.
@@ -48,6 +49,7 @@ assymetry<-function(.alpha, .beta = NULL, .by = 'CDR3.nucleotide.sequence'){
 #' @param .other Parameter to \code{freq.segments()} and \code{freq.segments.2D()} functions.
 #' @param .VJ If F than apply \code{freq.segments} function, else apply \code{freq.segments.2D} function.
 #' @param .verbose If T than print progress of function executing.
+#' @param .laplace Parameter passed to \code{freq.segments}.
 #' 
 #' @return For \code{entropy.seg} - numeric integer with entropy value(s). For \code{js.div.seg} - integer of vector one if \code{.data} and \code{.data2} are provided;
 #' esle matrix length(.data) X length(.data) if \code{.data} is a list.

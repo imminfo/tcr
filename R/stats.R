@@ -10,23 +10,23 @@
 #' they length are divisible by 3 (len mod 3 == 0 => in-frame, else out-of-frame)
 #' 
 #' @usage
-#' get.inframes(.data, .head = 0)
+#' get.inframes(.data, .head = 0, .coding = T)
 #' 
 #' get.outframes(.data, .head = 0)
 #' 
-#' count.inframes(.data, .head = 0)
+#' count.inframes(.data, .head = 0, .coding = T)
 #' 
 #' count.outframes(.data, .head = 0)
 #' 
-#' get.frames(.data, .frame = c('in', 'out', 'all'), .head = 0)
+#' get.frames(.data, .frame = c('in', 'out', 'all'), .head = 0, .coding = T)
 #' 
-#' count.frames(.data, .frame = c('in', 'out', 'all'), .head = 0)
+#' count.frames(.data, .frame = c('in', 'out', 'all'), .head = 0, .coding = T)
 #' 
 #' @param .data MiTCR data.frame or a list with mitcr data.frames.
 #' @param .frame Which *-frames to choose.
 #' @param .head Parameter to the head() function. Supply 0 to get all elements. \code{head} applied before subsetting, i.e.
 #' if .head == 500, you will get in-frames from the top 500 clonotypes.
-#' @param .coding If T than return only coding sequences, i.e. with stop-codon.
+#' @param .coding If T than return only coding sequences, i.e. without stop-codon.
 #' 
 #' @return Filtered data.frame or a list with such data.frames.
 get.inframes <- function (.data, .head = 0, .coding = T) { 
@@ -62,7 +62,7 @@ get.frames <- function (.data, .frame = c('in', 'out', 'all'), .head = 0, .codin
   else { head(.data, if (.head == 0) {nrow(.data)} else {.head}) }
 }
 
-count.frames <- function (.data, .frame = c('in', 'out', 'all'), .head = 0, .coding) {
+count.frames <- function (.data, .frame = c('in', 'out', 'all'), .head = 0, .coding = T) {
   if (.frame[1] == 'in') { count.inframes(.data, .head, .coding) }
   else if (.frame[1] == 'out') { count.outframes(.data, .head) }
   else { nrow(head(.data, if (.head == 0) {nrow(.data)} else {.head})) }
@@ -558,16 +558,29 @@ bootstrap.tcr <- function (.data, .fun = entropy.seg, .n = 1000,
 
 
 # mean + IQR
-clonal.space.homeostasis <- function (.data, .clone.types = list(Rare = 0, Small = .0001, Medium = .001, Large = .01, Hyperexpanded = 1), .prop.col = 'Read.proportion') {
-  .clone.types <- c(list(None = 0), .clone.types)
+#' Clonal space homeostasis.
+#' 
+#' @description
+#' asd
+#' 
+#' @seealso \link{vis.clonal.space}
+clonal.space.homeostasis <- function (.data, .clone.types = c(Rare = .00001,
+                                                              Small = .0001,
+                                                              Medium = .001,
+                                                              Large = .01,
+                                                              Hyperexpanded = 1),
+                                      .prop.col = 'Read.proportion') {
+  .clone.types <- c(None = 0, .clone.types)
   
   if (has.class(.data, 'data.frame')) {
     .data <- list(Data = .data)
   }
   
   mat <- matrix(0, length(.data), length(.clone.types) - 1, dimnames = list(names(.data), names(.clone.types)[-1]))
+  .data <- lapply(.data, '[[', .prop.col)
   for (i in 2:length(.clone.types)) {
-    mat[,i-1] <- sapply(.data, function (x) sum(subset(x, x[, .prop.col] > .clone.types[i-1] & x[, .prop.col] <= .clone.types[i])[, .prop.col]))
+    mat[,i-1] <- sapply(.data, function (x) sum(x[x > .clone.types[i-1] & x <= .clone.types[i]]))
+    colnames(mat)[i-1] <- paste0(names(.clone.types[i]), ' (', .clone.types[i-1], ' < X <= ', .clone.types[i], ')')
   }
   
   mat

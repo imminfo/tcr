@@ -4,24 +4,24 @@
 #' Parse input table files with immune receptor repertoire data.
 #'
 #' @description
-#' General parser for cloneset table files. 
+#' General parser for cloneset table files. Supply column names of the input file for parsing.
 #'
 #' @param .filepath Path to the input file with cloneset data.
-#' @param .nuc.seq 
-#' @param .aa.seq 
-#' @param .reads 
-#' @param .barcodes 
-#' @param .vgenes 
-#' @param .jgenes 
-#' @param .dgenes 
-#' @param .vend 
-#' @param .jstart 
-#' @param .dalignments 
-#' @param .vd.insertions 
-#' @param .dj.insertions 
-#' @param .total.insertions 
-#' @param .skip
-#' @param .sep
+#' @param .nuc.seq Name of the column with CDR3 nucleotide sequences.
+#' @param .aa.seq Name of the column with CDR3 amino acid sequences.
+#' @param .reads Name of the column with counts of reads for each clonotype.
+#' @param .barcodes Name of the column with counts of barcodes (UMI, events) for each clonotype.
+#' @param .vgenes Name of the column with names of aligned Variable gene segments.
+#' @param .jgenes Name of the column with names of aligned Joining gene segments.
+#' @param .dgenes Name of the column with names of aligned Diversity gene segments.
+#' @param .vend Name of the column with last positions of aligned V gene segments.
+#' @param .jstart Name of the column with first positions of aligned J gene segments.
+#' @param .dalignments Character vector of length two that names columns with D5' and D3' end positions.
+#' @param .vd.insertions Name of the column with VD insertions for each clonotype.
+#' @param .dj.insertions Name of the column with DJ insertions for each clonotype.
+#' @param .total.insertions Name of the column with total number of insertions for each clonotype.
+#' @param .skip How many lines from beginning to skip.
+#' @param .sep Separator character.
 #' 
 #' @return Data frame with immune receptor repertoire data. See \code{\link{parse.file}} for more details.
 #' 

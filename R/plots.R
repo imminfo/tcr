@@ -635,8 +635,7 @@ vis.clonal.dynamics <- function (.changed, .lower, .upper, .log = T) {
 #' Visualise occupied by clones homeostatic space among subjects or groups.
 #' 
 #' @description
-#' Visualise clonal dynamics (i.e., changes in frequency or count) with error bars of given
-#' clones among time points.
+#' Visualise 
 #' 
 #' @param .clonal.space.data Data from the \code{fclonal.space.homeostasis} function.
 #' @param .groups List of named character vector with names of subjects 
@@ -676,9 +675,10 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
   }
     
   p + theme_linedraw() + 
-    theme(axis.text.x = element_text(angle=90)) +ylab("Occupied homeostatic space, percentage") + 
+    theme(axis.text.x = element_text(angle=90)) + ylab("Occupied homeostatic space, proportion") + 
     ggtitle("Clonal space homeostasis") + 
-    guides(fill = guide_legend("Clone size")) + .colourblind.discrete(length(unique(melted$Clone.size)))
+    guides(fill = guide_legend("Clone size")) + .colourblind.discrete(length(unique(melted$Clone.size))) +
+    scale_y_continuous(expand = c(.01, .01)) + scale_x_discrete(expand = c(.02, .02))
 }
 
 
