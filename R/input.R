@@ -4,7 +4,9 @@
 #' Parse input table files with immune receptor repertoire data.
 #'
 #' @description
-#' General parser for cloneset table files. Supply column names of the input file for parsing.
+#' General parser for cloneset table files. Each column name has specific purpose (e.g., column for
+#' CDR3 nucleotide sequence or aligned gene segments), so you need to supply column names which has this
+#' purpose in your input data.
 #'
 #' @param .filepath Path to the input file with cloneset data.
 #' @param .nuc.seq Name of the column with CDR3 nucleotide sequences.
@@ -23,9 +25,9 @@
 #' @param .skip How many lines from beginning to skip.
 #' @param .sep Separator character.
 #' 
-#' @return Data frame with immune receptor repertoire data. See \code{\link{parse.file}} for more details.
+#' @return Data frame with immune receptor repertoire data. See \link{parse.file} for more details.
 #' 
-#' @seealso \code{\link{parse.file}}
+#' @seealso \link{parse.file}
 #' 
 #' @examples
 #' \dontrun{
@@ -145,9 +147,42 @@ parse.cloneset <- function (.filename,
 #' @param .namelist Either NA or character vector of length \code{.filenames} with names for output data frames.
 #' @param ... Parameters passed to \code{parse.cloneset}.
 #' 
-#' @return Data frame with immune receptor repertoire data and following columns:
+#' @return Data frame with immune receptor repertoire data. Each row in this data frame corresponds to a clonotype.
+#' The data frame has following columns:
 #' 
-#' @seealso \link{\code{parse.cloneset}}
+#' - "Barcode.count" - number of barcodes (events, UMIs);
+#' 
+#' - "Barcode.proportion" - proportion of barcodes (events, UMIs);
+#' 
+#' - "Read.count" - number of reads;
+#' 
+#' - "Read.proportion" - proportion of reads;
+#' 
+#' - "CDR3.nucleotide.sequence" - CDR3 nucleotide sequence;
+#' 
+#' - "CDR3.amino.acid.sequence" - CDR3 amino acid sequence;
+#' 
+#' - "V.segments" - names of aligned Variable gene segments;
+#' 
+#' - "J.segments" - names of aligned Joining gene segments;
+#' 
+#' - "D.segments" - names of aligned Diversity gene segments;
+#' 
+#' - "V.end" - last positions of aligned V gene segments (1-based);
+#' 
+#' - "J.start" - first positions of aligned J gene segments (1-based);
+#' 
+#' - "D5.end" - positions of D'5 end of aligned D gene segments (1-based);
+#' 
+#' - "D3.end" - positions of D'3 end of aligned D gene segments (1-based);
+#' 
+#' - "VD.insertions" - number of inserted nucleotides (N-nucleotides) at V-D junction (-1 for receptors with VJ recombination);
+#' 
+#' - "DJ.insertions" - number of inserted nucleotides (N-nucleotides) at D-J junction (-1 for receptors with VJ recombination);
+#' 
+#' - "Total.insertions" - total number of inserted nucleotides (number of N-nucleotides at V-J junction for receptors with VJ recombination);
+#' 
+#' @seealso \link{parse.cloneset}
 #' 
 #' @examples
 #' \dontrun{

@@ -16,11 +16,11 @@ or shared repertoire (result from the \code{shared.repertoire} function) constru
 
 \item{.max.errors}{Passed to the \code{find.similar.sequences} function.}
 
-\item{.label.col}{}
+\item{.label.col}{Name of the column with CDR3 sequences (vertex labels).}
 
-\item{.seg.col}{}
+\item{.seg.col}{Name of the column with V gene segments.}
 
-\item{.prob.col}{}
+\item{.prob.col}{Name of the column with clonotype probability.}
 }
 \value{
 Mutation network, i.e. igraph object with input sequences as vertices labels, ???

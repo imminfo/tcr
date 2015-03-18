@@ -9,13 +9,45 @@ parse.cloneset(.filename, .nuc.seq, .aa.seq, .reads, .barcodes, .vgenes,
   .dj.insertions, .total.insertions, .skip = 0, .sep = "\\t")
 }
 \arguments{
+\item{.nuc.seq}{Name of the column with CDR3 nucleotide sequences.}
+
+\item{.aa.seq}{Name of the column with CDR3 amino acid sequences.}
+
+\item{.reads}{Name of the column with counts of reads for each clonotype.}
+
+\item{.barcodes}{Name of the column with counts of barcodes (UMI, events) for each clonotype.}
+
+\item{.vgenes}{Name of the column with names of aligned Variable gene segments.}
+
+\item{.jgenes}{Name of the column with names of aligned Joining gene segments.}
+
+\item{.dgenes}{Name of the column with names of aligned Diversity gene segments.}
+
+\item{.vend}{Name of the column with last positions of aligned V gene segments.}
+
+\item{.jstart}{Name of the column with first positions of aligned J gene segments.}
+
+\item{.dalignments}{Character vector of length two that names columns with D5' and D3' end positions.}
+
+\item{.vd.insertions}{Name of the column with VD insertions for each clonotype.}
+
+\item{.dj.insertions}{Name of the column with DJ insertions for each clonotype.}
+
+\item{.total.insertions}{Name of the column with total number of insertions for each clonotype.}
+
+\item{.skip}{How many lines from beginning to skip.}
+
+\item{.sep}{Separator character.}
+
 \item{.filepath}{Path to the input file with cloneset data.}
 }
 \value{
-Data frame with immune receptor repertoire data. See \link{\code{parse.file}} for more details.
+Data frame with immune receptor repertoire data. See \link{parse.file} for more details.
 }
 \description{
-General parser for cloneset table files.
+General parser for cloneset table files. Each column name has specific purpose (e.g., column for
+CDR3 nucleotide sequence or aligned gene segments), so you need to supply column names which has this
+purpose in your input data.
 }
 \examples{
 \dontrun{
@@ -24,6 +56,6 @@ immdata1 <- parse.file("~/mitcr/immdata1.txt", 'mitcr')
 }
 }
 \seealso{
-\link{\code{parse.file}}
+\link{parse.file}
 }
 

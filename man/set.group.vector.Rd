@@ -6,9 +6,11 @@
 \title{Set group attribute for vertices of a mutation network}
 \usage{
 set.group.vector(.G, .attr.name, .groups)
+
+get.group.names(.G, .attr.name, .V = V(.G), .paste = T)
 }
 \arguments{
-\item{.G}{Graph that was created based on \code{.shared.rep}.}
+\item{.G}{Mutation network.}
 
 \item{.attr.name}{Name of the new vertex attribute.}
 

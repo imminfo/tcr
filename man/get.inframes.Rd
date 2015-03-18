@@ -10,17 +10,17 @@
 \alias{get.outframes}
 \title{In-frame / out-of-frame sequences filter.}
 \usage{
-get.inframes(.data, .head = 0)
+get.inframes(.data, .head = 0, .coding = T)
 
 get.outframes(.data, .head = 0)
 
-count.inframes(.data, .head = 0)
+count.inframes(.data, .head = 0, .coding = T)
 
 count.outframes(.data, .head = 0)
 
-get.frames(.data, .frame = c('in', 'out', 'all'), .head = 0)
+get.frames(.data, .frame = c('in', 'out', 'all'), .head = 0, .coding = T)
 
-count.frames(.data, .frame = c('in', 'out', 'all'), .head = 0)
+count.frames(.data, .frame = c('in', 'out', 'all'), .head = 0, .coding = T)
 }
 \arguments{
 \item{.data}{MiTCR data.frame or a list with mitcr data.frames.}
@@ -28,7 +28,7 @@ count.frames(.data, .frame = c('in', 'out', 'all'), .head = 0)
 \item{.head}{Parameter to the head() function. Supply 0 to get all elements. \code{head} applied before subsetting, i.e.
 if .head == 500, you will get in-frames from the top 500 clonotypes.}
 
-\item{.coding}{If T than return only coding sequences, i.e. with stop-codon.}
+\item{.coding}{If T than return only coding sequences, i.e. without stop-codon.}
 
 \item{.frame}{Which *-frames to choose.}
 }

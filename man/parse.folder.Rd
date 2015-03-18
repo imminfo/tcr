@@ -9,7 +9,17 @@
 \alias{parse.mitcrbc}
 \title{Parse input table files with immune receptor repertoire data.}
 \usage{
-parse.folder(.folderpath, .format = c("mitcr", "mitcrbc", "migec"), ...)
+parse.file(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+
+parse.file.list(.filenames, .format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA)
+
+parse.folder(.folderpath, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+
+parse.mitcr(.filename)
+
+parse.mitcrbc(.filename)
+
+parse.migec(.filename)
 }
 \arguments{
 \item{.folderpath}{Path to the folder with text cloneset files.}
@@ -25,7 +35,40 @@ parse.folder(.folderpath, .format = c("mitcr", "mitcrbc", "migec"), ...)
 \item{.namelist}{Either NA or character vector of length \code{.filenames} with names for output data frames.}
 }
 \value{
-Data frame with immune receptor repertoire data and following columns:
+Data frame with immune receptor repertoire data. Each row in this data frame corresponds to a clonotype.
+The data frame has following columns:
+
+- "Barcode.count" - number of barcodes (events, UMIs);
+
+- "Barcode.proportion" - proportion of barcodes (events, UMIs);
+
+- "Read.count" - number of reads;
+
+- "Read.proportion" - proportion of reads;
+
+- "CDR3.nucleotide.sequence" - CDR3 nucleotide sequence;
+
+- "CDR3.amino.acid.sequence" - CDR3 amino acid sequence;
+
+- "V.segments" - names of aligned Variable gene segments;
+
+- "J.segments" - names of aligned Joining gene segments;
+
+- "D.segments" - names of aligned Diversity gene segments;
+
+- "V.end" - last positions of aligned V gene segments (1-based);
+
+- "J.start" - first positions of aligned J gene segments (1-based);
+
+- "D5.end" - positions of D'5 end of aligned D gene segments (1-based);
+
+- "D3.end" - positions of D'3 end of aligned D gene segments (1-based);
+
+- "VD.insertions" - number of inserted nucleotides (N-nucleotides) at V-D junction (-1 for receptors with VJ recombination);
+
+- "DJ.insertions" - number of inserted nucleotides (N-nucleotides) at D-J junction (-1 for receptors with VJ recombination);
+
+- "Total.insertions" - total number of inserted nucleotides (number of N-nucleotides at V-J junction for receptors with VJ recombination);
 }
 \description{
 Load the MITCR TCR data from the file with the given filename
@@ -43,6 +86,6 @@ immdata <- parse.folder("~/data/", 'migec')
 }
 }
 \seealso{
-\link{\code{parse.cloneset}}
+\link{parse.cloneset}
 }
 

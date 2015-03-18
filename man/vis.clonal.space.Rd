@@ -16,8 +16,7 @@ in \code{.clonal.space.data} for grouping them together.}
 ggplot object.
 }
 \description{
-Visualise clonal dynamics (i.e., changes in frequency or count) with error bars of given
-clones among time points.
+Visualise which clones how much space occupy.
 }
 \seealso{
 \link{clonal.space.homeostasis}
