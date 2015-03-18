@@ -192,7 +192,7 @@ get.group.names <- function (.G, .attr.name, .V = V(.G), .paste = T) {
 #' Get vertex neighbours.
 #' 
 #' @description
-#' asdasd
+#' Get all properties of neighbour vertices in a mutation network of specific vertices.
 #' 
 #' @param .G Mutation network.
 #' @param .V Indices of vertices for which return neighbours.
