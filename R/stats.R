@@ -561,9 +561,29 @@ bootstrap.tcr <- function (.data, .fun = entropy.seg, .n = 1000,
 #' Clonal space homeostasis.
 #' 
 #' @description
-#' asd
+#' Compute clonal space homeostatsis - statistics of how many space occupied by clones
+#' with specific proportions.
+#' 
+#' @param .data Cloneset data frame or list with such data frames.
+#' @param .clone.types Named numeric vector.
+#' @param .prop.col Which column to use for counting proportions.
 #' 
 #' @seealso \link{vis.clonal.space}
+#' 
+#' @examples
+#' \dontrun{
+#' data(twb)
+#' # Compute summary space of clones, that occupy
+#' # [0, .05) and [.05, 1] proportion.
+#' clonal.space.homeostasis(twb, c(Low = .05, High = 1)))
+#' #        Low (0 < X <= 0.05) High (0.05 < X <= 1)
+#' # Subj.A           0.9421980           0.05780198
+#' # Subj.B           0.9239454           0.07605463
+#' # Subj.C           0.8279270           0.17207296
+#' # Subj.D           1.0000000           0.00000000
+#' # I.e., for Subj.D sum of all read proportions for clones
+#' # which have read proportion between 0 and .05 is equal to 1.
+#' }
 clonal.space.homeostasis <- function (.data, .clone.types = c(Rare = .00001,
                                                               Small = .0001,
                                                               Medium = .001,
