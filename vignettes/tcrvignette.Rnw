@@ -473,7 +473,7 @@ vis.logo(d)
 \label{subsec:clonalspace}
 For visialisation of how much space which clones are occupy in the package implemented the \code{vis.clonal.space} function.
 
-<<eval=TRUE>>=
+<<eval=TRUE,fig=TRUE>>=
 # data(twb)
 twb.space <- clonal.space.homeostasis(twb)
 vis.clonal.space(twb.space)

@@ -120,17 +120,17 @@ vis.count.len <- function (.data, .ncol = 3, .name = "") {
 #' # Plot a grid of histograms with 2 columns.
 #' vis.number.count(immdata, 2)
 #' }
-vis.number.count <- function (.data, .ncol = 3, .name = '') {
+vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes read counts') {
 #   cat('Limits for x-axis set to (0,50). Transform y-axis to sqrt(y).\n')
   
   if (has.class(.data, 'list')) {
     return(do.call(grid.arrange, c(lapply(1:length(.data), function (i) vis.number.count(.data[[i]], .name = names(.data)[i])), ncol = .ncol)))
   }
   
-  ggplot(.data, aes(x = Read.count)) + 
+  ggplot() + 
     xlim(min(.data$Read.count), 300) +
-    ylab('Number of clones') +
-    geom_histogram(aes(fill = ..count..), binwidth = 1, colour = 'black') +
+    ylab('Number of clonotypes') +
+    geom_histogram(aes(x = Read.count, fill = ..count..), data = .data, binwidth = 1, colour = 'black') +
     coord_trans(xtrans = 'log10') + scale_y_log10() +
     ggtitle(.name) + 
     .colourblind.gradient() +
@@ -295,8 +295,8 @@ vis.V.usage <- function (.data, .cast.freq = T, .main = 'V-usage', .ncol = 3, .c
       res <- melt(freq.Vb(.data))
       res <- res[1:nrow(res), ]  # something bad with melt
       colnames(res) <- c('Segment', 'Subject', 'Freq')
-      p <- ggplot(res, aes(x = Segment, y = Freq, fill = Subject)) + 
-        geom_bar(stat = 'identity', position = position_dodge(), colour = 'black') +
+      p <- ggplot() + 
+        geom_bar(aes(x = Segment, y = Freq, fill = Subject), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
         theme_linedraw() + 
         theme(axis.text.x = element_text(angle=90)) + 
         .colourblind.discrete(length(.data)) +
@@ -321,11 +321,11 @@ vis.V.usage <- function (.data, .cast.freq = T, .main = 'V-usage', .ncol = 3, .c
   
   if (names(.data)[1] == 'Segment') {
     # If result from freq.segments functions.
-    p <- ggplot(.data, aes(x = Segment, y = Freq, fill = Freq)) + geom_bar(stat = 'identity', colour = 'black')
+    p <- ggplot() + geom_bar(aes(x = Segment, y = Freq, fill = Freq), data = .data, stat = 'identity', colour = 'black')
   }
   else {
     # If mitcr data.frame.
-    p <- ggplot(.data, aes(x = V.segments)) + geom_histogram(aes(fill = ..count..), colour = 'black')
+    p <- ggplot() + geom_histogram(aes(x = V.segments, fill = ..count..), data = .data, colour = 'black')
   }
   if (.coord.flip) { p <- p + coord_flip() }
   p + theme_linedraw() + 
@@ -341,10 +341,10 @@ vis.J.usage <- function (.data, .cast.freq = T, .main = 'J-usage', .ncol = 3, .c
       res <- melt(freq.Jb(.data))
       res <- res[1:nrow(res), ]  # something bad with melt
       colnames(res) <- c('Segment', 'Subject', 'Freq')
-      p <- ggplot(res, aes(x = Segment, y = Freq, fill = Subject)) + 
-        geom_bar(stat = 'identity', position = position_dodge(), colour = 'black') +
+      p <- ggplot() + 
+        geom_bar(aes(x = Segment, y = Freq, fill = Subject), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
         theme_linedraw() + 
-        theme(axis.text.x  = element_text(angle=90)) + 
+        theme(axis.text.x = element_text(angle=90)) + 
         .colourblind.discrete(length(.data)) +
         scale_y_continuous(expand = c(0,0))
       return(p)
@@ -367,11 +367,11 @@ vis.J.usage <- function (.data, .cast.freq = T, .main = 'J-usage', .ncol = 3, .c
   
   if (names(.data)[1] == 'Segment') {
     # If result from freq.segments functions.
-    p <- ggplot(.data, aes(x = Segment, y = Freq, fill = Freq)) + geom_bar(stat = 'identity', colour = 'black')
+    p <- ggplot() + geom_bar(aes(x = Segment, y = Freq, fill = Freq), data = .data, stat = 'identity', colour = 'black')
   }
   else {
     # If mitcr data.frame.
-    p <- ggplot(.data, aes(x = J.segments)) + geom_histogram(aes(fill = ..count..), colour = 'black')
+    p <- ggplot() + geom_histogram(aes(x = J.segments, fill = ..count..), data = .data, colour = 'black')
   }
   if (.coord.flip) { p <- p + coord_flip() }
   p + theme_linedraw() + 
@@ -414,9 +414,9 @@ vis.pca <- function (.data, .groups = NA) {
     }
   }
   
-  ggplot(data = .data) + 
-    geom_point(aes(x = First, y = Second, colour = Group)) + 
-    geom_text(aes(x = First, y = Second, label = Subject), .data, hjust=0, vjust=0) +
+  ggplot() + 
+    geom_point(aes(x = First, y = Second, colour = Group), data = .data) + 
+    geom_text(aes(x = First, y = Second, label = Subject), data = .data, hjust=0, vjust=0) +
     theme_linedraw() +
     .colourblind.discrete(length(.groups), T)
 }

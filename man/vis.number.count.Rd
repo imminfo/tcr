@@ -4,7 +4,8 @@
 \alias{vis.number.count}
 \title{Plot a histogram of counts.}
 \usage{
-vis.number.count(.data, .ncol = 3, .name = "")
+vis.number.count(.data, .ncol = 3,
+  .name = "Histogram of clonotypes read counts")
 }
 \arguments{
 \item{.data}{Data frame with columns 'CDR3.nucleotide.sequence' and 'Read.count' or list with such data frames.}
