@@ -64,6 +64,6 @@ vis.V.usage(twb)
 }
 }
 \seealso{
-\code{\link{genesegment}}, \code{\link{vis.V.usage}} \code{\link{vis.J.usage}} \code{\link{pca.segments}}
+\code{\link{genealphabets}}, \code{\link{vis.V.usage}} \code{\link{vis.J.usage}} \code{\link{pca.segments}}
 }
 

@@ -230,19 +230,19 @@ get.deletions.beta <- function (.data, .Vs = segments$TRBV, .Js = segments$TRBJ,
 #' 
 #' @return Mitcr data.frame with generated sequences.
 #' 
-#' @seealso \link{segments} \link{beta.prob}
+#' @seealso \link{genesegments} \link{beta.prob}
 #' 
 #' @examples
 #' \dontrun{
 #' # Load list of segments provided along with tcR.
-#' data(segments) 
+#' data(genesegments) 
 #' # Load list of probabilities provided along with tcR.
 #' data(beta.prob)
 #' # Generate repertoire of beta chian with 10000 sequences.
 #' artif.rep <- generate.tcR(10000, 'beta')
 #' View(artif.rep)
 #' }
-generate.tcr <- function (.count = 1, .chain = c('beta', 'alpha'), .segments = genesegments,
+generate.tcr <- function (.count = 1, .chain = c('beta', 'alpha'), .segments,
                           .P.list = if (.chain[1] == 'alpha') alpha.prob else beta.prob) {
   #   .unique = -1
   

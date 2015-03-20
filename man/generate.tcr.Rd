@@ -4,9 +4,8 @@
 \alias{generate.tcr}
 \title{Generate random nucleotide TCR sequences.}
 \usage{
-generate.tcr(.count = 1, .chain = c("beta", "alpha"),
-  .segments = genesegments, .P.list = if (.chain[1] == "alpha") alpha.prob
-  else beta.prob)
+generate.tcr(.count = 1, .chain = c("beta", "alpha"), .segments,
+  .P.list = if (.chain[1] == "alpha") alpha.prob else beta.prob)
 }
 \arguments{
 \item{.count}{Number of TCR sequences to generate.}
@@ -35,7 +34,7 @@ List with probabilities is quite complicated, so just call \code{data(beta.prob)
 \examples{
 \dontrun{
 # Load list of segments provided along with tcR.
-data(segments)
+data(genesegments)
 # Load list of probabilities provided along with tcR.
 data(beta.prob)
 # Generate repertoire of beta chian with 10000 sequences.
@@ -44,6 +43,6 @@ View(artif.rep)
 }
 }
 \seealso{
-\link{segments} \link{beta.prob}
+\link{genesegments} \link{beta.prob}
 }
 

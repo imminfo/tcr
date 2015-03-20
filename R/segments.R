@@ -40,7 +40,7 @@ if (getRversion() >= "2.15.1") {
 #' 
 #' @return Data.frame with columns Segments and their frequencies in the column Freq.
 #' 
-#' @seealso \code{\link{genesegment}}, \code{\link{vis.V.usage}} \code{\link{vis.J.usage}} \code{\link{pca.segments}}
+#' @seealso \code{\link{genealphabets}}, \code{\link{vis.V.usage}} \code{\link{vis.J.usage}} \code{\link{pca.segments}}
 #' 
 #' @examples
 #' \dontrun{
