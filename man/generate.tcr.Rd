@@ -5,8 +5,8 @@
 \title{Generate random nucleotide TCR sequences.}
 \usage{
 generate.tcr(.count = 1, .chain = c("beta", "alpha"),
-  .segments = segments, .P.list = if (.chain[1] == "alpha") alpha.prob else
-  beta.prob)
+  .segments = genesegments, .P.list = if (.chain[1] == "alpha") alpha.prob
+  else beta.prob)
 }
 \arguments{
 \item{.count}{Number of TCR sequences to generate.}

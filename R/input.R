@@ -180,7 +180,7 @@ parse.cloneset <- function (.filename,
 #' 
 #' - "DJ.insertions" - number of inserted nucleotides (N-nucleotides) at D-J junction (-1 for receptors with VJ recombination);
 #' 
-#' - "Total.insertions" - total number of inserted nucleotides (number of N-nucleotides at V-J junction for receptors with VJ recombination);
+#' - "Total.insertions" - total number of inserted nucleotides (number of N-nucleotides at V-J junction for receptors with VJ recombination).
 #' 
 #' @seealso \link{parse.cloneset}
 #' 

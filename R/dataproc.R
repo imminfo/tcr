@@ -242,7 +242,7 @@ get.deletions.beta <- function (.data, .Vs = segments$TRBV, .Js = segments$TRBJ,
 #' artif.rep <- generate.tcR(10000, 'beta')
 #' View(artif.rep)
 #' }
-generate.tcr <- function (.count = 1, .chain = c('beta', 'alpha'), .segments = segments,
+generate.tcr <- function (.count = 1, .chain = c('beta', 'alpha'), .segments = genesegments,
                           .P.list = if (.chain[1] == 'alpha') alpha.prob else beta.prob) {
   #   .unique = -1
   

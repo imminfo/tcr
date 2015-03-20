@@ -711,5 +711,6 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
               position = position_jitterdodge(jitter.width = .jitter.width, 
                                               jitter.height = .jitter.height, 
                                               dodge.width = .dodge.width)) +
+    xlab("Position") + ylab("Proportion") +
     theme_linedraw()
 }

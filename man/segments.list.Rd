@@ -2,10 +2,10 @@
 % Please edit documentation in R/docdata.R
 \docType{data}
 \name{segments.list}
-\alias{segments}
+\alias{genesegments}
 \alias{segments.list}
 \title{Segment data.}
-\format{\code{segments} is a list with data frames.}
+\format{\code{genesegments} is a list with data frames.}
 \description{
 \code{segments} is a list with 5 data frames with data of human alpha-beta chain segments.
 Elements names as "TRAV", "TRAJ", "TRBV", "TRVJ", "TRVD". Each data frame consists of 5 columns:
@@ -22,8 +22,8 @@ Elements names as "TRAV", "TRAJ", "TRBV", "TRVJ", "TRVD". Each data frame consis
 }
 \examples{
 \dontrun{
-data(segments)
-segments$Nucleotide.sequence[segments$TRBV[,1] == "TRBV10-1"]
+data(genesegments)
+genesegments$Nucleotide.sequence[segments$TRBV[,1] == "TRBV10-1"]
 }
 }
 

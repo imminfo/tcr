@@ -13,7 +13,7 @@
 \alias{HUMAN_TRDV_ALPHABET}
 \alias{HUMAN_TRGJ_ALPHABET}
 \alias{HUMAN_TRGV_ALPHABET}
-\alias{genesegment}
+\alias{genealphabets}
 \alias{segments.alphabets}
 \title{Alphabets of TCR and Ig gene segments.}
 \format{Each \code{<SPECIES>_<GENES>_ALPHABET} is a character vector. <SPECIES> is an identifier of species, <GENES> is concatenated three
@@ -21,6 +21,26 @@ identifiers of cell type ("TR**" for TCR, "IG**" for Ig), chain (e.g., "**A*" fo
 "***J" for J(oining) gene segment, "***D" for D(iversity) gene segment).}
 \usage{
 HUMAN_TRAV_ALPHABET
+
+HUMAN_TRAJ_ALPHABET
+
+HUMAN_TRBV_ALPHABET
+
+HUMAN_TRBD_ALPHABET
+
+HUMAN_TRBJ_ALPHABET
+
+HUMAN_TRBV_ALPHABET_MITCR
+
+HUMAN_TRGV_ALPHABET
+
+HUMAN_TRGJ_ALPHABET
+
+HUMAN_TRDV_ALPHABET
+
+HUMAN_TRDD_ALPHABET
+
+HUMAN_TRDJ_ALPHABET
 }
 \description{
 Character vector with names for segments. With \code{tcR} we provided alphabets for all alpha, beta,
