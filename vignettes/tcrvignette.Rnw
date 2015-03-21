@@ -489,7 +489,7 @@ vis.clonal.space(twb.space)
 Mutation network (or a mutation graph) is a graph with vertices representing nucleotide or in-frame amino acid sequences (out-of-frame amino acid sequences will automatically filtered out by \Rpackage{tcR} functions) and edges are connecting pairs of sequences with hamming distance (parameter \code{.method} = 'hamm') or edit distance (parameter \code{.method} = 'lev') between them no more than specified in the \code{.max.errors} function parameter. To create a mutation network first you need is to make a shared repertoires and then apply the \code{mutation.network} function to this shared repertoire:
 
 <<eval=TRUE>>=
-data(twb)
+# data(twb)
 twb.shared <- shared.repertoire(twb, .head = 1000, .verbose = F)
 G <- mutation.network(twb.shared)
 G
