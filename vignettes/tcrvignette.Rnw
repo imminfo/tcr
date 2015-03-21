@@ -432,7 +432,12 @@ The package implements rich data visualisation procedures. All of them are descr
 
 \subsection{CDR3 length and read count distributions}
 Plots of the distribution of CDR3 nucleotide sequences length (function \code{vis.count.len}) and the histogram of "Read.count" number (function \code{vis.number.count}). Input data is either a data frame or a list with data frames.
-<<eval=TRUE,fig=TRUE,height=5,width=18,height=6>>=
+%<<eval=TRUE,fig=TRUE,height=5,width=18,height=6>>=
+%p1 <- vis.count.len(twb[[1]])
+%p2 <- vis.number.count(twb[[1]])
+%grid.arrange(p1, p2, ncol = 2)
+%@
+<<eval=FALSE>>=
 p1 <- vis.count.len(twb[[1]])
 p2 <- vis.number.count(twb[[1]])
 grid.arrange(p1, p2, ncol = 2)
