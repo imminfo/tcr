@@ -1,7 +1,7 @@
 Package: tcR
 Type: Package
 Title: Advanced Data Analysis of T-Cell Receptor Repertoires
-Version: 1.4dev
+Version: 1.4
 Date: 2015-03-21
 Author: Vadim Nazarov, Mikhail Pogorelyy
 Maintainer: Vadim Nazarov <vdm.nazarov@gmail.com>
