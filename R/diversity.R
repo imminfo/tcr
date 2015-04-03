@@ -119,7 +119,7 @@ chao1 <- function (.data) {
   # f1 != && f2 != 0
   else {
     const <- (n - 1) / n
-    e <- D + f1^2 / (2 * f1) * const
+    e <- D + f1^2 / (2 * f2) * const
     f12 <- f1 / f2
     v <- f2 * (const * f12^2 / 2 + const^2 * f12^3 + const^2 * f12^4 / 4)
     t <- e - D
