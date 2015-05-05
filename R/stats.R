@@ -75,12 +75,12 @@ clonotypescount <- function(.data, .head = 0) {
 
 #' MiTCR data frame basic statistics.
 #' 
-#' @aliases mitcr.stats lib.mitcr.stats
+#' @aliases cloneset.stats library.stats
 #' 
 #' @usage
-#' mitcr.stats(.data, .head = 0)
+#' cloneset.stats(.data, .head = 0)
 #' 
-#' lib.mitcr.stats(.data, .head = 0)
+#' library.stats(.data, .head = 0)
 #' 
 #' @description
 #' Compute basic statistics of TCR repertoires: number of clones, number of clonotypes, 
@@ -95,12 +95,12 @@ clonotypescount <- function(.data, .head = 0) {
 #' @examples
 #' \dontrun{
 #' # Compute basic statistics of list with data frames.
-#' mitcr.stats(immdata)
-#' lib.mitcr.stats(immdata)
+#' cloneset.stats(immdata)
+#' library.stats(immdata)
 #' }
-mitcr.stats <- function (.data, .head = 0) {
+cloneset.stats <- function (.data, .head = 0) {
   if (has.class(.data, 'list')) {
-    res <- t(do.call(cbind, lapply(.data, mitcr.stats, .head = .head)))
+    res <- t(do.call(cbind, lapply(.data, cloneset.stats, .head = .head)))
     row.names(res) <- names(.data)
     return(res)
   }
@@ -127,9 +127,9 @@ mitcr.stats <- function (.data, .head = 0) {
   c(res, res2)
 }
 
-lib.mitcr.stats = function(.data, .head=0) {
+library.stats = function(.data, .head=0) {
   if (has.class(.data, "list")) {
-    res=do.call(cbind, lapply(.data, lib.mitcr.stats, .head=.head))
+    res=do.call(cbind, lapply(.data, library.stats, .head=.head))
     dimnames(res)[[2]]=names(.data)
     return(t(res))
   }else{
