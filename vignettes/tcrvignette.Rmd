@@ -1,0 +1,137 @@
+---
+title: '<center> <h1>tcR: a package for T-cell receptor repertoire advanced data analysis</h1>
+  </center> <center> <h2>Vadim I. Nazarov</h2>'
+author: </center> <center> <h4><vdm.nazarov@gmail.com></h4> </center> <center> <h4>Laboratory
+  of Comparative and Functional Genomics, IBCH RAS, Moscow, Russia</h4> </center>
+output:
+  html_document:
+    theme: spacelab
+    toc: yes
+    toc_depth: 4
+  pdf_document:
+    toc: yes
+    toc_depth: 4
+  word_document: default
+---
+
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{tcR vignette}
+%\VignettePackage{tcR}
+-->
+
+## Introduction
+The *tcR* package designed to help researchers in the immunology field to analyse TCR and BCR repertoires.
+In this vignette, I will cover procedures for TCR repertoire analysis provided with the package.
+
+Terms: clonotype, cloneset, repertoire, TCR, BCR.
+
+```{r eval=TRUE,echo=FALSE,warning=FALSE,message=FALSE}
+library(tcR)
+```
+
+### Package features
+  - Parsers for outputs of various tools for CDR3 extraction and gene segments alignment *(currently implemented MiTCR and MiGEC parsers)*
+  - Data manipulation *(in-frame / out-of-frame sequences subsetting, clonotype motif search)*
+  - Descriptive statistics *(number of reads, number of clonotypes, gene segment usage)*
+  - Shared clonotypes statistics *(number of shared clonotypes, using V-segments or not; sequential intersection among the most abundant clonotype ("top-cross"))*
+  - Repertoire comparison *(Jaccard index, Morisita's overlap index, Horn's index, Tversky index, overlap coefficient)*
+  - V- and J-segments usage and it's analysis *(PCA, Shannon Entropy, Jensen-Shannon Divergence)*
+  - Diversity evaluation *(ecological diversity index, Gini index, inverse Simpson index, rarefaction analysis)*
+  - Artificial repertoire generation (beta chain only, for now)
+  - Spectratyping
+  - Various visualisation procedures
+  - Mutation networks *(graphs, in which vertices represent CDR3 nucleotide / amino acid sequences and edges are connecting similar sequences with low hamming or edit distance between them)*
+
+
+### Data in the package
+There are two datasets provided with the package - twins data and V(D)J recombination genes data.
+
+#### Downsampled twins data
+
+`twa.rda`, `twb.rda` - two lists with 4 data frames in each list. Every data frame is  a sample downsampled to the 10000 most abundant clonotypes of twins data (alpha and beta chains). Full data is available here:
+
+[Twins TCR data at Laboratory of Comparative and Functional Genomics](http://labcfg.ibch.ru/tcr.html)
+
+Explore the data:
+```{r eval=FALSE,echo=TRUE}
+# Load the package and load the data.
+library(tcR)
+data(twa)  # "twa" - list of length 4
+data(twb)  # "twb" - list of length 4
+
+# Explore the data.
+head(twa[[1]])
+head(twb[[1]])
+```
+
+
+#### Gene segments alphabets
+
+Gene segments alphabets - character vectors with names of genes for TCR and Ig.
+```{r eval=FALSE,echo=TRUE}
+# Run help to see available alphabets.
+?genealphabets
+```
+
+
+### Quick start / automatic report generation
+For the exploratory analysis of a single repertoire, use the RMarkdown report file at
+
+`"<path to the tcR package>/inst/library.report.Rmd"`
+   
+Analysis in the file include statistics and visualisation of number of clones, clonotypes, in- and out-of-frame sequences, unique amino acid CDR3 sequences, V- and J-usage, most frequent k-mers, rarefaction analysis. 
+
+For the analysis of a group of repertoires ("cross-analysis"), use the RMarkdown report file at:
+
+`"<path to the tcR package>/inst/crossanalysis.report.Rmd}"`
+
+Analysis in this file include statistics and visualisation of number of shared clones and clonotypes, V-usage for individuals and groups, J-usage for individuals, Jensen-Shannon divergence among V-usages of repertoires and top-cross. 
+
+You need the *knitr* package installed in order to generate reports from default pipelines. In RStudio you can run a pipeline file as follows:
+
+`Run RStudio -> load the pipeline .Rmd files -> press the knitr button`
+
+
+### Input parsing
+Parsers for MiTCR and MiGEC software tools outputs are currently implemented, and a general parser for text table files is implemented. General parser is `parse.cloneset`, MiTCR parser is `parse.mitcr` and MiGEC parser if `parse.migec`. General wrapper for parsers is `parse.file`. User can also parse a list of files or the entire folder.
+
+```{r eval=FALSE,echo=TRUE}
+# Parse file in "~/mitcr/immdata1.txt" as a MiTCR file.
+immdata1 <- parse.file("~/mitcr_data/immdata1.txt", 'mitcr')
+# equivalent to
+immdata1.eq <- parse.mitcr("~/mitcr_data/immdata1.txt")
+
+# Parse folder with MiGEC files.
+immdata <- parse.folder("~/migec_data/", 'migec')
+```
+
+
+### Cloneset representation
+
+
+```{r eval=TRUE, echo=TRUE}
+# No D genes is available here hence "" at "D.segments" and "-1" at positions.
+str(twa[[1]])
+
+str(twb[[1]])
+```
+
+
+## Repertoire descriptive statistics
+
+
+## Visualisation
+
+```{r eval=TRUE, echo=TRUE}
+data(twa)
+data(twb)
+str(twa[[1]])
+str(twb[[1]])
+vis.heatmap(intersect(twb, 'n0e'))
+vis.V.usage(twb[[1]])
+```
+
+```{r eval=TRUE,echo=TRUE,fig.align='center',fig.width=14,fig.height=10}
+vis.V.usage(twb, .ncol = 2)
+```
