@@ -15,14 +15,14 @@
 #' I.e., this functions will remove such columns as 'CDR3.amino.acid.sequence', 'V.segments', 'People'.
 #' 
 #' @usage
-#' shared.repertoire(.datalist, .type = 'avc', .min.ppl = 1, .head = -1,
+#' shared.repertoire(.datalist, .type = 'avrc', .min.ppl = 1, .head = -1,
 #'                   .clear = T, .verbose = T, .by.col = '', .sum.col = '',
 #'                   .max.ppl = length(.datalist))
 #' 
 #' shared.matrix(.shared.rep)
 #' 
 #' @param .datalist List with data frames.
-#' @param .type String of length 3 denotes how to create a shared repertoire. See "Details" for
+#' @param .type String of length 4 denotes how to create a shared repertoire. See "Details" for
 #' more information. If supplied, than parameters \code{.by.col} and \code{.sum.col} will be ignored. If not supplied, than columns
 #' in \code{.by.col} and \code{.sum.col} will be used.
 #' @param .min.ppl At least how many people must have a sequence to leave this sequence in the shared repertoire.
@@ -35,15 +35,16 @@
 #' @param .shared.rep Shared repertoire.
 #' 
 #' @details
-#' Parameter \code{.type} is a string of length 3, where:
+#' Parameter \code{.type} is a string of length 4, where:
 #' \enumerate{
 #'  \item First character stands either for the letter 'a' for taking the "CDR3.amino.acid.sequence" column or
 #' for the letter 'n' for taking the "CDR3.nucleotide.sequence" column.
 #'  \item Second character stands whether or not take the V.segments column. Possible values are '0' (zero) stands
 #' for taking no additional columns, 'v' stands for taking the "V.segments" column.
-#'  \item Third character stands for name of the column to choose as numeric characteristic of sequences. Possible values are
-#' "c" for the "Read.count" column, "p" for the "Read.proportion" column, "r" for the "Rank" column or "i" for the "Index" column.
-#' If "Rank" or "Index" isn't in the given repertoire, than it will be created using \code{set.rank} function using default "Read.count" column.
+#'  \item Third character stands for using either barcodes or reads in choosing the column with numeric characterisitc (see the next letter).
+#'  \item Fourth character stands for name of the column to choose as numeric characteristic of sequences. It depends on the third letter. Possible values are
+#' "c" for the "Barcode.count" (if 3rd character is "b") / "Read.count" column (if 3rd character is "r"), "p" for the "Barcode.proportion" / "Read.proportion" column, "r" for the "Rank" column or "i" for the "Index" column.
+#' If "Rank" or "Index" isn't in the given repertoire, than it will be created using \code{set.rank} function using "Barcode.count" / "Read.count" column.
 #' }
 #' 
 #' @return
@@ -59,9 +60,9 @@
 #' immdata <- set.rank(immdata)
 #' # Generate shared repertoire using "CDR3.amino.acid.sequence" and
 #' # "V.segments" columns and with rank.
-#' imm.shared.av <- shared.repertoire(immdata, 'avr')
+#' imm.shared.av <- shared.repertoire(immdata, 'avrc')
 #' }
-shared.repertoire <- function (.datalist, .type = 'avc', .min.ppl = 1, .head = -1, .clear = T,
+shared.repertoire <- function (.datalist, .type = 'avrc', .min.ppl = 1, .head = -1, .clear = T,
                                .verbose = T, .by.col = '', .sum.col = '', .max.ppl = length(.datalist)) {
   
   .process.df <- function (.data, .bc, .sc) {
@@ -76,10 +77,14 @@ shared.repertoire <- function (.datalist, .type = 'avc', .min.ppl = 1, .head = -
     # If .data$Rank or .data$Index is NULL, than generate this columns
     # using the "Read.count" column.
     if (is.null(.data[[.sc]])) {
-      if (.sc == 'Rank') {
-        .data <- set.rank(.data)
+      if (.sc == 'Read.rank') {
+        .data <- set.rank(.data, 'Read.count')
+      } else if (.sc == 'Barcode.rank') {
+        .data <- set.rank(.data, 'Barcode.count')
+      } else if (.sc == 'Read.rank') {
+        .data <- set.index(.data, 'Read.count')
       } else {
-        .data <- set.index(.data)
+        .data <- set.index(.data, 'Barcode.count')
       }
     }
     
@@ -101,18 +106,34 @@ shared.repertoire <- function (.datalist, .type = 'avc', .min.ppl = 1, .head = -
   }
   
   if (nchar(.sum.col) == 0) {
-    # read count
-    if (substr(.type, 3, 3) == 'c') {
-      .sum.col <- 'Read.count'
-    } else if (substr(.type, 3, 3) == 'p') {
-      .sum.col <- 'Read.proportion'
-    } else if (substr(.type, 3, 3) == 'r') {
-      .sum.col <- 'Rank'
-    } else if (substr(.type, 3, 3) == 'i') {
-      .sum.col <- 'Index'
+    # barcode count
+    if (substr(.type, 3, 3) == 'b') {
+      if (substr(.type, 4, 4) == 'c') {
+        .sum.col <- 'Barcode.count'
+      } else if (substr(.type, 4, 4) == 'p') {
+        .sum.col <- 'Barcode.proportion'
+      } else if (substr(.type, 4, 4) == 'r') {
+        .sum.col <- 'Barcode.rank'
+      } else if (substr(.type, 4, 4) == 'i') {
+        .sum.col <- 'Barcode.index'
+      } else {
+        # As a default option.
+        .sum.col <- 'Barcode.count'
+      }
     } else {
-      # As a default option.
-      .sum.col <- 'Read.count'
+      # read count
+      if (substr(.type, 4, 4) == 'c') {
+        .sum.col <- 'Read.count'
+      } else if (substr(.type, 4, 4) == 'p') {
+        .sum.col <- 'Read.proportion'
+      } else if (substr(.type, 4, 4) == 'r') {
+        .sum.col <- 'Read.rank'
+      } else if (substr(.type, 4, 4) == 'i') {
+        .sum.col <- 'Read.index'
+      } else {
+        # As a default option.
+        .sum.col <- 'Read.count'
+      }
     }
   }
   
