@@ -69,6 +69,7 @@ if (getRversion() >= "2.15.1") {
 #' @param .data Data frame with columns 'CDR3.nucleotide.sequence' and 'Read.count' or list with such data frames.
 #' @param .ncol If .data is a list, than number of columns in a grid of histograms for each data frame in \code{.data}. Else not used.
 #' @param .name Title for this plot.
+#' @param .col Name of the column to use in computing the lengths distribution.
 #' 
 #' @details
 #' If \code{.data} is a data frame, than one histogram will be plotted. Is \code{.data} is a list, than grid of histograms
@@ -84,15 +85,15 @@ if (getRversion() >= "2.15.1") {
 #' # Plot a grid of histograms with 2 columns.
 #' vis.count.len(immdata, 2)
 #' }
-vis.count.len <- function (.data, .ncol = 3, .name = "") {
+vis.count.len <- function (.data, .ncol = 3, .name = "", .col = 'Read.count') {
   if (has.class(.data, 'list')) {
-    return(do.call(grid.arrange, c(lapply(1:length(.data), function (i) vis.count.len(.data[[i]], .name = names(.data)[i])), ncol = .ncol)))
+    return(do.call(grid.arrange, c(lapply(1:length(.data), function (i) vis.count.len(.data[[i]], .col = .col, .name = names(.data)[i])), ncol = .ncol)))
   }
-  tmp <- aggregate(Read.count ~ nchar(CDR3.nucleotide.sequence), .data, sum)
-  names(tmp) <- c('Lengths', 'Read.count')
+  tmp <- aggregate(as.formula(paste0(.col, " ~ nchar(CDR3.nucleotide.sequence)")), .data, sum)
+  names(tmp) <- c('Lengths', "Count")
   ggplot() +
-    geom_histogram(aes(x = Lengths, y = Read.count, fill = Read.count), data = tmp, stat = 'identity', colour = 'black') +
-    .colourblind.gradient(min(tmp$Read.count), max(tmp$Read.count)) +
+    geom_histogram(aes(x = Lengths, y = Count, fill = Count), data = tmp, stat = 'identity', colour = 'black') +
+    .colourblind.gradient(min(tmp$Count), max(tmp$Count)) +
     ggtitle(.name) + theme_linedraw()
 }
 
@@ -105,6 +106,7 @@ vis.count.len <- function (.data, .ncol = 3, .name = "") {
 #' @param .data Data frame with columns 'CDR3.nucleotide.sequence' and 'Read.count' or list with such data frames.
 #' @param .ncol If .data is a list, than number of columns in a grid of histograms for each data frame in \code{.data}. Else not used.
 #' @param .name Title for this plot.
+#' @param .col Name of the column with counts.
 #' 
 #' @details
 #' If \code{.data} is a data frame, than one histogram will be plotted. Is \code{.data} is a list, than grid of histograms
@@ -120,17 +122,19 @@ vis.count.len <- function (.data, .ncol = 3, .name = "") {
 #' # Plot a grid of histograms with 2 columns.
 #' vis.number.count(immdata, 2)
 #' }
-vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes read counts') {
+vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes read counts', .col = "Read.count") {
 #   cat('Limits for x-axis set to (0,50). Transform y-axis to sqrt(y).\n')
   
   if (has.class(.data, 'list')) {
-    return(do.call(grid.arrange, c(lapply(1:length(.data), function (i) vis.number.count(.data[[i]], .name = names(.data)[i])), ncol = .ncol)))
+    return(do.call(grid.arrange, c(lapply(1:length(.data), function (i) vis.number.count(.data[[i]], .col = .col, .name = names(.data)[i])), ncol = .ncol)))
   }
   
+  counts <- data.frame(Count = .data[[.col]])
+  
   ggplot() + 
-    xlim(min(.data$Read.count), 300) + 
+    xlim(min(counts$Count), 300) + 
     ylab('Number of clonotypes') +
-    geom_histogram(aes(x = Read.count, fill = ..count..), data = .data, binwidth = 1, colour = 'black') +
+    geom_histogram(aes(x = Count, fill = ..count..), data = counts, binwidth = 1, colour = 'black') +
     coord_trans(xtrans = 'log10') + scale_y_log10() +
     ggtitle(.name) + 
     .colourblind.gradient() +
