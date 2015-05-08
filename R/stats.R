@@ -75,12 +75,12 @@ clonotypescount <- function(.data, .head = 0) {
 
 #' MiTCR data frame basic statistics.
 #' 
-#' @aliases cloneset.stats library.stats
+#' @aliases cloneset.stats repseq.stats
 #' 
 #' @usage
 #' cloneset.stats(.data, .head = 0)
 #' 
-#' library.stats(.data, .head = 0)
+#' repseq.stats(.data, .head = 0)
 #' 
 #' @description
 #' Compute basic statistics of TCR repertoires: number of clones, number of clonotypes, 
@@ -96,7 +96,7 @@ clonotypescount <- function(.data, .head = 0) {
 #' \dontrun{
 #' # Compute basic statistics of list with data frames.
 #' cloneset.stats(immdata)
-#' library.stats(immdata)
+#' repseq.stats(immdata)
 #' }
 cloneset.stats <- function (.data, .head = 0) {
   if (has.class(.data, 'list')) {
@@ -127,9 +127,9 @@ cloneset.stats <- function (.data, .head = 0) {
   c(res, res2)
 }
 
-library.stats = function(.data, .head=0) {
+repseq.stats = function(.data, .head=0) {
   if (has.class(.data, "list")) {
-    res=do.call(cbind, lapply(.data, library.stats, .head=.head))
+    res=do.call(cbind, lapply(.data, repseq.stats, .head=.head))
     dimnames(res)[[2]]=names(.data)
     return(t(res))
   }else{

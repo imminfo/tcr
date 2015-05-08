@@ -41,8 +41,8 @@ immdata <- head(immdata, N)
 ## Data statistics
 
 ```{r seqstats,warning=FALSE,message=F}
-mitcr.stats(immdata)
-lib.mitcr.stats(immdata)
+cloneset.stats(immdata)
+lib.cloneset.stats(immdata)
 ```
 
 
