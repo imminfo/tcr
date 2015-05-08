@@ -1,5 +1,5 @@
 ---
-title: '<center> <h1>tcR: a package for T-cell receptor repertoire advanced data analysis</h1>
+title: '<center> <h1>tcR: a package for T cell receptor repertoire advanced data analysis</h1>
   </center> <center> <h2>Vadim I. Nazarov</h2>'
 author: </center> <center> <h4><vdm.nazarov@gmail.com></h4> </center> <center> <h4>Laboratory
   of Comparative and Functional Genomics, IBCH RAS, Moscow, Russia</h4> </center>
@@ -14,21 +14,31 @@ output:
   word_document: default
 ---
 
+
 <!--
 %\VignetteEngine{knitr::rmarkdown}
 %\VignetteIndexEntry{tcR vignette}
 %\VignettePackage{tcR}
 -->
 
+
 ## Introduction
-The *tcR* package designed to help researchers in the immunology field to analyse TCR and BCR repertoires.
+The *tcR* package designed to help researchers in the immunology field to analyse T cell receptor (`TCR`) and immunoglobulin (`Ig`) repertoires.
 In this vignette, I will cover procedures for TCR repertoire analysis provided with the package.
 
-Terms: clonotype, cloneset, repertoire, TCR, BCR.
+Terms:
 
-```{r eval=TRUE,echo=FALSE,warning=FALSE,message=FALSE}
+- Clonotype:
+
+- Cloneset / repertoire:
+
+
+```{r eval=TRUE,echo=FALSE,warning=FALSE,message=FALSE,cache=TRUE}
 library(tcR)
+data(twa)
+data(twb)
 ```
+
 
 ### Package features
   - Parsers for outputs of various tools for CDR3 extraction and gene segments alignment *(currently implemented MiTCR and MiGEC parsers)*
@@ -48,12 +58,12 @@ library(tcR)
 There are two datasets provided with the package - twins data and V(D)J recombination genes data.
 
 #### Downsampled twins data
-
 `twa.rda`, `twb.rda` - two lists with 4 data frames in each list. Every data frame is  a sample downsampled to the 10000 most abundant clonotypes of twins data (alpha and beta chains). Full data is available here:
 
 [Twins TCR data at Laboratory of Comparative and Functional Genomics](http://labcfg.ibch.ru/tcr.html)
 
 Explore the data:
+
 ```{r eval=FALSE,echo=TRUE}
 # Load the package and load the data.
 library(tcR)
@@ -67,8 +77,8 @@ head(twb[[1]])
 
 
 #### Gene segments alphabets
-
 Gene segments alphabets - character vectors with names of genes for TCR and Ig.
+
 ```{r eval=FALSE,echo=TRUE}
 # Run help to see available alphabets.
 ?genealphabets
@@ -108,7 +118,26 @@ immdata <- parse.folder("~/migec_data/", 'migec')
 
 
 ### Cloneset representation
+Clonesets represented in *tcR* as data frames with specific column names:
 
+  - *Barcode.count* - number of barcodes (events, UMIs);
+  - *Barcode.proportion* - proportion of barcodes (events, UMIs);
+  - *Read.count* - number of reads;
+  - *Read.proportion* - proportion of reads;
+  - *CDR3.nucleotide.sequence* - CDR3 nucleotide sequence;
+  - *CDR3.amino.acid.sequence* - CDR3 amino acid sequence;
+  - *V.segments* - names of aligned Variable gene segments;
+  - *J.segments* - names of aligned Joining gene segments;
+  - *D.segments* - names of aligned Diversity gene segments;
+  - *V.end* - last positions of aligned V gene segments (1-based);
+  - *J.start* - first positions of aligned J gene segments (1-based);
+  - *D5.end* - positions of D'5 end of aligned D gene segments (1-based);
+  - *D3.end* - positions of D'3 end of aligned D gene segments (1-based);
+  - *VD.insertions* - number of inserted nucleotides (N-nucleotides) at V-D junction (-1 for receptors with VJ recombination);
+  - *DJ.insertions* - number of inserted nucleotides (N-nucleotides) at D-J junction (-1 for receptors with VJ recombination);
+  - *Total.insertions* - total number of inserted nucleotides (number of N-nucleotides at V-J junction for receptors with VJ recombination).
+
+Any data frame with this columns and of this class is suitable for processing with the package, hence user can generate their own table files and load them for the further analysis using \code{read.csv}, \code{read.table} and other base R functions. Please note that \Rpackage{tcR} internally expects all strings to be of class "character", not "factor". Therefore use R parsing function with parameter \code{stringsAsFactors=FALSE} please.
 
 ```{r eval=TRUE, echo=TRUE}
 # No D genes is available here hence "" at "D.segments" and "-1" at positions.
@@ -119,19 +148,350 @@ str(twb[[1]])
 
 
 ## Repertoire descriptive statistics
+For the exploratory analysis *tcR* provides various functions for computing descriptive statistics.
+
+
+### Cloneset summary
+To get a general view of a subject's repertoire (overall count of sequences, in- and out-of-frames numbers and proportions) use the `cloneset.stats` function. It returns a `summary` of counts of nucleotide and amino acid clonotypes, as well as summary of read counts:
+
+```{r eval=TRUE,echo=TRUE}
+cloneset.stats(twb)
+```
+
+
+For characterisation of a library use the `repseq.stats` function:
+
+```{r eval=TRUE,echo=TRUE}
+repseq.stats(twb)
+```
+
+
+### Most abundant clonotypes statistics
+Function `clonal.proportion` is used to get the number of most abundant by the count of reads clonotypes. E.g., compute number of clonotypes which fill up (approx.) the 25% from total repertoire's "Read.count":
+
+```{r eval=TRUE,echo=TRUE}
+                            # How many clonotypes fill up approximately
+clonal.proportion(twb, 25)  # the 25% of the sum of values in 'Read.count'?
+```
+
+
+To get a proportion of the most abundant clonotypes' sum of reads to the overall number of reads in a repertoire, use `top.proportion`, i.e. get
+
+($\sum$ reads of top clonotypes)$/$($\sum$ reads for all clonotypes).
+
+E.g., get a proportion of the top-10 clonotypes' reads to the overall number of reads:
+
+```{r echo=TRUE,eval=TRUE,fig=TRUE,fig.height=4,fig.width=5.5,message=FALSE,fig.align='center'}
+                          # What accounts a proportion of the top-10 clonotypes' reads
+top.proportion(twb, 10)   # to the overall number of reads?
+vis.top.proportions(twb)  # Plot this proportions.
+```
+
+
+Function `tailbound.proportion` with two arguments *.col* and *.bound* gets subset of the given data frame with clonotypes which have column *.col* with value $\leq$ *.bound* and computes the ratio of sums of count reads of such subset to the overall data frame. E.g., get proportion of sum of reads of sequences which has "Read.count" <= 100 to the overall number of reads:
+
+```{r eval=TRUE,echo=TRUE}
+                                # What is a proportion of sequences which
+                                # have 'Read.count' <= 100 to the
+tailbound.proportion(twb, 100)  # overall number of reads?
+```
+
+
+### Clonal space homeostasis
+Clonal space homeostasis is a useful statistics of how many space occupied by clonotypes with specific proportions.
+
+```{r eval=TRUE, echo=TRUE, fig.height=4, fig.width=6.5, fig.align='center'}
+# data(twb)
+# Compute summary space of clones, that occupy
+# [0, .05) and [.05, 1] proportion.
+clonal.space.homeostasis(twb, c(Low = .05, High = 1))
+# Use default arguments:
+clonal.space.homeostasis(twb[[1]])
+
+twb.space <- clonal.space.homeostasis(twb)
+vis.clonal.space(twb.space)
+```
+
+
+### In-frame and out-of-frame sequences
+Functions for performing subsetting and counting number of in-frame and out-of-frame clonotypes are: `count.inframes`, `count.outframes`, `get.inframes`, `get.outframes`. Parameter *.head* for this functions is a parameter to the *.head* function, that applied to the input data frame or an input list of data frames before subsetting. Functions accept both data frames and list of data frames as parameters. E.g., get data frame with only in-frame sequences and count out-of-frame sequences in the first 5000 rows for this data frame:
+```{r eval=TRUE,echo=TRUE}
+imm.in <- get.inframes(twb) # Return all in-frame sequences from the 'twb'.
+
+                            # Count the number of out-of-frame sequences
+count.outframes(twb, 5000)  # from the first 5000 sequences.
+```
+
+
+General functions with parameter stands for 'all' (all sequences), 'in' (only in-frame sequences) or 'out' (only out-of-frame sequences) are *get.frames* and *count.frames*:
+
+```{r eval=TRUE,echo=TRUE}
+imm.in <- get.frames(twb, 'in') # Similar to 'get.inframes(twb)'.
+
+count.frames(twb[[1]], 'all')   # Just return number of rows.
+
+flag <- 'out'
+count.frames(twb, flag, 5000)   # Similar to 'count.outframes(twb, 5000)'.
+```
+
+
+### Search for a target CDR3 sequences
+For exact or fuzzy search of sequences the package employed a function `find.clonotypes`. Input arguments for this function are a data frame or a list of data frames, targets (a character vector or data frame having one column with sequences and additional columns with, e.g., V genes), a value of which column or columns to return, a method to be used to compare sequences among each other (either "exact" for exact matching, "hamm" for matching sequences by Hamming distance (two sequences are matched if H $\leq$ 1) or "lev" for matching sequences by Levenshtein distance (two sequences are matched if L $\leq$ 1)), and column name from which sequences for matching are obtained. Sounds very complex, but in practice it's very easy, therefore let's go to examples.
+
+Suppose we want to search for some CDR3 sequences in a number of repertoires:
+
+```{r eval=TRUE,echo=TRUE}
+cmv <- data.frame(CDR3.amino.acid.sequence = c('CASSSANYGYTF', 'CSVGRAQNEQFF', 'CASSLTGNTEAFF', 'CASSALGGAGTGELFF', 'CASSLIGVSSYNEQFF'),
+                  V.segments = c('TRBV4-1', 'TRBV4-1', 'TRBV4-1', 'TRBV4-1', 'TRBV4-1'), stringsAsFactors = F)
+
+cmv
+```
+
+
+We will search for them using all methods of matching (exact, hamming or levenshtein) and with and without matching by V-segment. Also, for the first case (exact matching and without V gene) we return "Total.insertions" column along with the "Read.count" column, and for the second case output will be a "Rank" - rank (generated by `set.rank`) of a clone or a clonotype in a data frame.
+
+```{r eval=TRUE,echo=TRUE}
+twb <- set.rank(twb)
+# Case 1.
+cmv.imm.ex <- 
+  find.clonotypes(.data = twb[1:2], .targets = cmv[,1], .method = 'exact',
+                  .col.name = c('Read.count', 'Total.insertions'),
+                  .verbose = F)
+head(cmv.imm.ex)
+
+# Case 2.
+# Search for CDR3 sequences with hamming distance <= 1
+# to the one of the cmv$CDR3.amino.acid.sequence with
+# matching V-segments. Return ranks of found sequences.
+cmv.imm.hamm.v <- 
+  find.clonotypes(twb[1:3], cmv, 'hamm', 'Rank', 
+                  .target.col = c('CDR3.amino.acid.sequence',
+                                  'V.segments'),
+                  .verbose = F)
+head(cmv.imm.hamm.v)
+
+# Case 3.
+# Similar to the previous example, except
+# using levenshtein distance and the "Read.count" column.
+cmv.imm.lev.v <- 
+  find.clonotypes(twb[1:3], cmv, 'lev', 
+                  .target.col = c('CDR3.amino.acid.sequence', 'V.segments'),
+                  .verbose = F)
+head(cmv.imm.lev.v)
+```
+
+
+## Gene usage
+Variable and Joining gene usage (V-usage and J-usage) are important characteristics of repertoires. To access and compare them among repertoires *tcR* provides a few useful functions.
+
+
+### Computing gene usage
+To access V- and J-usage of a repertoire *tcR* provides functions `freq.segments`, `freq.segments.2D` and a family of functions `freq.[VJ][ab]` for simplified use. Function `freq.segments`, depending on parameters, computes frequencies or counts of the given elements (e.g., V-segments) in the given column (e.g., "V.segments") of the input data frame or the input list of data frames. Function `freq.segments.2D` computes joint distributions or counts of the two given elements (e.g., V-segments and J-segments). V and J gene names for humans for TCR and Ig are stored in the .rda file `genesegments.rda` (they are identical to those form IMGT: \href{http://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=nomenclatures&species=human&group=TRBV}{link to beta genes (red ones)} and \href{http://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=nomenclatures&species=human&group=TRAV}{link to alpha genes (red ones)}). All of the mentioned functions are accept data frames as well as list of data frames. Output for those functions are data frames with the first column stands for a gene and the other for frequencies.
+
+```{r eval=TRUE,echo=TRUE}
+# Equivalent to freq.Vb(twb[[1]]) if using
+# default parameters.
+imm1.vs <- freq.segments(twb[[1]])
+head(imm1.vs)
+
+imm.vs.all <- freq.segments(twb)  # Equivalent to freq.Vb(twb) by default.
+imm.vs.all[1:10, 1:4]
+
+imm1.vj <- freq.segments.2D(twb[[1]])
+imm1.vj[1:5, 1:5]
+```
+
+
+You can also directly visualise gene usage with functions `vis.V.usage` and `vis.J.usage` with argument `.cast.freq` equal to TRUE:
+
+```{r eval=TRUE, echo=TRUE, message=FALSE, fig.align='center', fig.height=5, fig.width=7}
+# Put ".dodge = F" to get distinct plot for every data frame in the given list.
+vis.J.usage(twb, .cast.freq = T, .main = 'twb J-usage dodge', .dodge = T)
+```
+
+```{r eval=TRUE, echo=TRUE, message=FALSE, fig.align='center', fig.height=6, fig.width=9}
+vis.J.usage(twb, .cast.freq = T, .main = 'twb J-usage column', .dodge = F, .ncol = 2)
+```
+
+```{r eval=TRUE, echo=TRUE, message=FALSE, fig.align='center', fig.height=5, fig.width=7}
+vis.V.usage(imm1.vs, .cast.freq = F, .main = 'twb[[1]] V-usage', .coord.flip = F)
+```
+
+
+### Comparing gene usage
+To evaluate V- and J-segments usage of repertoires, the package implements subroutines for two approaches to the analysis: measures from the information theory and PCA (Principal Component Analysis).
+
+
+#### Shannon entropy and Jensen-Shannon divergence
+To assess the diversity of segments usage user can use the `entropy` function. Kullback-Leibler assymetric measure (function `kl.div`) and Jensen-Shannon symmetric measure (functions `js.div` for computing JS-divergence between the given distributions and `js.div.seg` for computing JS-divergence between gene segments distributions of two clonesets or a list with data frames) are provided to estimate distance among gene usage of different repertoires. To visualise distances *tcR* employed the `vis.radarlike` function, see Section "Plots" for more detailed information.
+
+```{r eval=T, echo=TRUE, fig.align='center'}
+                              # Transform "0:100" to distribution with Laplace correction 
+entropy(0:100, .laplace = 1)  # (i.e., add "1" to every value before transformation).
+                  # Compute entropy of V-segment usage for each data frame. Same to
+entropy.seg(twb)  # apply(freq.Vb(twb)[,-1], 2, entropy)
+                  
+# Next expression is equivalent to the expression
+# js.div(freq.Vb(twb[[1]])[,2], freq.Vb(twb[[2]])[,2], .norm.entropy = T)
+js.div.seg(twb[[1]], twb[[2]], .verbose = F)
+# Also works when input arguments are list of data frames.
+imm.js <- js.div.seg(twb, .verbose = F) 
+vis.radarlike(imm.js, .ncol = 2)
+```
+
+
+#### Principal Component Analysis (PCA)
+Principal component analysis (PCA) is a statistical procedure for transforming a set of observations to a set of special values for analysis. In *tcR* implemented functions `pca.segments` for performing PCA on V- or J-usage, and `pca.segments.2D` for performing PCA on VJ-usage. For plotting the PCA results see the `vis.pca` function.
+
+```{r eval=TRUE, echo=TRUE, fig.align='center', fig.height=4.5, fig.width=6}
+pca.segments(twb)  # Plot PCA results of V-segment usage.
+class(pca.segments(twb, .do.plot = F))  # Return object of class "prcomp"
+```
+
+
+## Repertoire overlap analysis
+*tcR* provides a number of functions for evaluating similarity of clonesets based on shared among clonesets clonotypes and working with data frames with shared clonotypes.
+
+
+### Overlap quantification
+
+
+#### Number of shared clonotypes
+
+
+#### "Top cross"
+
+
+#### More complex similarity measures
+
+
+### Shared repertoire
+To investigate a shared among a several repertoires clonotypes ("shared repertoire") the package provided the `shared.repertoire` function along with functions for computing the shared repertoire statistics. The `shared.representation` function computes the number of shared clonotypes for each repertoire for each degree of sharing (i.e., number of people, in which indicated amount of clones have been found). The function `shared.summary` is equivalent to `intersection` but applies to the shared repertoire data frame. Measuring distances among repertoires using the cosine similarity on vector of counts of shared sequences is also possible with the `cosine.sharing` function.
+```{r eval=TRUE, echo=TRUE}
+# Compute shared repertoire of amino acid CDR3 sequences and V-segments
+# which has been found in two or more people and return the Read.count column
+# of such clonotypes from each data frame in the input list.
+imm.shared <- shared.repertoire(.data = twb, .type = 'avrc', .min.ppl = 2, .verbose = F)
+head(imm.shared)
+shared.representation(imm.shared)  # Number of shared sequences.
+cosine.sharing(imm.shared)         # Compute cosing similarity on shared sequences.
+```
+
+
+## Diversity evaluation
 
 
 ## Visualisation
 
+
+### CDR3 length and read count distributions plot
+
+
+### Top proportions bar plot
+
+
+### Clonal space homeostasis bar plot
+
+
+### Heat map (for repertoire overlap quantification)
+
+
+### Gene usage histogram
+
+
+### PCA visualisation
+
+
+### Logo-like plot
+
 ```{r eval=TRUE, echo=TRUE}
-data(twa)
-data(twb)
-str(twa[[1]])
-str(twb[[1]])
 vis.heatmap(intersect(twb, 'n0e'))
 vis.V.usage(twb[[1]])
 ```
 
 ```{r eval=TRUE,echo=TRUE,fig.align='center',fig.width=14,fig.height=10}
 vis.V.usage(twb, .ncol = 2)
+```
+
+
+## Mutation networks
+Mutation network (or a mutation graph) is a graph with vertices representing nucleotide or in-frame amino acid sequences (out-of-frame amino acid sequences will be automatically filtered out by *tcR* functions for mutation network creating) and edges which connecting pairs of sequences with hamming distance (parameter *.method* = 'hamm') or edit distance (parameter *.method* = 'lev') between them no more than specified in the *.max.errors* function parameter of the `mutation.network` function. To create a mutation network first what you need is to make a shared repertoires and then apply the `mutation.network` function to this shared repertoire:
+
+```{r eval=TRUE, echo=TRUE}
+# data(twb)
+twb.shared <- shared.repertoire(twb, .head = 1000, .verbose = F)
+G <- mutation.network(twb.shared)
+G
+```
+
+
+To manipulate vertex attributes functions \code{set.group.vector} and \code{get.group.names} are provided.
+
+```{r eval=TRUE, echo=TRUE}
+# data(twb)
+# twb.shared <- shared.repertoire(twb, .head = 1000)
+# G <- mutation.network(twb.shared)
+G <- set.group.vector(G, "twins", list(A = c(1,2), B = c(3,4)))  # <= refactor this
+get.group.names(G, "twins", 1)
+get.group.names(G, "twins", 300)
+get.group.names(G, "twins", c(1,2,3), F)
+get.group.names(G, "twins", 300, F)
+
+# Because we have only two groups, we can assign more readable attribute.
+V(G)$twin.names <- get.group.names(G, "twins")
+V(G)$twin.names[1]
+V(G)$twin.names[300]
+```
+
+
+To access neighbour vertices of vertices ("ego-network") use the \code{mutation.neighbours} function:
+
+```{r eval=TRUE, echo=TRUE}
+# data(twb)
+# twb.shared <- shared.repertoire(twb, .head = 1000)
+# G <- mutation.network(twb.shared)
+head(mutated.neighbours(G, 1)[[1]])
+```
+
+
+## Conclusion
+Feel free to contact me for the package-related or immunoinformatics research-related questions.
+
+If you spot a bug or would like to see something useful for you in the package feel free to raise an issue at *tcR* GitHub: [https://github.com/imminfo/tcr/issues](Issues)
+
+
+## Appendix A: Kmers manipulation and processing
+In the package implemented functions for working with k-mers. Function `get.kmers` generates k-mers from the given chatacter vector or a data frame with columns for sequences and a count for each sequence.
+
+```{r eval=TRUE, echo=TRUE}
+head(get.kmers(twb[[1]]$CDR3.amino.acid.sequence, 100, .meat = F, .verbose = F))
+head(get.kmers(twb[[1]], .meat = T, .verbose = F))
+```
+
+
+## Appendix B: Nucleotide and amino acid sequences manipulation
+The package also provides a several number of functions for performing classic bioinformatics tasks on strings. For more powerful subroutines see the Bioconductor's *Biostrings* package.
+
+
+### Nucleotide sequence manipulation
+Functions for basic nucleotide sequences manipulations: reverse-complement, translation and GC-content computation. All functions are vectorised.
+
+```{r eval=TRUE, echo=TRUE}
+revcomp(c('AAATTT', 'ACGTTTGGA'))
+cbind(bunch.translate(twb[[1]]$CDR3.nucleotide.sequence[1:10]),
+      twb[[1]]$CDR3.amino.acid.sequence[1:10])
+gc.content(twb[[1]]$CDR3.nucleotide.sequence[1:10])
+```
+
+
+### Reverse translation subroutines
+Function `codon.variants` returns a list of vectors of nucleotide codons for each letter for each input amino acid sequence. Function `translated.nucl.sequences` returns the number of nucleotide sequences, which, when translated, will result in the given amino acid sequence(s). Function `reverse.translation` return all nucleotide sequences, which is translated to the given amino acid sequences. Optional argument `.nucseq` for each of this function provides restriction for nucleotides, which cannot be changed. All functions are vectorised.
+
+```{r eval=TRUE, echo=TRUE}
+codon.variants('LQ')
+translated.nucl.sequences(c('LQ', 'CASSLQ'))
+reverse.translation('LQ')
+translated.nucl.sequences('LQ', 'XXXXXG')
+codon.variants('LQ', 'XXXXXG')
+reverse.translation('LQ', 'XXXXXG')
 ```
