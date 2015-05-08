@@ -62,7 +62,7 @@ entropy.seg <- function (.data, .frame = c('all', 'in', 'out'),
   else     .fun <- freq.segments
   
   if (class(.data) == 'list') {
-    return(sapply(.data, entropy.seg, .frame = .frame, .alphabet = .alphabet, .meat = .meat, .other = .other, .VJ = .VJ))
+    return(sapply(.data, entropy.seg, .frame = .frame, .alphabet = .alphabet, .meat = .meat, .other = .other, .VJ = .VJ, .laplace = .laplace))
   }
   
   .data <- get.frames(.data, .frame)
