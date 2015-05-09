@@ -5,7 +5,7 @@
 \title{Plot a histogram of counts.}
 \usage{
 vis.number.count(.data, .ncol = 3,
-  .name = "Histogram of clonotypes read counts")
+  .name = "Histogram of clonotypes read counts", .col = "Read.count")
 }
 \arguments{
 \item{.data}{Data frame with columns 'CDR3.nucleotide.sequence' and 'Read.count' or list with such data frames.}
@@ -13,6 +13,8 @@ vis.number.count(.data, .ncol = 3,
 \item{.ncol}{If .data is a list, than number of columns in a grid of histograms for each data frame in \code{.data}. Else not used.}
 
 \item{.name}{Title for this plot.}
+
+\item{.col}{Name of the column with counts.}
 }
 \value{
 ggplot object.

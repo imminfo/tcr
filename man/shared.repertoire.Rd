@@ -5,7 +5,7 @@
 \alias{shared.repertoire}
 \title{Shared TCR repertoire managing and analysis}
 \usage{
-shared.repertoire(.datalist, .type = 'avc', .min.ppl = 1, .head = -1,
+shared.repertoire(.datalist, .type = 'avrc', .min.ppl = 1, .head = -1,
                   .clear = T, .verbose = T, .by.col = '', .sum.col = '',
                   .max.ppl = length(.datalist))
 
@@ -14,7 +14,7 @@ shared.matrix(.shared.rep)
 \arguments{
 \item{.datalist}{List with data frames.}
 
-\item{.type}{String of length 3 denotes how to create a shared repertoire. See "Details" for
+\item{.type}{String of length 4 denotes how to create a shared repertoire. See "Details" for
 more information. If supplied, than parameters \code{.by.col} and \code{.sum.col} will be ignored. If not supplied, than columns
 in \code{.by.col} and \code{.sum.col} will be used.}
 
@@ -47,15 +47,16 @@ repertoire, than only the first appeared one will be choosed for a shared repert
 I.e., this functions will remove such columns as 'CDR3.amino.acid.sequence', 'V.segments', 'People'.
 }
 \details{
-Parameter \code{.type} is a string of length 3, where:
+Parameter \code{.type} is a string of length 4, where:
 \enumerate{
  \item First character stands either for the letter 'a' for taking the "CDR3.amino.acid.sequence" column or
 for the letter 'n' for taking the "CDR3.nucleotide.sequence" column.
  \item Second character stands whether or not take the V.segments column. Possible values are '0' (zero) stands
 for taking no additional columns, 'v' stands for taking the "V.segments" column.
- \item Third character stands for name of the column to choose as numeric characteristic of sequences. Possible values are
-"c" for the "Read.count" column, "p" for the "Read.proportion" column, "r" for the "Rank" column or "i" for the "Index" column.
-If "Rank" or "Index" isn't in the given repertoire, than it will be created using \code{set.rank} function using default "Read.count" column.
+ \item Third character stands for using either barcodes or reads in choosing the column with numeric characterisitc (see the next letter).
+ \item Fourth character stands for name of the column to choose as numeric characteristic of sequences. It depends on the third letter. Possible values are
+"c" for the "Barcode.count" (if 3rd character is "b") / "Read.count" column (if 3rd character is "r"), "p" for the "Barcode.proportion" / "Read.proportion" column, "r" for the "Rank" column or "i" for the "Index" column.
+If "Rank" or "Index" isn't in the given repertoire, than it will be created using \code{set.rank} function using "Barcode.count" / "Read.count" column.
 }
 }
 \examples{
@@ -66,7 +67,7 @@ If "Rank" or "Index" isn't in the given repertoire, than it will be created usin
 immdata <- set.rank(immdata)
 # Generate shared repertoire using "CDR3.amino.acid.sequence" and
 # "V.segments" columns and with rank.
-imm.shared.av <- shared.repertoire(immdata, 'avr')
+imm.shared.av <- shared.repertoire(immdata, 'avrc')
 }
 }
 \seealso{
