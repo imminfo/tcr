@@ -19,12 +19,12 @@
 
         <h4>An R package for T-cell receptor repertoire advanced data analysis </h4>
 
-        <p>T-cell receptor, TCR repertoire, TCR analysis, immunoinformatics, computational immunology</p>
+        <p>T cell receptor, TCR repertoire, TCR analysis, immunoinformatics, computational immunology</p>
 
         <p><a href="http://imminfo.github.io/tcr/">Paper in <i>Journal of Something</i> (stay tuned...) </a></p>
 
         <ul>
-          <li><a href="tcrvignette.pdf">View PDF <strong>Vignette</strong></a></li>
+          <li><a href="tcrvignette.pdf">View HTML <strong>Vignette</strong></a></li>
           <li><a href="https://github.com/imminfo/tcr/tarball/master">Download <strong>TAR Ball</strong></a></li>
           <li><a href="https://github.com/imminfo/tcr">View On <strong>GitHub</strong></a></li>
         </ul>
@@ -54,7 +54,7 @@ procedures supported by <strong>tcR</strong> users can perform advanced statisti
   <i>(number of shared clonotypes, using V-segments or not; sequential intersection among the most abundant clones ("top-cross"))</i></li>
   <li>Repertoire comparison</li>
   <i>(Jaccard index, Morisita's overlap index, Horn's index, Tversky index, overlap coefficient)</i>
-  <li>V- and J-segments usage and it's analysis<br>
+  <li>V and J gene usage and analysis<br>
   <i>(PCA, Shannon Entropy, Jensen-Shannon Divergence)</i></li>
   <li>Diversity evaluation<br>
   <i>(ecological diversity index, Gini index, inverse Simpson index, rarefaction analysis)</i></li>
@@ -71,7 +71,7 @@ procedures supported by <strong>tcR</strong> users can perform advanced statisti
 <a name="binaries" class="anchor" href="#binaries"><span class="octicon octicon-link"></span></a>Installation</h3>
 <p>The package is available through CRAN and through <i>devtools::install_github</i>.
 <p>CRAN version: <strong>1.3</strong></p>
-<p>Dev version: <strong>1.4</strong></p>
+<p>Dev version: <strong>2.0</strong></p>
 <p>Install the latest release version from CRAN with:</p>
 <pre><code>install.packages("tcR")
 </code></pre>
@@ -100,26 +100,31 @@ devtools::install_github("imminfo/tcR", build_vignettes = FALSE)
 <h3>
 <a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h3>
 
-<p>First, load the list with data frames with beta chain data of 2 twin pairs and V- and J-genes alphabets for human subjects:</p>
+<p>First, load the list with cloneset data frames with TCR beta chain data of 2 twin pairs:</p>
 <pre><code>library(tcR)
 data(twb)
 </code></pre>
 
-<p>Get numbers of clones, in-frames and out-of-frames, unique amino acid CDR3 sequences and other basic statistics:</p>
-<pre><code>mitcr.stats(twb)
+<p>Get numbers of clonotypes, in-frame and out-of-frame sequences, unique amino acid CDR3 sequences and other basic statistics:</p>
+<pre><code>cloneset.stats(twb)
 </code></pre>
 
-<p>Compute V-usage of the first subject:</p>
-<pre><code>freq.Vb(twb[[1]])
+<p>Compute V beta usage of the first human subject:</p>
+<pre><code>geneUsage(twb[[1]], HUMAN_TRBV)
 </code></pre>
 
-<p>Compute V-usage of all subjects and visualise it through a histogram:</p>
-<pre><code>vis.V.usage(twb, .dodge = T)
+<p>Compute V usage of all subjects and visualise it using a histogram:</p>
+<pre><code>vis.gene.usage(twb, HUMAN_TRBV, .dodge = T)
 </code></pre>
 
-<p>Compute a pairwise number of shared clones and plot a heatmap of them:</p>
-<pre><code>twb.int <- intersect(twb, 'n0e')
+<p>Compute a pairwise normalised number of shared clonotypes and plot a heatmap of them:</p>
+<pre><code>twb.int <- repOverlap(twb, "exact")
 vis.heatmap(twb.int)
+</code></pre>
+
+<p>Estimate the diversity of each sample using Chao1 and Gini-Simpson indices:</p>
+<pre><code>twb.chao1 <- repDiversity(twb, "chao1")
+twb.gs <- repDiversity(twb, "gini.simp")
 </code></pre>
 
 <p>Perform a rarefaction analysis and plot the resulting rarefaction curve on a log x-axis:</p>
