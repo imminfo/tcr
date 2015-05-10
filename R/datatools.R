@@ -258,9 +258,13 @@ apply.asymm <- function (.datalist, .fun, ..., .diag = NA, .verbose = T) {
 #' correction. If F than don't do normalisaton and laplace correction.
 #' @param .laplace Value for laplace correction.
 #' @param .na.val Replace all NAs with this value.
+#' @param .warn.zero If T than the function checks if in the resulted vector (after normalisation)
+#' are any zeros, and print a warning message if there are some.
+#' @param .warn.sum If T than the function checks if the sum of resulted vector (after normalisation)
+#' is equal to one, and print a warning message if not.
 #' 
 #' @return Numeric vector.
-check.distribution <- function (.data, .do.norm = NA, .laplace = 1, .na.val = 0) {
+check.distribution <- function (.data, .do.norm = NA, .laplace = 1, .na.val = 0, .warn.zero = F, .warn.sum = T) {
   if (is.na(.do.norm)) {
     .data[is.na(.data)] <- .na.val
     if (sum(.data) != 1) {
@@ -270,6 +274,15 @@ check.distribution <- function (.data, .do.norm = NA, .laplace = 1, .na.val = 0)
     .data[is.na(.data)] <- .na.val
     .data <- (.data + .laplace) / sum(.data + .laplace)
   }
+  
+  if (.warn.zero && (0 %in% .data)) {
+    cat("Warning! There are", sum(which(.data == 0)), "zeros in the input vector. Function may produce incorrect results.\n")
+  }
+  
+  if (.warn.sum && sum(.data) != 1) {
+    cat("Warning! Sum of the input vector is NOT equal to 1. Function may produce incorrect results.\n")
+  }
+  
   .data
 }
 
