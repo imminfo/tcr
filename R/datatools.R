@@ -11,6 +11,17 @@
 }
 
 
+.column.choice <- function (x, .verbose = T) {
+  x <- switch(x[1],
+              read.count = "Read.count",
+              bc.count = "Barcode.count",
+              read.prop = "Read.proportion",
+              bc.prop = "Barcode.proportion",
+              { .verbose.msg("You have specified an invalid column identifier. Choosed column: Read.count\n", .verbose); "Read.count" })
+  x
+}
+
+
 #' Get all unique clonotypes.
 #' 
 #' @description
@@ -276,11 +287,11 @@ check.distribution <- function (.data, .do.norm = NA, .laplace = 1, .na.val = 0,
   }
   
   if (.warn.zero && (0 %in% .data)) {
-    cat("Warning! There are", sum(which(.data == 0)), "zeros in the input vector. Function may produce incorrect results.\n")
+    cat("Warning! There are", sum(which(.data == 0)), "zeros in the input vector. Function may produce incorrect results.\nTo fix this try to set .laplace = 1 or any other small number in the function's parameters\n")
   }
   
   if (.warn.sum && sum(.data) != 1) {
-    cat("Warning! Sum of the input vector is NOT equal to 1. Function may produce incorrect results.\n")
+    cat("Warning! Sum of the input vector is NOT equal to 1. Function may produce incorrect results.\nTo fix this try to set .do.norm = TRUE in the function's parameters.\n")
   }
   
   .data
