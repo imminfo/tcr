@@ -2,7 +2,7 @@
 % Please edit documentation in R/input.R
 \name{parse.cloneset}
 \alias{parse.cloneset}
-\title{Parse input table files with immune receptor repertoire data.}
+\title{Parse input table files with the immune receptor repertoire data.}
 \usage{
 parse.cloneset(.filename, .nuc.seq, .aa.seq, .reads, .barcodes, .vgenes,
   .jgenes, .dgenes, .vend, .jstart, .dalignments, .vd.insertions,

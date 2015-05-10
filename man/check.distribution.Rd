@@ -4,7 +4,8 @@
 \alias{check.distribution}
 \title{Check for adequaty of distrubution.}
 \usage{
-check.distribution(.data, .do.norm = NA, .laplace = 1, .na.val = 0)
+check.distribution(.data, .do.norm = NA, .laplace = 1, .na.val = 0,
+  .warn.zero = F, .warn.sum = T)
 }
 \arguments{
 \item{.data}{Numeric vector of values.}
@@ -16,6 +17,12 @@ correction. If F than don't do normalisaton and laplace correction.}
 \item{.laplace}{Value for laplace correction.}
 
 \item{.na.val}{Replace all NAs with this value.}
+
+\item{.warn.zero}{If T than the function checks if in the resulted vector (after normalisation)
+are any zeros, and print a warning message if there are some.}
+
+\item{.warn.sum}{If T than the function checks if the sum of resulted vector (after normalisation)
+is equal to one, and print a warning message if not.}
 }
 \value{
 Numeric vector.

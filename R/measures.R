@@ -142,6 +142,9 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 #' Overlap coefficient: \code{overlap(X, Y) = |X and Y| / min(|X|, |Y|)}
 #' 
 #' Jaccard index: \code{J(A, B) = |A and B| / |A U B|}
+#' For Jaccard index user can provide |A and B| in \code{.intersection.number} otherwise it will be computed
+#' using \code{base::intersect} function. In this case \code{.alpha} and \code{.beta} expected to be vectors of elements.
+#' If \code{.intersection.number} is provided than \code{.alpha} and \code{.beta} are exptected to be numbers of elements.
 #' 
 #' Formula for Morisita's overlap index is quite complicated and can't be easily shown here, so just look at this webpage: http://en.wikipedia.org/wiki/Morisita%27s_overlap_index
 #' 

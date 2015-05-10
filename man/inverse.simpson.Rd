@@ -35,9 +35,11 @@ estimated number of species, standart deviation of this number and two 95% confi
 }
 \description{
 Functions for evaluating the diversity of species or objects in the given distribution.
+See the \code{repOverlap} function for working with clonesets and a general interface to
+all of this functions.
 
 Warning!
-Functions will check if .data if a distribution of random variable (sum == 1) or not.
+Functions will check if .data is a distribution of a random variable (sum == 1) or not.
 To force normalisation and / or to prevent this, set .do.norm to TRUE (do normalisation)
 or FALSE (don't do normalisation), respectively.
 
@@ -69,6 +71,6 @@ stopifnot(gini(twb[[1]]$Read.proportion, FALSE) - 0.7609971 < 1e-07)
 stopifnot(chao1(twb[[1]]$Read.count)[1] == 1e+04)
 }
 \seealso{
-\link{entropy}, \link{similarity}
+\link{repOverlap}, \link{entropy}, \link{similarity}
 }
 

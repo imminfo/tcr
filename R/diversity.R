@@ -4,9 +4,11 @@
 #' 
 #' @description
 #' Functions for evaluating the diversity of species or objects in the given distribution.
+#' See the \code{repOverlap} function for working with clonesets and a general interface to
+#' all of this functions.
 #' 
 #' Warning!
-#' Functions will check if .data if a distribution of random variable (sum == 1) or not.
+#' Functions will check if .data is a distribution of a random variable (sum == 1) or not.
 #' To force normalisation and / or to prevent this, set .do.norm to TRUE (do normalisation)
 #' or FALSE (don't do normalisation), respectively.
 #' 
@@ -51,7 +53,7 @@
 #' @return Numeric vector of length 1 with value for all functions except \code{chao1}, which returns 4 values:
 #' estimated number of species, standart deviation of this number and two 95% confidence intervals for the species number.
 #' 
-#' @seealso \link{entropy}, \link{similarity}
+#' @seealso \link{repOverlap}, \link{entropy}, \link{similarity}
 #' 
 #' @examples
 #' data(twb)
@@ -78,7 +80,7 @@ diversity <- function (.data, .q = 5, .do.norm = NA, .laplace = 0) {
 }
 
 gini <- function (.data, .do.norm = NA, .laplace = 0) {
-  .data <- sort(check.distribution(.data, .do.norm, .laplace))
+  .data <- sort(check.distribution(.data, .do.norm, .laplace, .warn.sum = F))
   n <- length(.data)
   1 / n * (n + 1 - 2 * sum((n + 1 - 1:n) * .data) / sum(.data))
 }

@@ -46,7 +46,8 @@ intersectLogic(.alpha, .beta, .method = c('exact', 'hamm', 'lev'), .col = NULL)
 \code{intersectLogic} returns logical vector of \code{length(x)} or \code{nrow(x)}, where TRUE at position \code{i} means that element with index {i} has been found in the \code{y}
 }
 \description{
-Functions for the intersection of data frames with TCR / BCR data.
+Functions for the intersection of data frames with TCR / Ig data.
+See the \code{repOverlap} function for a general interface to all overlap analysis functions.
 
 \code{intersect} - overwrites \code{base::intersect} function. If supplied with parameters \code{x} and \code{y},
 than runs \code{base::intersect} on them. If not, than returns number of similar elements in the given objects or matrix
@@ -97,6 +98,6 @@ imm.1.2 <- intersectLogic(twb[[1]], twb[[2]],
 head(twb[[1]][imm.1.2, c('CDR3.amino.acid.sequence', 'V.segments')])
 }
 \seealso{
-\link{vis.heatmap}, \link{vis.group.boxplot}
+\link{repOverlap}, \link{vis.heatmap}, \link{vis.group.boxplot}
 }
 

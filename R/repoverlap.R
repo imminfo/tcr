@@ -1,6 +1,7 @@
 #' General function for the repertoire overlap evaluation.
 #' 
 #' @description
+#' General interface to all overlap functions.
 #' 
 #' @param ... Input clonesets or a list(s) of clonesets.
 #' @param .method Which method to use for the overlap evaluation. See "Details" for methods.

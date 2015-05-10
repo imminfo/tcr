@@ -6,7 +6,8 @@
 #' @aliases intersect intersectCount intersectLogic intersectIndices
 #' 
 #' @description
-#' Functions for the intersection of data frames with TCR / BCR data.
+#' Functions for the intersection of data frames with TCR / Ig data. 
+#' See the \code{repOverlap} function for a general interface to all overlap analysis functions.
 #' 
 #' \code{intersect} - overwrites \code{base::intersect} function. If supplied with parameters \code{x} and \code{y},
 #' than runs \code{base::intersect} on them. If not, than returns number of similar elements in the given objects or matrix
@@ -55,7 +56,7 @@
 #'  equal to or less than 1, "l" for match elements which have the Levenshtein distance between tham equal to or less than 1.
 #' }
 #' 
-#' @seealso \link{vis.heatmap}, \link{vis.group.boxplot}
+#' @seealso  \link{repOverlap}, \link{vis.heatmap}, \link{vis.group.boxplot}
 #' 
 #' @return
 #' \code{intersect} returns (normalised) number of similar elements or matrix with numbers of elements.

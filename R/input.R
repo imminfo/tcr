@@ -1,7 +1,7 @@
 ########## Data processing functions ##########
 
 
-#' Parse input table files with immune receptor repertoire data.
+#' Parse input table files with the immune receptor repertoire data.
 #'
 #' @description
 #' General parser for cloneset table files. Each column name has specific purpose (e.g., column for
