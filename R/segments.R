@@ -55,6 +55,32 @@ if (getRversion() >= "2.15.1") {
 #' # plot V-segments frequencies from the data
 #' vis.V.usage(twb)
 #' }
+geneUsage <- function (.data, .alphabet = HUMAN_TRBV, .quant = c(NA, "..."), .other = F, .laplace = 0) {
+  
+  .process.df <- function (.df) {
+    if (is.na(.quant)) {
+      summarise_(grouped_df(.data, lapply(c('V.segments', 'J.segments'), as.name)), Freq = 'n()')
+    } else {
+      summarise_(grouped_df(.data, list(as.name('V.segments'))), Freq = 'sum(Read.count)')
+    }
+  }
+  
+  
+  quant <- NA
+  if (!is.na(.quant)) { quant <- .column.choice(.quant, .verbose) }
+  
+  if (has.class(.alphabet, 'list')) {
+    genecol1 <- paste0(substr(.alphabet[[1]], 3, 3), ".genes")
+    genecol2 <- paste0(substr(.alphabet[[2]], 3, 3), ".genes")
+  } else {
+    genecol1 <- paste0(substr(.alphabet[[1]], 3, 3), ".genes")
+  }
+  
+  
+  
+}
+
+
 freq.segments <- function (.data, .alphabet='TRBV', .count=F, .meat=F, .other=F, .laplace=0, .column = NULL, .sum.col = "Read.count") {
   if (class(.data) == 'list') {
     res <- freq.segments(.data[[1]], .alphabet=.alphabet, .count=.count, .meat = .meat, .other = .other, .laplace=.laplace, .column = .column)
