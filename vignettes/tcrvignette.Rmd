@@ -77,12 +77,14 @@ head(twb[[1]])
 ```
 
 
-#### genes alphabets
-genes alphabets - character vectors with names of genes for TCR and Ig.
+#### Gene alphabets
+Gene alphabets - character vectors with names of genes for TCR and Ig.
 
 ```{r eval=FALSE,echo=TRUE}
 # Run help to see available alphabets.
 ?genealphabets
+?genesegments
+data(genesegments)
 ```
 
 
@@ -286,19 +288,18 @@ head(cmv.imm.lev.v)
 Variable and Joining gene usage (V-usage and J-usage) are important characteristics of repertoires. To access and compare them among repertoires *tcR* provides a few useful functions.
 
 
-### Computing gene usage
-To access V- and J-usage of a repertoire *tcR* provides functions `freq.segments`, `freq.segments.2D` and a family of functions `freq.[VJ][ab]` for simplified use. Function `freq.segments`, depending on parameters, computes frequencies or counts of the given elements (e.g., V genes) in the given column (e.g., "V.genes") of the input data frame or the input list of data frames. Function `freq.segments.2D` computes joint distributions or counts of the two given elements (e.g., V genes and J genes). V and J gene names for humans for TCR and Ig are stored in the .rda file `genegenes.rda` (they are identical to those form IMGT: \href{http://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=nomenclatures&species=human&group=TRBV}{link to beta genes (red ones)} and \href{http://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=nomenclatures&species=human&group=TRAV}{link to alpha genes (red ones)}). All of the mentioned functions are accept data frames as well as list of data frames. Output for those functions are data frames with the first column stands for a gene and the other for frequencies.
+### Gene usage computing
+To access V- and J-usage of a repertoire *tcR* provides functions `geneUsage`. Function `geneUsage`, depending on parameters, computes frequencies or counts of the given elements (e.g., V genes) of the input data frame or the input list of data frames. V and J gene names for humans for TCR and Ig are stored in the .rda file `genesegments.rda` (they are identical to those form IMGT: \href{http://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=nomenclatures&species=human&group=TRBV}{link to beta genes (red ones)} and \href{http://www.imgt.org/IMGTrepertoire/index.php?section=LocusGenes&repertoire=nomenclatures&species=human&group=TRAV}{link to alpha genes (red ones)}). All of the mentioned functions are accept data frames as well as list of data frames. Output for those functions are data frames with the first column stands for a gene and the other for frequencies.
 
 ```{r eval=TRUE,echo=TRUE}
-# Equivalent to freq.Vb(twb[[1]]) if using
-# default parameters.
-imm1.vs <- freq.segments(twb[[1]])
+imm1.vs <- geneUsage(twb[[1]], HUMAN_TRBV)
 head(imm1.vs)
 
-imm.vs.all <- freq.segments(twb)  # Equivalent to freq.Vb(twb) by default.
+imm.vs.all <- geneUsage(twb, HUMAN_TRBV)
 imm.vs.all[1:10, 1:4]
 
-imm1.vj <- freq.segments.2D(twb[[1]])
+# Compute joint V-J counts
+imm1.vj <- geneUsage(twb[[1]], list(HUMAN_TRBV, HUMAN_TRBJ))
 imm1.vj[1:5, 1:5]
 ```
 
@@ -319,7 +320,7 @@ vis.V.usage(imm1.vs, .cast.freq = F, .main = 'twb[[1]] V-usage', .coord.flip = F
 ```
 
 
-### Comparing gene usage
+### Gene usage comparing
 To evaluate V- and J genes usage of repertoires, the package implements subroutines for two approaches to the analysis: measures from the information theory and PCA (Principal Component Analysis).
 
 
@@ -415,9 +416,10 @@ top.cross.plot(twb.top)
 
 To visualise similarity among repertoires the `vis.heatmap` function is appropriate.
 
-```{r eval=TRUE, echo=TRUE}
-cols <- c('CDR3.amino.acid.sequence', 'Read.count')
+```{r eval=TRUE, echo=TRUE, results='hold'}
 # Apply the Morisitas overlap index to the each pair of repertoires.
+repOverlap(twb, 'morisita', 'aa', 'read.count', .verbose = F)
+cols <- c('CDR3.amino.acid.sequence', 'Read.count')
 apply.symm(twb, function (x,y) morisitas.index(x[, cols], y[, cols]), .verbose = F)
 ```
 
@@ -437,17 +439,30 @@ cosine.sharing(imm.shared)         # Compute cosing similarity on shared sequenc
 
 
 ## Diversity evaluation
-For assessing the distribution of clonotypes in the given repertoire, *tcR* provides functions for evaluating the diversity (functions `diversity` and `inverse.simpson`) and the skewness of the clonal distribution (functions `gini` and `gini.simpson`). Function `diversity` computes the ecological diversity index (with parameter `.q` for penalties for clones with large count). Function `inverse.simpson` computes the Inverse Simpson Index (i.e., inverse probability of choosing two similar clones). Function `gini` computes the economical Gini index of clonal distribution. Function `gini.simpson` computes the Gini-Simpson index. Function `chao1` computes Chao index, its SD and two 95 perc CI.
+For assessing the distribution of clonotypes in the given repertoire, *tcR* provides functions for evaluating the diversity (functions `diversity` and `inverse.simpson`) and the skewness of the clonal distribution (functions `gini` and `gini.simpson`), and a general interface to all of this functions `repDiversity`, which user should use. Function `diversity` (`repDiversity(your_clonesets, "div")`) computes the ecological diversity index (with parameter `.q` for penalties for clones with large count). Function `inverse.simpson` (`repDiversity(your_clonesets, "inv.simp")`) computes the Inverse Simpson Index (i.e., inverse probability of choosing two similar clonotypes). Function `gini` (`repDiversity(your_clonesets, "gini")`) computes the economical Gini index of clonal distribution. Function `gini.simpson` (`repDiversity(your_clonesets, "gini.simp")`) computes the Gini-Simpson index. Function `chao1` (`repDiversity(your_clonesets, "chao1")`) computes the Chao1 index, its SD and two 95 perc CI. Function `repDiversity` accepts single clonesets as well as a list of clonesets. Parameter `.quant` specifies which column to use for computing the diversity (print `?repDiversity` to see more information about input arguments).
 
-```{r eval=TRUE, echo=TRUE}
+```{r eval=TRUE, echo=TRUE, results='hold'}
 # Evaluate the diversity of clones by the ecological diversity index.
+repDiversity(twb, 'div', 'read.count')
 sapply(twb, function (x) diversity(x$Read.count))
-# Compute the diversity as inverse probability of choosing two similar clones.
-sapply(twb, function (x) inverse.simpson(x$Read.count))
+```
+
+```{r eval=TRUE, echo=TRUE, results='hold'}
+# Compute the diversity as the inverse probability of choosing two similar clonotypes.
+repDiversity(twb, 'inv.simp', 'read.prop')
+sapply(twb, function (x) inverse.simpson(x$Read.proportion))
+```
+
+```{r eval=TRUE, echo=TRUE, results='hold'}
 # Evaluate the skewness of clonal distribution.
-sapply(twb, function (x) gini(x$Read.count))
+repDiversity(twb, 'gini.simp', 'read.prop')
+sapply(twb, function (x) gini.simpson(x$Read.proportion))
+```
+
+```{r eval=TRUE, echo=TRUE, results='hold'}
 # Compute diversity of repertoire using Chao index.
-t(sapply(twb, function (x) chao1(x$Read.count)))
+repDiversity(twb, 'chao1', 'read.count')
+sapply(twb, function (x) chao1(x$Read.count))
 ```
 
 
