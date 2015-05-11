@@ -532,7 +532,7 @@ vis.radarlike <- function (.data, .ncol = 3, .expand = c(.25, 0)) {
 #' }
 vis.top.proportions <- function (.data, .head = c(10, 100, 1000, 10000, 30000, 100000, 300000, 1000000), .col = "Read.count") {
   if (has.class(.data, 'data.frame')) {
-    .data <- list(Data = .data)
+    .data <- list(Sample = .data)
   }
   
   res <- sapply(.head, function (h) top.proportion(.data, h, .col))

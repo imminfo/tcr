@@ -166,7 +166,7 @@ chao1 <- function (.data) {
 #' }
 rarefaction <- function (.data, .step = 30000, .quantile = c(.025, .975), .extrapolation = 200000, .col = 'Barcode.count', .verbose = T) {
   if (has.class(.data, 'data.frame')) {
-    .data <- list(Data = .data)
+    .data <- list(Sample = .data)
   }
   
   # multinom

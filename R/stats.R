@@ -263,7 +263,7 @@ find.clonotypes <- function (.data, .targets, .method = c('exact', 'hamm', 'lev'
   }
   
   if (has.class(.data, 'data.frame')) {
-    .data <- list(Data = .data)
+    .data <- list(Sample = .data)
   }
   
   if (.method[1] == 'lev') {
@@ -594,7 +594,7 @@ clonal.space.homeostasis <- function (.data, .clone.types = c(Rare = .00001,
   .clone.types <- c(None = 0, .clone.types)
   
   if (has.class(.data, 'data.frame')) {
-    .data <- list(Data = .data)
+    .data <- list(Sample = .data)
   }
   
   mat <- matrix(0, length(.data), length(.clone.types) - 1, dimnames = list(names(.data), names(.clone.types)[-1]))

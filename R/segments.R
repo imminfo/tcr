@@ -79,33 +79,28 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", 
     if (!is.na(.quant)) { count.fun <- paste0("sum(", .quant, ")", collapse = "", sep = "")}
     
     if (length(.cols) == 1) { .cols <- c(.cols, '.')}
-    fun(summarise_(grouped_df(.df, lapply(.cols, as.name)), Freq = count.fun), as.formula(paste0(.cols[1], "~", .cols[2])), value.var = 'Freq')
+    
+    cast.fun(summarise_(grouped_df(.df, lapply(.cols, as.name)), Freq = count.fun), as.formula(paste0(.cols[1], "~", .cols[2])), value.var = 'Freq')
   }
   
   
   quant <- NA
   if (!is.na(.quant)) { quant <- .column.choice(.quant, .verbose) }
   
-  if (has.class(.data, 'data.frame')) { .data <- list(Data = .data) }
+  if (has.class(.data, 'data.frame')) { .data <- list(Sample = .data) }
   
   if (has.class(.alphabet, 'list')) {    
-    genecol1 <- paste0(substr(.alphabet[[1]], 3, 3), ".genes")
-    genecol2 <- paste0(substr(.alphabet[[2]], 3, 3), ".genes")
-    
-    tbls <- lapply(.data, .process.df, .quant = quant, .cols = c(genecol1, genecol2))
-    
-    for (i)
-    
-    # check for length
-    if (length(.data) == 1) { res <- res[[1]] }
-    res
-    
+    genecols <- c(paste0(substr(.alphabet[[1]], 3, 3), ".gene"), paste0(substr(.alphabet[[2]], 3, 3), ".gene"))
   } else {
-    genecol1 <- paste0(substr(.alphabet[[1]], 3, 3), ".genes")
-    
-    tbls <- lapply(.data, .process.df, .quant = quant, .cols = genecol1)
-    
-    res
+    genecol1 <- paste0(substr(.alphabet[[1]], 3, 3), ".gene")
+  }
+  
+  tbls <- lapply(.data, .process.df, .quant = quant, .cols = genecols)
+  
+  if (.other) {
+    for (i in 1:length(.data)) {
+      
+    }
   }
 }
 

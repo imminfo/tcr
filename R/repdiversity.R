@@ -38,7 +38,7 @@ repDiversity <- function (.data,
                 entropy = function (x, ...) entropy(x, .norm = .norm, ...),
                 { .verbose.msg("You have specified an invalid method identifier. Choosed method: chao1\n", .verbose); chao1 })
   
-  if (has.class(.data, 'data.frame')) { .data <- list(Data = .data) }
+  if (has.class(.data, 'data.frame')) { .data <- list(Sample = .data) }
   
   sapply(.data, function (x) fun(x[[quant]], .do.norm = .do.norm, .laplace = .laplace))
 }
