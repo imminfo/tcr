@@ -46,7 +46,7 @@
 #' 
 #' @seealso \link{similarity}, \link{diversity}
 entropy <- function (.data, .norm = F, .do.norm = NA, .laplace = 1e-12) {
-  .data <- check.distribution(.data, .do.norm, .laplace)
+  .data <- check.distribution(.data, .do.norm, .laplace, .warn.zero = T)
   res <- - sum(.data * log2(.data))
   if (.norm) {
     res / log2(length(.data))
@@ -56,14 +56,14 @@ entropy <- function (.data, .norm = F, .do.norm = NA, .laplace = 1e-12) {
 }
 
 kl.div <- function (.alpha, .beta, .do.norm = NA, .laplace = 0) {
-  .alpha <- check.distribution(.alpha, .do.norm, .laplace)
-  .beta <- check.distribution(.beta, .do.norm, .laplace)
+  .alpha <- check.distribution(.alpha, .do.norm, .laplace, .warn.zero = T)
+  .beta <- check.distribution(.beta, .do.norm, .laplace, .warn.zero = T)
   sum(log2(.alpha / .beta) * .alpha)
 }
 
 js.div <- function (.alpha, .beta, .do.norm = NA, .laplace = 0, .norm.entropy = F) {
-  .alpha <- check.distribution(.alpha, .do.norm, .laplace)
-  .beta <- check.distribution(.beta, .do.norm, .laplace)
+  .alpha <- check.distribution(.alpha, .do.norm, .laplace, .warn.zero = T)
+  .beta <- check.distribution(.beta, .do.norm, .laplace, .warn.zero = T)
   nrm = if (.norm.entropy) 0.5 * (entropy(.alpha, F) + entropy(.beta, F)) else 1
   M <- (.alpha + .beta) / 2
   0.5 * (kl.div(.alpha, M, F) + kl.div(.beta, M, F)) / nrm
@@ -156,8 +156,8 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 #' @examples
 #' \dontrun{
 #' jaccard.index(1:10, 2:20)
-#' a <- length(unique(immdata[[1]][, c('CDR3.amino.acid.sequence', 'V.segments')]))
-#' b <- length(unique(immdata[[2]][, c('CDR3.amino.acid.sequence', 'V.segments')]))
+#' a <- length(unique(immdata[[1]][, c('CDR3.amino.acid.sequence', 'V.gene')]))
+#' b <- length(unique(immdata[[2]][, c('CDR3.amino.acid.sequence', 'V.gene')]))
 #' jaccard.index(a, b, intersect(immdata[[1]], immdata[[2]], 'ave'))
 #' }
 cosine.similarity <- function (.alpha, .beta, .do.norm = NA, .laplace = 0) {

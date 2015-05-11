@@ -45,17 +45,17 @@ spectratyping <- function (.data, .column = 'VD.insertions', .by.alphabet = 'Vb'
   .by <- .by.alphabet
   if (.by.col == '') {
     if (.by == 'Vb') {
-      .by <- HUMAN_TRBV_ALPHABET_MITCR
-      .by.col <- 'V.segments'
+      .by <- HUMAN_TRBV_MITCR
+      .by.col <- 'V.gene'
     } else if (.by == 'Va') {
-      .by <- HUMAN_TRAV_ALPHABET
-      .by.col <- 'V.segments'
+      .by <- HUMAN_TRAV
+      .by.col <- 'V.gene'
     } else if (.by == 'Ja') {
-      .by <- HUMAN_TRAJ_ALPHABET
-      .by.col <- 'J.segments'
+      .by <- HUMAN_TRAJ
+      .by.col <- 'J.gene'
     } else {
-      .by <- HUMAN_TRBJ_ALPHABET
-      .by.col <- 'J.segments'
+      .by <- HUMAN_TRBJ
+      .by.col <- 'J.gene'
     }
   }
   

@@ -1,4 +1,4 @@
-########## Statistics and analysis of V- and J-segments usage ##########
+########## Statistics and analysis of Variable and Joining genes usage ##########
 
 
 if (getRversion() >= "2.15.1") {
@@ -27,20 +27,31 @@ if (getRversion() >= "2.15.1") {
 #' 
 #' freq.Jb(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
 #' 
-#' @param .data Mitcr data.frame or list with data.frames.
-#' @param .alphabet Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_ALPHABET_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
+#' @param .data Cloneset data frame or a list with clonesets.
+#' @param .alphabet Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
 #' or one of the 'alpha' or 'beta' for freq.segments.2D or a list of length 2 with alphabets strings for freq.segments.2D.
 #' @param .count Should we return count or percentage?
 #' @param .meat Compute statistics using counts of elements (e.g., Read.count) or not.
 #' @param .other Should elements not in the given alphabet be shown in the result matrix.
 #' @param .laplace Value for the Laplace correction.
 #' @param .column,.columns Column's name with elements from the given alphabet for the freq.segments or a character vector of length two for freq.segments.2D.
-#' @param .sum.col Which column use to count frequencies if \code{.meat} = T. Default: 'Read.count'.
+#' @param .quant Which column to use for the quantity of clonotypes: NA for computing only number of genes without using clonotype counts, 
+#' "read.count" for the "Read.count" column, "bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column,
+#' "bc.prop" for the "Barcode.proportion" column.
 #' @param ... Don't use it, for internal purpose.
 #' 
-#' @return Data.frame with columns Segments and their frequencies in the column Freq.
+#' @return 
+#' If \code{.data} is a cloneset and \code{.alphabet} is NOT a list than return a data frame with first column "Gene" with genes and second with counts / proportions.
 #' 
-#' @seealso \code{\link{genealphabets}}, \code{\link{vis.V.usage}} \code{\link{vis.J.usage}} \code{\link{pca.segments}}
+#' If \code{.data} is a list with clonesets and \code{.alphabet} is NOT a list than return a data frame with first column "Gene" 
+#' with genes and other columns with counts / proportions for each cloneset in the input list.
+#' 
+#' If \code{.data} is a cloneset and \code{.alphabet} IS a list than return a matrix with gene segments for the first gene in \code{.alphabet}
+#' and column names for the second gene in \code{.alphabet}. See "Examples".
+#' 
+#' If \code{.data} is a list with clonesets and \code{.alphabet} IS a list than return a list with matrices like in the previous case.
+#' 
+#' @seealso \code{\link{genealphabets}}, \code{\link{vis.gene.usage}}, \code{\link{pca.segments}}
 #' 
 #' @examples
 #' \dontrun{
@@ -49,35 +60,53 @@ if (getRversion() >= "2.15.1") {
 #' # compute V-segments frequencies of human TCR beta.
 #' seg <- freq.segments(twb, "TRBV")
 #' # equivalent to the previos one
-#' seg <- freq.segments(twb, HUMAN_TRBV_ALPHABET, .column = "V.segments")
+#' seg <- freq.segments(twb, HUMAN_TRBV, .column = "V.gene")
 #' # plot V-segments frequencies as a grid
 #' vis.grid.stats(seg)
 #' # plot V-segments frequencies from the data
 #' vis.V.usage(twb)
+#' 
+#' # Compute V-J joint usage.
+#' geneUsage(twb, list(HUMAN_TRBV, HUMAN_TRBJ))
 #' }
-geneUsage <- function (.data, .alphabet = HUMAN_TRBV, .quant = c(NA, "..."), .other = F, .laplace = 0) {
+geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", "bc.count", "read.prop", "bc.prop"), .other = F, .laplace = 0) {
   
-  .process.df <- function (.df) {
-    if (is.na(.quant)) {
-      summarise_(grouped_df(.data, lapply(c('V.segments', 'J.segments'), as.name)), Freq = 'n()')
-    } else {
-      summarise_(grouped_df(.data, list(as.name('V.segments'))), Freq = 'sum(Read.count)')
-    }
+  .process.df <- function (.df, .quant, .cols) {
+    cast.fun <- dcast
+    if (length(.cols) == 2) { cast.fun <- acast }
+    
+    count.fun <- "n()"
+    if (!is.na(.quant)) { count.fun <- paste0("sum(", .quant, ")", collapse = "", sep = "")}
+    
+    if (length(.cols) == 1) { .cols <- c(.cols, '.')}
+    fun(summarise_(grouped_df(.df, lapply(.cols, as.name)), Freq = count.fun), as.formula(paste0(.cols[1], "~", .cols[2])), value.var = 'Freq')
   }
   
   
   quant <- NA
   if (!is.na(.quant)) { quant <- .column.choice(.quant, .verbose) }
   
-  if (has.class(.alphabet, 'list')) {
+  if (has.class(.data, 'data.frame')) { .data <- list(Data = .data) }
+  
+  if (has.class(.alphabet, 'list')) {    
     genecol1 <- paste0(substr(.alphabet[[1]], 3, 3), ".genes")
     genecol2 <- paste0(substr(.alphabet[[2]], 3, 3), ".genes")
+    
+    tbls <- lapply(.data, .process.df, .quant = quant, .cols = c(genecol1, genecol2))
+    
+    for (i)
+    
+    # check for length
+    if (length(.data) == 1) { res <- res[[1]] }
+    res
+    
   } else {
     genecol1 <- paste0(substr(.alphabet[[1]], 3, 3), ".genes")
+    
+    tbls <- lapply(.data, .process.df, .quant = quant, .cols = genecol1)
+    
+    res
   }
-  
-  
-  
 }
 
 
@@ -93,10 +122,10 @@ freq.segments <- function (.data, .alphabet='TRBV', .count=F, .meat=F, .other=F,
     return(res)
   }
   
-  if (.alphabet == "TRBV")      { .column <- 'V.segments'; alphabet <- HUMAN_TRBV_ALPHABET_MITCR }
-  else if (.alphabet == "TRAV") { .column <- 'V.segments'; alphabet <- HUMAN_TRAV_ALPHABET }
-  else if (.alphabet == "TRBJ") { .column <- 'J.segments'; alphabet <- HUMAN_TRBJ_ALPHABET }
-  else if (.alphabet == "TRAJ") { .column <- 'J.segments'; alphabet <- HUMAN_TRAJ_ALPHABET }
+  if (.alphabet == "TRBV")      { .column <- 'V.gene'; alphabet <- HUMAN_TRBV_MITCR }
+  else if (.alphabet == "TRAV") { .column <- 'V.gene'; alphabet <- HUMAN_TRAV }
+  else if (.alphabet == "TRBJ") { .column <- 'J.gene'; alphabet <- HUMAN_TRBJ }
+  else if (.alphabet == "TRAJ") { .column <- 'J.gene'; alphabet <- HUMAN_TRAJ }
   else                          { alphabet <- .alphabet }
   seg <- .data[[.column]]
   
@@ -126,13 +155,13 @@ freq.segments.2D <- function (.data, .alphabet = "beta", .count = F, .meat = F, 
   }
   
   if (.alphabet=="beta") {
-    .columns <- c('V.segments', 'J.segments')
-    alphabetV <- HUMAN_TRBV_ALPHABET_MITCR
-    alphabetJ <- HUMAN_TRBJ_ALPHABET
+    .columns <- c('V.gene', 'J.gene')
+    alphabetV <- HUMAN_TRBV_MITCR
+    alphabetJ <- HUMAN_TRBJ
   } else if (.alphabet=="alpha") {
-    .columns <- c('V.segments', 'J.segments')
-    alphabetV <- HUMAN_TRAV_ALPHABET
-    alphabetJ <- HUMAN_TRAJ_ALPHABET
+    .columns <- c('V.gene', 'J.gene')
+    alphabetV <- HUMAN_TRAV
+    alphabetJ <- HUMAN_TRAJ
   } else {
     alphabetV <- .alphabet[[1]]
     alphabetJ <- .alphabet[[2]]

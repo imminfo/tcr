@@ -11,6 +11,8 @@
 }
 
 
+#' 
+#' 
 .column.choice <- function (x, .verbose = T) {
   x <- switch(x[1],
               read.count = "Read.count",
@@ -67,7 +69,7 @@
 #' twb1.gr <- group.clonotypes(twb[[1]])
 #' twb.gr <- group.clonotypes(twb)
 #' }
-group.clonotypes <- function (.data, .gene.col = 'V.segments', .count.col = 'Read.count',
+group.clonotypes <- function (.data, .gene.col = 'V.gene', .count.col = 'Read.count',
                               .prop.col = 'Read.proportion', .seq.col = 'CDR3.amino.acid.sequence') {
   if (has.class(.data, 'list')) {
     return(lapply(.data, group.clonotypes, .gene.col = .gene.col, .count.col = .count.col, .seq.col = .seq.col))
@@ -276,6 +278,11 @@ apply.asymm <- function (.datalist, .fun, ..., .diag = NA, .verbose = T) {
 #' 
 #' @return Numeric vector.
 check.distribution <- function (.data, .do.norm = NA, .laplace = 1, .na.val = 0, .warn.zero = F, .warn.sum = T) {
+  if (sum(is.na(.data)) == length(.data)) {
+    cat("Error! Input vector is completely filled with NAs. Check your input data to avoid this. Returning vectors with zeros.\n")
+    return(rep.int(0, length(.data)))
+  }
+  
   if (is.na(.do.norm)) {
     .data[is.na(.data)] <- .na.val
     if (sum(.data) != 1) {

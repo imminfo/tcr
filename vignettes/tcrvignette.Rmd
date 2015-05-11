@@ -127,9 +127,9 @@ Clonesets represented in *tcR* as data frames with each row corresponding to the
   - *Read.proportion* - proportion of reads;
   - *CDR3.nucleotide.sequence* - CDR3 nucleotide sequence;
   - *CDR3.amino.acid.sequence* - CDR3 amino acid sequence;
-  - *V.segments* - names of aligned Variable genes;
-  - *J.segments* - names of aligned Joining genes;
-  - *D.segments* - names of aligned Diversity genes;
+  - *V.gene* - names of aligned Variable genes;
+  - *J.gene* - names of aligned Joining genes;
+  - *D.gene* - names of aligned Diversity genes;
   - *V.end* - last positions of aligned V genes (1-based);
   - *J.start* - first positions of aligned J genes (1-based);
   - *D5.end* - positions of D'5 end of aligned D genes (1-based);
@@ -267,7 +267,7 @@ head(cmv.imm.ex)
 cmv.imm.hamm.v <- 
   find.clonotypes(twb[1:3], cmv, 'hamm', 'Rank', 
                   .target.col = c('CDR3.amino.acid.sequence',
-                                  'V.segments'),
+                                  'V.gene'),
                   .verbose = F)
 head(cmv.imm.hamm.v)
 
@@ -276,7 +276,7 @@ head(cmv.imm.hamm.v)
 # using levenshtein distance and the "Read.count" column.
 cmv.imm.lev.v <- 
   find.clonotypes(twb[1:3], cmv, 'lev', 
-                  .target.col = c('CDR3.amino.acid.sequence', 'V.segments'),
+                  .target.col = c('CDR3.amino.acid.sequence', 'V.gene'),
                   .verbose = F)
 head(cmv.imm.lev.v)
 ```
@@ -385,9 +385,9 @@ Functions `intersectCount`, `intersectLogic` and `intersectIndices` are more fle
 # Get logic vector of shared elements, where
 # elements are tuples of CDR3 nucleotide sequence and corresponding V-segment
 imm.1.2 <- intersectLogic(twb[[1]], twb[[2]],
-                           .col = c('CDR3.amino.acid.sequence', 'V.segments'))  
+                           .col = c('CDR3.amino.acid.sequence', 'V.gene'))  
 # Get elements which are in both twb[[1]] and twb[[2]].
-head(twb[[1]][imm.1.2, c('CDR3.amino.acid.sequence', 'V.segments')])
+head(twb[[1]][imm.1.2, c('CDR3.amino.acid.sequence', 'V.gene')])
 ```
 
 

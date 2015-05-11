@@ -3,13 +3,17 @@
 #' @description
 #' General interface to all overlap functions.
 #' 
-#' @param ... Input clonesets or a list(s) of clonesets.
+#' @param .data List of clonesets.
 #' @param .method Which method to use for the overlap evaluation. See "Details" for methods.
-#' @param .seq Which column to use for overlap: 
+#' @param .seq Which clonotype sequences to use for the overlap: "nuc" for "CDR3.nucleotide.sequence", "aa" for 
+#' "CDR3.amino.acid.sequence".
+#' @param .quant Which column to use for the quantity of clonotypes: "read.count" for the "Read.count" column, 
+#' "bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column, "bc.prop" for 
+#' the "Barcode.proportion" column. Ignored for all methods excluding "morisita".
 #' 
 #' @seealso  \link{intersect}, \link{similarity}
 #' 
-repOverlap <- function (...,
+repOverlap <- function (.data,
                         .method = c("exact", "hamm", "lev", "jaccard", "morisita", "cosine", "tversky", "overlap", "horn"), 
                         .seq = c("nuc", "aa"), 
                         .quant = c("read.count", "bc.count", "read.prop", "bc.prop"),
@@ -23,9 +27,14 @@ repOverlap <- function (...,
                         .verbose = T
                         ) {
   
+  quant <- .column.choice(.quant, .verbose)
+  
+  
+  
   .fun <- NULL
   
   switch(.method[1], 
-         exact = { .fun <- function (x) intersect(x, .norm = .norm, .verbose = .verbose) })
+         exact = { .fun <- function (x) intersect(x, .norm = .norm, .verbose = .verbose) },
+         { .verbose.msg("You have specified an invalid method identifier. Choosed method: normalised number of shared nuc clonotypes. \n", .verbose); { ??? } })
   
 }

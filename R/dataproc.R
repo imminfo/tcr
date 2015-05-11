@@ -40,7 +40,7 @@ get.deletions.alpha <- function (.data, .Vs = segments$TRAV, .Js = segments$TRAJ
   
   cat('Computing V deletions...\n')
   pb <- txtProgressBar(max = length(seqs), style = 3)
-  Vs <- sapply(.data$V.segments, function (x) {
+  Vs <- sapply(.data$V.gene, function (x) {
     V <- .split.get(x)
     res <- .Vs$Nucleotide.sequence[.Vs$V.alleles == V][1]
     if (is.na(res)) {
@@ -57,7 +57,7 @@ get.deletions.alpha <- function (.data, .Vs = segments$TRAV, .Js = segments$TRAJ
   
   cat('Computing J deletions...\n')
   pb <- txtProgressBar(max = length(seqs), style = 3)
-  Js <- sapply(.data$J.segments, function (x) {
+  Js <- sapply(.data$J.gene, function (x) {
     J <- .split.get(x)
     res <- .Js$Nucleotide.sequence[.Js$J.alleles == J][1]
     if (is.na(res)) {
@@ -129,7 +129,7 @@ get.deletions.beta <- function (.data, .Vs = segments$TRBV, .Js = segments$TRBJ,
   
   cat('Computing VD deletions...\n')
   pb <- txtProgressBar(max = length(seqs), style = 3)
-  Vs <- sapply(.data$V.segments, function (x) {
+  Vs <- sapply(.data$V.gene, function (x) {
     V <- .split.get(x)
     res <- .Vs$Nucleotide.sequence[.Vs$V.segment == V][1]
     if (is.na(res)) {
@@ -146,7 +146,7 @@ get.deletions.beta <- function (.data, .Vs = segments$TRBV, .Js = segments$TRBJ,
   
   cat('Computing DJ deletions...\n')
   pb <- txtProgressBar(max = length(seqs), style = 3)
-  Js <- sapply(.data$J.segments, function (x) {
+  Js <- sapply(.data$J.gene, function (x) {
     J <- .split.get(x)
     res <- .Js$Nucleotide.sequence[.Js$J.segment == J][1]
     if (is.na(res)) {
@@ -163,16 +163,16 @@ get.deletions.beta <- function (.data, .Vs = segments$TRBV, .Js = segments$TRBJ,
   
   cat("Computing D'5 and D'3 deletions...\n")
   pb <- txtProgressBar(max = length(seqs) * 2, style=3)
-  D.segments <- .data$D.segments
-  D.straight <- sapply(1:length(D.segments), function (i) {
+  D.gene <- .data$D.gene
+  D.straight <- sapply(1:length(D.gene), function (i) {
     add.pb(pb)
     substr(seqs[i],
            First.D.nucleotide.position[i] + 1,
            Last.D.nucleotide.position[i] + 1)
   } )
   D.rev <- revcomp(D.straight)
-  D.deletions <- sapply(1:length(D.segments), function (i) {
-    D <- .split.get(D.segments[i])
+  D.deletions <- sapply(1:length(D.gene), function (i) {
+    D <- .split.get(D.gene[i])
     first.index <- -1
     res <- c(-1, -1)
     if (D != '') {
@@ -303,9 +303,9 @@ generate.tcr <- function (.count = 1, .chain = c('beta', 'alpha'), .segments,
     res<-data.frame(Read.count = 1,
                     CDR3.nucleotide.sequence = seqs,
                     CDR3.amino.acid.sequence = bunch.translate(seqs),
-                    V.segments = V.sample,
-                    J.segments = J.sample,
-                    D.segments = '',
+                    V.gene = V.sample,
+                    J.gene = J.sample,
+                    D.gene = '',
                     VD.insertions = -1,
                     DJ.insertions = -1,
                     Total.insertions = VJ.ins.lens,
@@ -412,9 +412,9 @@ generate.tcr <- function (.count = 1, .chain = c('beta', 'alpha'), .segments,
                     CDR3.nucleotide.sequence = seqs,
                     CDR3.nucleotide.sequence.sep = seqs.sep,
                     CDR3.amino.acid.sequence = bunch.translate(seqs),
-                    V.segments = V.sample,
-                    J.segments = JD.sample[,1],
-                    D.segments = JD.sample[,2],
+                    V.gene = V.sample,
+                    J.gene = JD.sample[,1],
+                    D.gene = JD.sample[,2],
                     VD.insertions = VD.ins.lens,
                     DJ.insertions = DJ.ins.lens,
                     Total.insertions = VD.ins.lens + DJ.ins.lens,

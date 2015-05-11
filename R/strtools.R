@@ -10,9 +10,9 @@
   
   if (has.class(.str, 'data.frame')) {
     res <- .str
-    res$V.segments <- sapply(res$V.segments, .split.get, .alphabet = HUMAN_TRBV_ALPHABET_MITCR)
-    res$D.segments <- sapply(res$D.segments, .split.get, .alphabet = c('TRBD1', 'TRBD2'))
-    res$J.segments <- sapply(res$J.segments, .split.get, .alphabet = HUMAN_TRBJ_ALPHABET)
+    res$V.gene <- sapply(res$V.gene, .split.get, .alphabet = HUMAN_TRBV_MITCR)
+    res$D.gene <- sapply(res$D.gene, .split.get, .alphabet = c('TRBD1', 'TRBD2'))
+    res$J.gene <- sapply(res$J.gene, .split.get, .alphabet = HUMAN_TRBJ)
     return(res)
   }
   .alphabet2 <- sub(' ', '', .alphabet, fixed = T)
@@ -30,9 +30,9 @@
     return(lapply(.data, .fix.segments))
   }
   
-  .data$V.segments <- sapply(strsplit(.data$V.segments, ',', fixed=T, useBytes=T), paste0, collapse = ', ')
-  .data$D.segments <- sapply(strsplit(.data$D.segments, ',', fixed=T, useBytes=T), paste0, collapse = ', ')
-  .data$J.segments <- sapply(strsplit(.data$J.segments, ',', fixed=T, useBytes=T), paste0, collapse = ', ')
+  .data$V.gene <- sapply(strsplit(.data$V.gene, ',', fixed=T, useBytes=T), paste0, collapse = ', ')
+  .data$D.gene <- sapply(strsplit(.data$D.gene, ',', fixed=T, useBytes=T), paste0, collapse = ', ')
+  .data$J.gene <- sapply(strsplit(.data$J.gene, ',', fixed=T, useBytes=T), paste0, collapse = ', ')
   .data
 }
 

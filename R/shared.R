@@ -12,7 +12,7 @@
 #' \code{shared.repertoire} - make a shared repertoire of sequences from the given list of data frames.
 #' 
 #' \code{shared.matrix} - leave columns, which related to the count of sequences in people, and return them as a matrix.
-#' I.e., this functions will remove such columns as 'CDR3.amino.acid.sequence', 'V.segments', 'People'.
+#' I.e., this functions will remove such columns as 'CDR3.amino.acid.sequence', 'V.gene', 'People'.
 #' 
 #' @usage
 #' shared.repertoire(.datalist, .type = 'avrc', .min.ppl = 1, .head = -1,
@@ -39,8 +39,8 @@
 #' \enumerate{
 #'  \item First character stands either for the letter 'a' for taking the "CDR3.amino.acid.sequence" column or
 #' for the letter 'n' for taking the "CDR3.nucleotide.sequence" column.
-#'  \item Second character stands whether or not take the V.segments column. Possible values are '0' (zero) stands
-#' for taking no additional columns, 'v' stands for taking the "V.segments" column.
+#'  \item Second character stands whether or not take the V.gene column. Possible values are '0' (zero) stands
+#' for taking no additional columns, 'v' stands for taking the "V.gene" column.
 #'  \item Third character stands for using either barcodes or reads in choosing the column with numeric characterisitc (see the next letter).
 #'  \item Fourth character stands for name of the column to choose as numeric characteristic of sequences. It depends on the third letter. Possible values are
 #' "c" for the "Barcode.count" (if 3rd character is "b") / "Read.count" column (if 3rd character is "r"), "p" for the "Barcode.proportion" / "Read.proportion" column, "r" for the "Rank" column or "i" for the "Index" column.
@@ -59,7 +59,7 @@
 #' # if the "Rank" column hasn't been found.
 #' immdata <- set.rank(immdata)
 #' # Generate shared repertoire using "CDR3.amino.acid.sequence" and
-#' # "V.segments" columns and with rank.
+#' # "V.gene" columns and with rank.
 #' imm.shared.av <- shared.repertoire(immdata, 'avrc')
 #' }
 shared.repertoire <- function (.datalist, .type = 'avrc', .min.ppl = 1, .head = -1, .clear = T,
@@ -102,7 +102,7 @@ shared.repertoire <- function (.datalist, .type = 'avrc', .min.ppl = 1, .head = 
     if (substr(.type, 1, 1) == 'a') { .by.col <- 'CDR3.amino.acid.sequence' }
     else { .by.col <- 'CDR3.nucleotide.sequence' }
     
-    if (substr(.type, 2, 2) == 'v') { .by.col <- c(.by.col, 'V.segments') }
+    if (substr(.type, 2, 2) == 'v') { .by.col <- c(.by.col, 'V.gene') }
   }
   
   if (nchar(.sum.col) == 0) {

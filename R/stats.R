@@ -179,10 +179,10 @@ repseq.stats = function(.data, .head=0) {
 #' \dontrun{
 #' # Compute summary statistics of VD insertions
 #' # for each V-segment using all V-segments in the given data frame.
-#' column.summary(immdata[[1]], 'V.segments', 'Total.insertions')
+#' column.summary(immdata[[1]], 'V.gene', 'Total.insertions')
 #' # Compute summary statistics of VD insertions for each V-segment using only V-segments
-#' # from the HUMAN_TRBV_ALPHABET_MITCR
-#' column.summary(immdata[[1]], 'V.segments', 'Total.insertions', HUMAN_TRBV_ALPHABET_MITCR)
+#' # from the HUMAN_TRBV_MITCR
+#' column.summary(immdata[[1]], 'V.gene', 'Total.insertions', HUMAN_TRBV_MITCR)
 #' }
 column.summary <- function (.data, .factor.col, .target.col, .alphabet = NA, .remove.neg = T) {
   if (length(.alphabet) != 0 && !is.na(.alphabet[1])) {
@@ -204,14 +204,14 @@ insertion.stats <- function (.data) {
   if (class(.data) == 'list') {
     return(lapply(.data, insertion.stats))
   }
-  vd <- column.summary(.data, 'V.segments', 'VD.insertions', HUMAN_TRBV_ALPHABET_MITCR)
+  vd <- column.summary(.data, 'V.gene', 'VD.insertions', HUMAN_TRBV_MITCR)
   names(vd)[-1] <- paste0('VD.', names(vd)[-1])
-  dj <- column.summary(.data, 'V.segments', 'DJ.insertions', HUMAN_TRBV_ALPHABET_MITCR)
+  dj <- column.summary(.data, 'V.gene', 'DJ.insertions', HUMAN_TRBV_MITCR)
   names(dj)[-1] <- paste0('DJ.', names(dj)[-1])
-  tot <- column.summary(.data, 'V.segments', 'Total.insertions', HUMAN_TRBV_ALPHABET_MITCR)
+  tot <- column.summary(.data, 'V.gene', 'Total.insertions', HUMAN_TRBV_MITCR)
   names(tot)[-1] <- paste0('Total.', names(tot)[-1])
-  res <- merge(vd, dj, by = 'V.segments', all = T)
-  res <- merge(res, tot, by = 'V.segments', all = T)
+  res <- merge(vd, dj, by = 'V.gene', all = T)
+  res <- merge(res, tot, by = 'V.gene', all = T)
   res
 }
 
@@ -247,9 +247,9 @@ insertion.stats <- function (.data) {
 #'                 .method = 'exact', .col.name = "Rank", .target.col = "CDR3.amino.acid.sequence")
 #' # Find close by levenhstein distance clonotypes with similar V-segments and return
 #' # their values in columns 'Read.count' and 'Total.insertions'.
-#' find.clonotypes(.data = twb, .targets = twb[[1]][, c('CDR3.amino.acid.sequence', 'V.segments')],
+#' find.clonotypes(.data = twb, .targets = twb[[1]][, c('CDR3.amino.acid.sequence', 'V.gene')],
 #'                 .col.name = c('Read.count', 'Total.insertions'), .method = 'lev',
-#'                 .target.col = c('CDR3.amino.acid.sequence', 'V.segments'))
+#'                 .target.col = c('CDR3.amino.acid.sequence', 'V.gene'))
 #' }
 find.clonotypes <- function (.data, .targets, .method = c('exact', 'hamm', 'lev'), .col.name = 'Read.count', .target.col = 'CDR3.amino.acid.sequence', .verbose = T) {  
   if (is.character(.targets) && length(.target.col) != 1) {

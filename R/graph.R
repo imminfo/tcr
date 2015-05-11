@@ -29,7 +29,7 @@
 #' get.people.names(G, 300, F)  # list(c("Subj.A", "Subj.B"))
 #' }
 mutation.network <- function (.data, .method = c('hamm', 'lev'), .max.errors = 1,
-                                   .label.col = 'CDR3.amino.acid.sequence', .seg.col = 'V.segments', .prob.col = 'Probability') {
+                                   .label.col = 'CDR3.amino.acid.sequence', .seg.col = 'V.gene', .prob.col = 'Probability') {
   # Make vertices and edges.
   if (has.class(.data, 'character')) {
     .data <- data.frame(A = .data, stringsAsFactors = F)
@@ -109,7 +109,10 @@ set.people.vector <- function (.G, .shared.rep) {
                              apply(as.matrix(.shared.rep[, -(1:(match('People', colnames(.shared.rep))))]),
                                    1,
                                    function (row) { paste0(as.integer(row > 0), collapse='') }))
-  set.vertex.attribute(.G, 'npeople', V(.G), .shared.rep[['People']])
+  .G <- set.vertex.attribute(.G, 'npeople', V(.G),
+                             apply(as.matrix(.shared.rep[, -(1:(match('People', colnames(.shared.rep))))]),
+                                   1,
+                                   function (row) { sum(row > 0) }))
 }
 
 get.people.names <- function (.G, .V = V(.G), .paste = T) {

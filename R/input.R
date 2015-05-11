@@ -111,7 +111,7 @@ parse.cloneset <- function (.filename,
   
   colnames(df) <- c('Barcode.count', 'Barcode.proportion', 'Read.count', 'Read.proportion',
                     'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
-                    'V.segments', 'J.segments', 'D.segments',
+                    'V.gene', 'J.gene', 'D.gene',
                     'V.end', 'J.start', 'D5.end', 'D3.end',
                     'VD.insertions', 'DJ.insertions', 'Total.insertions')
   
@@ -162,11 +162,11 @@ parse.cloneset <- function (.filename,
 #' 
 #' - "CDR3.amino.acid.sequence" - CDR3 amino acid sequence;
 #' 
-#' - "V.segments" - names of aligned Variable gene segments;
+#' - "V.gene" - names of aligned Variable gene segments;
 #' 
-#' - "J.segments" - names of aligned Joining gene segments;
+#' - "J.gene" - names of aligned Joining gene segments;
 #' 
-#' - "D.segments" - names of aligned Diversity gene segments;
+#' - "D.gene" - names of aligned Diversity gene segments;
 #' 
 #' - "V.end" - last positions of aligned V gene segments (1-based);
 #' 

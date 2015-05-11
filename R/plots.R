@@ -2,9 +2,9 @@
 
 
 if (getRversion() >= "2.15.1") {
-  utils::globalVariables(c("Segment", 'Size', 'Freq', 'Subject', 'V.segments', 'J.segments', '..count..', 'Time.point', 'Proportion', 'Sequence',
+  utils::globalVariables(c("Segment", 'Size', 'Freq', 'Subject', 'V.gene', 'J.gene', '..count..', 'Time.point', 'Proportion', 'Sequence',
                            'Lower', 'Upper', 'Lengths', 'Read.count', 'Var', 'Value', 'Group', 'variable', 'name', 'value', 'Kmers',
-                           'Count', 'People', 'First', 'Second', 'Var1', 'Q0.025', 'Q0.975', 'Mean', 'Type', 'Clone.size', 'Q1', 'Q2', 'Symbol'))
+                           'Count', 'People', 'First', 'Second', 'Var1', 'Q0.025', 'Q0.975', 'Mean', 'Type', 'Clone.size', 'Q1', 'Q2', 'Symbol', 'Gene', 'Genes', 'Sample'))
 }
 
 
@@ -168,7 +168,7 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' # Plot a heatmap.
 #' vis.heatmap(imm.av, .title = 'Immdata - (ave)-intersection')
 #' }
-vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 'Subject', .legend = 'Shared clonotypes', .na.value = NA, .text = T) {
+vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 'Sample', .legend = 'Shared clonotypes', .na.value = NA, .text = T) {
   if (has.class(.data, 'data.frame')) {
     names <- .data[,1]
     .data <- as.matrix(.data[,-1])
@@ -232,7 +232,7 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
 #'    list(A = c('A1', 'A2'), B = c('B1', 'B2'), C = c('C1', 'C2')),
 #'    c('V segments', 'Frequency')) 
 #' }
-vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D1', 'D2'), C = c('C1', 'C2')), .labs = c('V segments', 'Frequency'), .title = '', .rotate.x = T, ...) {
+vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D1', 'D2'), C = c('C1', 'C2')), .labs = c('V genes', 'Frequency'), .title = '', .rotate.x = T, ...) {
   .data <- melt(.data, ...)
   
   colnames(.data) <- c('Var', 'Subject', 'Value')
@@ -284,15 +284,63 @@ vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D
 #' imm1.vs <- freq.Vb(immdata[[1]])
 #' # Two eqivalent calls for plotting the V-usage for all data frames on the one plot:
 #' vis.V.usage(immdata, .cast.freq = T, .main = 'Immdata V-usage [1]', .dodge = T)
-#' # Plot a histogram for one data frame using all gene segment data from V.segments column.
+#' # Plot a histogram for one data frame using all gene segment data from V.gene column.
 #' vis.V.usage(immdata[[1]], .cast.freq = F, .main = 'Immdata V-usage [1]')
 #' vis.V.usage(imm1.vs, .cast.freq = F, .main = 'Immdata V-usage [2]', .dodge = T)
 #' # Plot a grid of histograms - one histogram for V-usage for each data frame in .data.
 #' vis.V.usage(immdata, .cast.freq = T, .main = 'Immdata V-usage [3]', .dodge = F, .other = F)
 #' # Plot alpha V-usage
 #' vis.V.usage(immdata[[1]], .cast.freq = T, .main = 'Immdata V-usage [4]',
-#' .dodge = F, .other = F, .alphabet = HUMAN_TRAV_ALPHABET)
+#' .dodge = F, .other = F, .alphabet = HUMAN_TRAV)
 #' }
+vis.gene.usage <- function (.data, .alphabet = NA, .main = "Gene usage", .ncol = 3, .coord.flip = F, .dodge = F, .labs = c("Gene", "Frequency"), ...) {
+  if (has.class(.data, 'list')) {    
+    if (.dodge) {
+      if (!is.na(.alphabet)) {
+        .data <- geneUsage(.data, .alphabet, ...)
+      }
+      
+      res <- melt(.data)
+      res <- res[1:nrow(res), ]  # something bad with melt
+      colnames(res) <- c('Gene', 'Sample', 'Freq')
+      p <- ggplot() + 
+        geom_bar(aes(x = Gene, y = Freq, fill = Subject), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
+        theme_linedraw() + 
+        theme(axis.text.x = element_text(angle=90)) + 
+        .colourblind.discrete(length(.data)) +
+        scale_y_continuous(expand = c(0,0))
+      return(p)
+    } else {
+      ps <- lapply(1:length(.data), function (i) {
+        vis.gene.usage(.data[[i]], .cast.freq, names(.data)[i], 0, .coord.flip, .labs = .labs, ...) 
+      })
+      p <- do.call(grid.arrange, c(ps, ncol = .ncol, main = .main) )
+      return(p)
+    }
+    
+  }
+  
+  else {
+    if (!is.na(.alphabet)) {
+      .data <- geneUsage(.data, .alphabet, ...)
+    }
+    
+    p <- ggplot() + geom_bar(aes(x = Gene, y = Freq, fill = Freq), data = .data, stat = 'identity', colour = 'black')
+    
+    if (.coord.flip) { p <- p + coord_flip() }
+    
+    p + theme_linedraw() + 
+      theme(axis.text.x = element_text(angle=90)) + 
+      ggtitle(.main) + 
+      .colourblind.gradient() +
+      scale_y_continuous(expand = c(.02,0)) + 
+      xlab(.labs[1]) + ylab(.labs[2])
+  }
+}
+
+
+
+
 vis.V.usage <- function (.data, .cast.freq = T, .main = 'V-usage', .ncol = 3, .coord.flip = F, .dodge = F, ...) {
   if (has.class(.data, 'list')) {
     if (.dodge) {
@@ -329,7 +377,7 @@ vis.V.usage <- function (.data, .cast.freq = T, .main = 'V-usage', .ncol = 3, .c
   }
   else {
     # If mitcr data.frame.
-    p <- ggplot() + geom_histogram(aes(x = V.segments, fill = ..count..), data = .data, colour = 'black')
+    p <- ggplot() + geom_histogram(aes(x = V.gene, fill = ..count..), data = .data, colour = 'black')
   }
   if (.coord.flip) { p <- p + coord_flip() }
   p + theme_linedraw() + 
@@ -375,7 +423,7 @@ vis.J.usage <- function (.data, .cast.freq = T, .main = 'J-usage', .ncol = 3, .c
   }
   else {
     # If mitcr data.frame.
-    p <- ggplot() + geom_histogram(aes(x = J.segments, fill = ..count..), data = .data, colour = 'black')
+    p <- ggplot() + geom_histogram(aes(x = J.gene, fill = ..count..), data = .data, colour = 'black')
   }
   if (.coord.flip) { p <- p + coord_flip() }
   p + theme_linedraw() + 
