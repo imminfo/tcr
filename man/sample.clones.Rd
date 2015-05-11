@@ -11,7 +11,7 @@ sample.clones(.data, .n, .replace = T)
 
 \item{.n}{Sample size if integer. If in bounds [0;1] than percent of rows to extract. "1" is a percent, not one row!}
 
-\item{.replace}{If T than choose with replacement, else without.}
+\item{.replace}{if T then choose with replacement, else without.}
 }
 \value{
 Data.frame of nrow .n or a list with such data.frames.

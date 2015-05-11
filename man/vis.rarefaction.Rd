@@ -12,7 +12,7 @@ vis.rarefaction(.muc.res, .groups = NULL, .log = F)
 \item{.groups}{List with names for groups and names of the group members. If NULL than each
 member is in the individual group.}
 
-\item{.log}{If T than log-scale the y axis.}
+\item{.log}{if T then log-scale the y axis.}
 }
 \description{
 Plot a line with mean unique clones.

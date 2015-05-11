@@ -10,7 +10,7 @@ vis.logo(.data, .replace.zero.with.na = T, .jitter.width = 0.01,
 \arguments{
 \item{.data}{Output from the \code{kmer.profile} function.}
 
-\item{.replace.zero.with.na}{If T than replace all zeros with NAs, therefore letters with
+\item{.replace.zero.with.na}{if T then replace all zeros with NAs, therefore letters with
 zero frequency wont appear at the plot.}
 
 \item{.jitter.width,.jitter.height,.dodge.width}{Parameters to \code{position_jitterdodge}

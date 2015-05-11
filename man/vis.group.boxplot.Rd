@@ -19,7 +19,7 @@ member is in the individual group.}
 
 \item{.title}{Main title of the plot.}
 
-\item{.rotate.x}{If T than rotate x-axis.}
+\item{.rotate.x}{if T then rotate x-axis.}
 
 \item{...}{Parameters passed to \code{melt}, applied to \code{.data} before plotting in \code{vis.group.boxplot}.}
 }

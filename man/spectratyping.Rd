@@ -16,9 +16,9 @@ spectratyping(.data, .column = "VD.insertions", .by.alphabet = "Vb",
 
 \item{.by.alphabet}{Either 'Va/b', 'Ja/b' or an alphabet.}
 
-\item{.do.legend}{If T than plot a legend.}
+\item{.do.legend}{if T then plot a legend.}
 
-\item{.draw.only.legend}{If T than plot only a legend without plots.}
+\item{.draw.only.legend}{if T then plot only a legend without plots.}
 
 \item{.legend.ncol}{Number of columns in the legend. If -1 than function will try to predict number of columns.}
 
@@ -28,11 +28,11 @@ spectratyping(.data, .column = "VD.insertions", .by.alphabet = "Vb",
 
 \item{.sum.col}{Which column use for sum.}
 
-\item{.other}{If T than include in the result plot values which isn't in the given alphabet.}
+\item{.other}{if T then include in the result plot values which isn't in the given alphabet.}
 
-\item{.log}{If T than scale y-axis by log10.}
+\item{.log}{if T then scale y-axis by log10.}
 
-\item{.verbose}{If T than print messages about state of the process.}
+\item{.verbose}{if T then print messages about state of the process.}
 }
 \value{
 ggplot object.

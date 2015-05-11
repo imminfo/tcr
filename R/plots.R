@@ -152,10 +152,10 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' @param .data Either a matrix with colnames and rownames specifyed or a data.frame with the first column of
 #' strings for row names and other columns stands for values.
 #' @param .title Main title of the plot.
-#' @param .labs Labs names. Character vector of length 1 (for naming both axis with same name) or 2 (first elements stands for x-axis).
+#' @param .labs Labs names. Character vector of length 2 (for naming x-axis and y-axis).
 #' @param .legend Title for the legend.
 #' @param .na.value Replace NAs with this values.
-#' @param .text If T than print \code{.data} values at tiles.
+#' @param .text if T then print \code{.data} values at tiles.
 #' 
 #' @return ggplot object.
 #' 
@@ -168,7 +168,7 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' # Plot a heatmap.
 #' vis.heatmap(imm.av, .title = 'Immdata - (ave)-intersection')
 #' }
-vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 'Sample', .legend = 'Shared clonotypes', .na.value = NA, .text = T) {
+vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = c('Sample', 'Sample'), .legend = 'Shared clonotypes', .na.value = NA, .text = T) {
   if (has.class(.data, 'data.frame')) {
     names <- .data[,1]
     .data <- as.matrix(.data[,-1])
@@ -199,7 +199,7 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
   p <- p + .blues.gradient(min(m$value), max(m$value))
   p + ggtitle(.title) + 
     guides(fill = guide_legend(title=.legend)) +
-    xlab(.labs) + ylab(.labs) + coord_equal() +
+    xlab(.labs[1]) + ylab(.labs[2]) + coord_equal() +
     theme_linedraw() + theme(axis.text.x  = element_text(angle=90)) +
     scale_x_discrete(expand=c(0,0)) + scale_y_discrete(expand=c(0,0))
 }
@@ -218,7 +218,7 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
 #' member is in the individual group.
 #' @param .title Main title of the plot.
 #' @param .labs Labs names. Character vector of length 1 (for naming both axis with same name) or 2 (first elements stands for x-axis).
-#' @param .rotate.x If T than rotate x-axis.
+#' @param .rotate.x if T then rotate x-axis.
 #' @param ... Parameters passed to \code{melt}, applied to \code{.data} before plotting in \code{vis.group.boxplot}.
 #' 
 #' @return ggplot object.
@@ -266,10 +266,10 @@ vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D
 #' 
 #' @param .data Mitcr data frame or a list with mitcr data frames.
 #' 
-#' @param .cast.freq If T than cast \code{freq.Vb} (for \code{vis.V.usage}) or \code{freq.Jb} (for \code{vis.J.usage}) on \code{.data} before plotting.
+#' @param .cast.freq if T then cast \code{freq.Vb} (for \code{vis.V.usage}) or \code{freq.Jb} (for \code{vis.J.usage}) on \code{.data} before plotting.
 #' @param .main Main title of the plot.
 #' @param .ncol Number of columns in a grid of histograms if \code{.data} is a list and \code{.dodge} is F.
-#' @param .coord.flip If T than flip coordinates.
+#' @param .coord.flip if T then flip coordinates.
 #' @param .dodge If \code{.data} is a list, than if this is T plot V-usage for all data frames to the one histogram.
 #' @param ... Parameter passed to \code{freq.segments}. By default the function compute V-usage or J-usage for beta chains
 #' w/o using read counts and w/ "Other" segments.
@@ -569,7 +569,7 @@ vis.top.proportions <- function (.data, .head = c(10, 100, 1000, 10000, 30000, 1
 #' @param .muc.res Output from the \code{muc} function.
 #' @param .groups List with names for groups and names of the group members. If NULL than each
 #' member is in the individual group.
-#' @param .log If T than log-scale the y axis.
+#' @param .log if T then log-scale the y axis.
 #' 
 #' @seealso \link{rarefaction}
 #' 
@@ -664,7 +664,7 @@ vis.kmer.histogram <- function (.kmers, .head = 100, .position = c('stack', 'dod
 #' for each time point for each clone.
 #' @param .lower Similar to .changed but values are lower bound for clonal count / frequency.
 #' @param .upper Similar to .changed but values are upper bound for clonal count / frequency.
-#' @param .log If T than log-scale y-axis.
+#' @param .log if T then log-scale y-axis.
 #' 
 #' @return ggplot object.
 vis.clonal.dynamics <- function (.changed, .lower, .upper, .log = T) {
@@ -740,7 +740,7 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
 #' Plot logo-like graphs for visualising of nucleotide or amino acid motif sequences / profiles.
 #' 
 #' @param .data Output from the \code{kmer.profile} function.
-#' @param .replace.zero.with.na If T than replace all zeros with NAs, therefore letters with
+#' @param .replace.zero.with.na if T then replace all zeros with NAs, therefore letters with
 #' zero frequency wont appear at the plot.
 #' @param .jitter.width,.jitter.height,.dodge.width Parameters to \code{position_jitterdodge}
 #' for aligning text labels of letters.

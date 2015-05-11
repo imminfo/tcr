@@ -22,9 +22,9 @@ in \code{.by.col} and \code{.sum.col} will be used.}
 
 \item{.head}{Parameter for the \code{head} function, applied to all data frames before clearing.}
 
-\item{.clear}{If T than remove all sequences which have symbols "~" or "*" (i.e., out-of-frame sequences for amino acid sequences).}
+\item{.clear}{if T then remove all sequences which have symbols "~" or "*" (i.e., out-of-frame sequences for amino acid sequences).}
 
-\item{.verbose}{If T than output progress.}
+\item{.verbose}{if T then output progress.}
 
 \item{.by.col}{Character vector with names of columns with sequences and their parameters (like segment) for using for creating a shared repertoire.}
 

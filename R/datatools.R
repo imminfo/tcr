@@ -126,7 +126,7 @@ unpermutedf <- function (.data) {
 #' 
 #' @param .data Data.frame or a list with data.frames
 #' @param .n Sample size if integer. If in bounds [0;1] than percent of rows to extract. "1" is a percent, not one row!
-#' @param .replace If T than choose with replacement, else without.
+#' @param .replace if T then choose with replacement, else without.
 #' 
 #' @return Data.frame of nrow .n or a list with such data.frames.
 sample.clones <- function (.data, .n, .replace = T) { 
@@ -221,7 +221,7 @@ sample2D <- function (.table, .count = 1) {
 #' @param .fun Function to apply, which return basic class value.
 #' @param ... Arguments passsed to .fun.
 #' @param .diag Either NA for NA or something else != NULL for .fun(x,x).
-#' @param .verbose If T than output a progress bar.
+#' @param .verbose if T then output a progress bar.
 #' 
 #' @return Matrix with values M[i,j] = fun(datalist[i], datalist[j])
 #' 
@@ -267,13 +267,13 @@ apply.asymm <- function (.datalist, .fun, ..., .diag = NA, .verbose = T) {
 #' 
 #' @param .data Numeric vector of values.
 #' @param .do.norm One of the three values - NA, T or F. If NA than check for distrubution (sum(.data) == 1)
-#' and normalise if needed with the given laplace correction value. If T than do normalisation and laplace
+#' and normalise if needed with the given laplace correction value. if T then do normalisation and laplace
 #' correction. If F than don't do normalisaton and laplace correction.
 #' @param .laplace Value for laplace correction.
 #' @param .na.val Replace all NAs with this value.
-#' @param .warn.zero If T than the function checks if in the resulted vector (after normalisation)
+#' @param .warn.zero if T then the function checks if in the resulted vector (after normalisation)
 #' are any zeros, and print a warning message if there are some.
-#' @param .warn.sum If T than the function checks if the sum of resulted vector (after normalisation)
+#' @param .warn.sum if T then the function checks if the sum of resulted vector (after normalisation)
 #' is equal to one, and print a warning message if not.
 #' 
 #' @return Numeric vector.
@@ -324,7 +324,7 @@ check.distribution <- function (.data, .do.norm = NA, .laplace = 1, .na.val = 0,
 #' @param .size Size of the slice for sampling for slice.fun.
 #' @param .fun Funtions to apply to every sample subset. First input argument is a data.frame, others are passed as \code{...}.
 #' @param ... Additional parameters passed to the .fun.
-#' @param .simplify If T than try to simplify result to a vector or to a matrix if .data is a list.
+#' @param .simplify if T then try to simplify result to a vector or to a matrix if .data is a list.
 #' 
 #' @return List of length length(.n) for top.fun or .n for slice.fun.
 #' 

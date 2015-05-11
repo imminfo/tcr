@@ -35,12 +35,12 @@
 #' js.div(.alpha, .beta, .do.norm = NA, .laplace = 0, .norm.entropy = F)
 #' 
 #' @param .data,.alpha,.beta Vector of values.
-#' @param .norm If T than compute normalised entropy (H / Hmax).
+#' @param .norm if T then compute normalised entropy (H / Hmax).
 #' @param .do.norm One of the three values - NA, T or F. If NA than check for distrubution \code{(sum(.data) == 1)}.
-#' and normalise if needed with the given laplace correction value. If T than do normalisation and laplace
+#' and normalise if needed with the given laplace correction value. if T then do normalisation and laplace
 #' correction. If F than don't do normalisaton and laplace correction.
 #' @param .laplace Value for Laplace correction which will be added to every value in the .data.
-#' @param .norm.entropy If T than normalise JS-divergence by entropy.
+#' @param .norm.entropy if T then normalise JS-divergence by entropy.
 #' 
 #' @return Shannon entropy, Jensen-Shannon divergence or Kullback-Leibler divergence values.
 #' 
@@ -124,10 +124,10 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 #' either two sets or two numbers of elements in sets for \code{jaccard.index}.
 #' @param .a,.b Alpha and beta parameters for Tversky Index. Default values gives the Jaccard index measure.
 #' @param .do.norm One of the three values - NA, T or F. If NA than check for distrubution (sum(.data) == 1)
-#' and normalise if needed with the given laplace correction value. If T than do normalisation and laplace
+#' and normalise if needed with the given laplace correction value. if T then do normalisation and laplace
 #' correction. If F than don't do normalisaton and laplace correction.
 #' @param .laplace Value for Laplace correction.
-#' @param .do.unique If T than call unique on the first columns of the given data.frame or matrix.
+#' @param .do.unique if T then call unique on the first columns of the given data.frame or matrix.
 #' @param .intersection.number Number of intersected elements between two sets. See "Details" for more information.
 #' @details
 #' For \code{morisitas.index} input data are matrices or data.frames with two columns: first column is

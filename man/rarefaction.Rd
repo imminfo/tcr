@@ -18,7 +18,7 @@ rarefaction(.data, .step = 30000, .quantile = c(0.025, 0.975),
 
 \item{.col}{Column's name from which choose frequency of each clone.}
 
-\item{.verbose}{If T than print progress bar.}
+\item{.verbose}{if T then print progress bar.}
 }
 \value{
 Data frame with first column for sizes, second columns for the first quantile,

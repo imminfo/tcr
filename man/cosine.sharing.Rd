@@ -19,7 +19,7 @@ shared.summary(.shared.rep, .min.ppl = min(.shared.rep$People),
 \arguments{
 \item{.shared.rep}{Shared repertoire, obtained from the function \code{shared.repertoire}.}
 
-\item{.log}{If T than apply log to the after adding laplace correction equal to one.}
+\item{.log}{if T then apply log to the after adding laplace correction equal to one.}
 
 \item{...}{Parameters passed to the \code{prcomp} function.}
 

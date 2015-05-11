@@ -39,7 +39,7 @@
 #' 'lev' for matching strings which have <= 1 levenshtein (edit) distance between them.
 #' @param .col Which columns use for fetching values to intersect. First supplied column matched with \code{.method}, others as exact values.
 #' @param .norm If TRUE than normalise result by product of length or nrows of the given data.
-#' @param .verbose If T than produce output of processing the data.
+#' @param .verbose if T then produce output of processing the data.
 #' @param x,y Parameters leaved for compatability with code which uses \code{base::intersect}. If provided than replaces \code{.alpha} and \code{.beta} respectively.
 #' 
 #' @details

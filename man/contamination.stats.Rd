@@ -18,7 +18,7 @@ decontamination(.data1, .data2, .limit = 20, .col = 'Read.count', .symm = T)
 
 \item{.col}{Column's name with clonal count.}
 
-\item{.symm}{If T than perform filtering out of sequences in .data1, and then from .data2. Else only from .data1.}
+\item{.symm}{if T then perform filtering out of sequences in .data1, and then from .data2. Else only from .data1.}
 }
 \value{
 Filtered \code{.data1} or a list with filtered both \code{.data1} and \code{.data2}.

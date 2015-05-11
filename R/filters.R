@@ -22,7 +22,7 @@
 #' @param .data2 Second data frame with such columns. Will be used for checking for sequences which contaminated the first one.
 #' @param .limit Parameter for filtering: all sequences from \code{.data1} which are presented in \code{.data2} and (count of  in \code{.data2}) / (count of seq in \code{.data1}) >= \code{.limit} are removed.
 #' @param .col Column's name with clonal count.
-#' @param .symm If T than perform filtering out of sequences in .data1, and then from .data2. Else only from .data1.
+#' @param .symm if T then perform filtering out of sequences in .data1, and then from .data2. Else only from .data1.
 #' 
 #' @return Filtered \code{.data1} or a list with filtered both \code{.data1} and \code{.data2}.
 contamination.stats <- function (.data1, .data2, .limit = 20, .col = 'Read.count') {

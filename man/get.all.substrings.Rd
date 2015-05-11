@@ -11,7 +11,7 @@ get.all.substrings(.seq, .min.len = 3, .table = T)
 
 \item{.min.len}{Minimal length of output sequences.}
 
-\item{.table}{If T than return data frame with substrings and positions of their ends in the .seq.}
+\item{.table}{if T then return data frame with substrings and positions of their ends in the .seq.}
 }
 \value{
 Character vector or data frame with columns "Substring", "Start" and "End".

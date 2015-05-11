@@ -16,14 +16,14 @@ vis.gene.usage(.data, .alphabet = NA, .main = "Gene usage", .ncol = 3,
 
 \item{.ncol}{Number of columns in a grid of histograms if \code{.data} is a list and \code{.dodge} is F.}
 
-\item{.coord.flip}{If T than flip coordinates.}
+\item{.coord.flip}{if T then flip coordinates.}
 
 \item{.dodge}{If \code{.data} is a list, than if this is T plot V-usage for all data frames to the one histogram.}
 
 \item{...}{Parameter passed to \code{freq.segments}. By default the function compute V-usage or J-usage for beta chains
 w/o using read counts and w/ "Other" segments.}
 
-\item{.cast.freq}{If T than cast \code{freq.Vb} (for \code{vis.V.usage}) or \code{freq.Jb} (for \code{vis.J.usage}) on \code{.data} before plotting.}
+\item{.cast.freq}{if T then cast \code{freq.Vb} (for \code{vis.V.usage}) or \code{freq.Jb} (for \code{vis.J.usage}) on \code{.data} before plotting.}
 }
 \value{
 ggplot object.

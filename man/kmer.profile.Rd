@@ -13,7 +13,7 @@ data.frame with first column with character sequences and second column with num
 
 \item{.names}{Names for each sequence / row in the \code{.data}.}
 
-\item{.verbose}{If T than print processing output.}
+\item{.verbose}{if T then print processing output.}
 }
 \value{
 Return data frame with first column "Symbol" with all possible symbols in the given sequences

@@ -11,9 +11,9 @@
 #' @param .data Either character vector or a data.frame.
 #' @param .head Parameter for head function applied to the given data before kmer generation.
 #' @param .k Size of the kmer.
-#' @param .clean If T than remove sequences which contain '~' or '*' symbols. Useful for deleting out-of-frame aminoacid sequnces.
+#' @param .clean if T then remove sequences which contain '~' or '*' symbols. Useful for deleting out-of-frame aminoacid sequnces.
 #' @param .meat if TRUE than .data must be data.frame with columns CDR3.amino.acid.sequence and Read.count.
-#' @param .verbose If T than print progress.
+#' @param .verbose if T then print progress.
 #' @param .left.shift Cut all \code{.left.shift} symbols from the left side for each sequence.
 #' @param .right.shift Cut all \code{.right.shift} symbols from the right side for each sequence.
 #' 
@@ -251,7 +251,7 @@ generate.kmers.prob <- function (.k, .probs, .count = 1, .alphabet = c('A', 'C',
 #' @param .data Either list with elements of one of the allowed classes or object with one of the class:
 #' data.frame with first column with character sequences and second column with number of sequences or character vector.
 #' @param .names Names for each sequence / row in the \code{.data}.
-#' @param .verbose If T than print processing output.
+#' @param .verbose if T then print processing output.
 #' 
 #' @return Return data frame with first column "Symbol" with all possible symbols in the given sequences
 #' and other columns with names "1", "2", ... for each position with percentage for each symbol.

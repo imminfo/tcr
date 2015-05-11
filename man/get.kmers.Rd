@@ -14,11 +14,11 @@ get.kmers(.data, .head = -1, .k = 5, .clean = T, .meat = F,
 
 \item{.k}{Size of the kmer.}
 
-\item{.clean}{If T than remove sequences which contain '~' or '*' symbols. Useful for deleting out-of-frame aminoacid sequnces.}
+\item{.clean}{if T then remove sequences which contain '~' or '*' symbols. Useful for deleting out-of-frame aminoacid sequnces.}
 
 \item{.meat}{if TRUE than .data must be data.frame with columns CDR3.amino.acid.sequence and Read.count.}
 
-\item{.verbose}{If T than print progress.}
+\item{.verbose}{if T then print progress.}
 
 \item{.left.shift}{Cut all \code{.left.shift} symbols from the left side for each sequence.}
 

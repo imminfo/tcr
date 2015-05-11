@@ -27,8 +27,8 @@
 #' in \code{.by.col} and \code{.sum.col} will be used.
 #' @param .min.ppl At least how many people must have a sequence to leave this sequence in the shared repertoire.
 #' @param .head Parameter for the \code{head} function, applied to all data frames before clearing.
-#' @param .clear If T than remove all sequences which have symbols "~" or "*" (i.e., out-of-frame sequences for amino acid sequences).
-#' @param .verbose If T than output progress.
+#' @param .clear if T then remove all sequences which have symbols "~" or "*" (i.e., out-of-frame sequences for amino acid sequences).
+#' @param .verbose if T then output progress.
 #' @param .by.col Character vector with names of columns with sequences and their parameters (like segment) for using for creating a shared repertoire.
 #' @param .sum.col Character vector of length 1 with names of the column with count, percentage or any other numeric chaaracteristic of sequences for using for creating a shared repertoire.
 #' @param .max.ppl At most how many people must have a sequence to leave this sequence in the shared repertoire.
@@ -203,7 +203,7 @@ shared.matrix <- function (.shared.rep) {
 #' 
 #' @param .shared.rep Shared repertoire, obtained from the function \code{shared.repertoire}.
 #' @param ... Parameters passed to the \code{prcomp} function.
-#' @param .log If T than apply log to the after adding laplace correction equal to one.
+#' @param .log if T then apply log to the after adding laplace correction equal to one.
 #' @param .min.ppl Filter: get sequences with # people >= .min.ppl.
 #' @param .max.ppl Filter: get sequences with # people <= .max.ppl.
 #' 

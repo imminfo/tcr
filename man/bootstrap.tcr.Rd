@@ -23,7 +23,7 @@ For \code{.sim} == "percentage" stands for number of barcodes / read counts to t
 
 \item{.postfun}{Function applied to the resulting list: list of results from each processed sample.}
 
-\item{.verbose}{If T than show progress bar.}
+\item{.verbose}{if T then show progress bar.}
 
 \item{.prop.col}{Column with proportions for each clonotype.}
 

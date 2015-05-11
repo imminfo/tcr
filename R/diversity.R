@@ -46,7 +46,7 @@
 #' @param .data Numeric vector of values for proportions or for numbers of individuals.
 #' @param .q q-parameter for the Diversity index.
 #' @param .do.norm One of the three values - NA, T or F. If NA than check for distrubution (sum(.data) == 1)
-#' and normalise if needed with the given laplace correction value. If T than do normalisation and laplace
+#' and normalise if needed with the given laplace correction value. if T then do normalisation and laplace
 #' correction. If F than don't do normalisaton and laplace correction.
 #' @param .laplace Value for Laplace correction which will be added to every value in the .data.
 #' 
@@ -144,7 +144,7 @@ chao1 <- function (.data) {
 #' @param .quantile Numeric vector of length 2 with quantiles for confidence intervals.
 #' @param .extrapolation If N > 0 than perform extrapolation of all samples to the size of the max one +N reads or barcodes.
 #' @param .col Column's name from which choose frequency of each clone.
-#' @param .verbose If T than print progress bar.
+#' @param .verbose if T then print progress bar.
 #' 
 #' @return
 #' Data frame with first column for sizes, second columns for the first quantile,

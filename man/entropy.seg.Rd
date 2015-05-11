@@ -31,9 +31,9 @@ only in-frame ('in'), out-of-frame ('out') or all sequences ('all').}
 
 \item{.data2}{NULL if .data is a list, or a second mitcr data.frame.}
 
-\item{.norm.entropy}{If T than divide result by mean entropy of 2 segments' frequencies.}
+\item{.norm.entropy}{if T then divide result by mean entropy of 2 segments' frequencies.}
 
-\item{.verbose}{If T than print progress of function executing.}
+\item{.verbose}{if T then print progress of function executing.}
 }
 \value{
 For \code{entropy.seg} - numeric integer with entropy value(s). For \code{js.div.seg} - integer of vector one if \code{.data} and \code{.data2} are provided;

@@ -18,7 +18,7 @@ slice.fun(.data, .size, .n, .fun, ..., .simplify = T)
 
 \item{...}{Additional parameters passed to the .fun.}
 
-\item{.simplify}{If T than try to simplify result to a vector or to a matrix if .data is a list.}
+\item{.simplify}{if T then try to simplify result to a vector or to a matrix if .data is a list.}
 
 \item{.size}{Size of the slice for sampling for slice.fun.}
 }

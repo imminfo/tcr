@@ -27,7 +27,7 @@ intersectLogic(.alpha, .beta, .method = c('exact', 'hamm', 'lev'), .col = NULL)
 
 \item{.norm}{If TRUE than normalise result by product of length or nrows of the given data.}
 
-\item{.verbose}{If T than produce output of processing the data.}
+\item{.verbose}{if T then produce output of processing the data.}
 
 \item{x,y}{Parameters leaved for compatability with code which uses \code{base::intersect}. If provided than replaces \code{.alpha} and \code{.beta} respectively.}
 

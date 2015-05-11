@@ -27,7 +27,7 @@ levenshtein.match(.data, .patterns = c(), .max.errors = 1, .verbose = T)
 
 \item{.verbose}{Should function print progress or not. // DON'T USE IT}
 
-\item{.clear}{If T than remove all sequences with character "*" or "~".}
+\item{.clear}{if T then remove all sequences with character "*" or "~".}
 }
 \value{
 Matrix with two columns [i,j], dist(data(i), data(j)) <= .max.errors.

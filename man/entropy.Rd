@@ -15,15 +15,15 @@ js.div(.alpha, .beta, .do.norm = NA, .laplace = 0, .norm.entropy = F)
 \arguments{
 \item{.data,.alpha,.beta}{Vector of values.}
 
-\item{.norm}{If T than compute normalised entropy (H / Hmax).}
+\item{.norm}{if T then compute normalised entropy (H / Hmax).}
 
 \item{.do.norm}{One of the three values - NA, T or F. If NA than check for distrubution \code{(sum(.data) == 1)}.
-and normalise if needed with the given laplace correction value. If T than do normalisation and laplace
+and normalise if needed with the given laplace correction value. if T then do normalisation and laplace
 correction. If F than don't do normalisaton and laplace correction.}
 
 \item{.laplace}{Value for Laplace correction which will be added to every value in the .data.}
 
-\item{.norm.entropy}{If T than normalise JS-divergence by entropy.}
+\item{.norm.entropy}{if T then normalise JS-divergence by entropy.}
 }
 \value{
 Shannon entropy, Jensen-Shannon divergence or Kullback-Leibler divergence values.

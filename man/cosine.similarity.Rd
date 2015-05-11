@@ -28,14 +28,14 @@ horn.index(.alpha, .beta, .do.unique = T)
 either two sets or two numbers of elements in sets for \code{jaccard.index}.}
 
 \item{.do.norm}{One of the three values - NA, T or F. If NA than check for distrubution (sum(.data) == 1)
-and normalise if needed with the given laplace correction value. If T than do normalisation and laplace
+and normalise if needed with the given laplace correction value. if T then do normalisation and laplace
 correction. If F than don't do normalisaton and laplace correction.}
 
 \item{.laplace}{Value for Laplace correction.}
 
 \item{.a,.b}{Alpha and beta parameters for Tversky Index. Default values gives the Jaccard index measure.}
 
-\item{.do.unique}{If T than call unique on the first columns of the given data.frame or matrix.}
+\item{.do.unique}{if T then call unique on the first columns of the given data.frame or matrix.}
 
 \item{.intersection.number}{Number of intersected elements between two sets. See "Details" for more information.}
 }

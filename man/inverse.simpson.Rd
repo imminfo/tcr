@@ -22,7 +22,7 @@ chao1(.data)
 \item{.data}{Numeric vector of values for proportions or for numbers of individuals.}
 
 \item{.do.norm}{One of the three values - NA, T or F. If NA than check for distrubution (sum(.data) == 1)
-and normalise if needed with the given laplace correction value. If T than do normalisation and laplace
+and normalise if needed with the given laplace correction value. if T then do normalisation and laplace
 correction. If F than don't do normalisaton and laplace correction.}
 
 \item{.laplace}{Value for Laplace correction which will be added to every value in the .data.}

@@ -18,7 +18,7 @@ apply.asymm(.datalist, .fun, ..., .diag = NA, .verbose = T)
 
 \item{.diag}{Either NA for NA or something else != NULL for .fun(x,x).}
 
-\item{.verbose}{If T than output a progress bar.}
+\item{.verbose}{if T then output a progress bar.}
 }
 \value{
 Matrix with values M[i,j] = fun(datalist[i], datalist[j])

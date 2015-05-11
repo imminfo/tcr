@@ -9,15 +9,15 @@
 #' @param .data mitcr List with data frames.
 #' @param .column Character vector with name of the column with numeric characteristic.
 #' @param .by.alphabet Either 'Va/b', 'Ja/b' or an alphabet.
-#' @param .do.legend If T than plot a legend.
-#' @param .draw.only.legend If T than plot only a legend without plots.
+#' @param .do.legend if T then plot a legend.
+#' @param .draw.only.legend if T then plot only a legend without plots.
 #' @param .legend.ncol Number of columns in the legend. If -1 than function will try to predict number of columns.
 #' @param .nrow Rows of grid of plots.
 #' @param .by.col Character vector with name of the column by which divide the given data frames.
 #' @param .sum.col Which column use for sum.
-#' @param .other If T than include in the result plot values which isn't in the given alphabet.
-#' @param .log If T than scale y-axis by log10.
-#' @param .verbose If T than print messages about state of the process.
+#' @param .other if T then include in the result plot values which isn't in the given alphabet.
+#' @param .log if T then scale y-axis by log10.
+#' @param .verbose if T then print messages about state of the process.
 #' 
 #' @details
 #' For each element in \code{.data} do: for each factor in \code{.by.col} which is in \code{.by.alphabet}, compute histogram of \code{.column}

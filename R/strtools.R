@@ -63,7 +63,7 @@ reverse.string <- function (.seq, .n = 1) {
 #' 
 #' @param .seq Sequence for splitting to substrings.
 #' @param .min.len Minimal length of output sequences.
-#' @param .table If T than return data frame with substrings and positions of their ends in the .seq.
+#' @param .table if T then return data frame with substrings and positions of their ends in the .seq.
 #' 
 #' @return Character vector or data frame with columns "Substring", "Start" and "End".
 get.all.substrings <- function (.seq, .min.len = 3, .table = T) {
@@ -102,7 +102,7 @@ get.all.substrings <- function (.seq, .min.len = 3, .table = T) {
 #' bunch.translate(.seq, .two.way = T)
 #' 
 #' @param .seq Vector of nucleotide sequences.
-#' @param .two.way If T than translate sequences from both ends (output differes for
+#' @param .two.way if T then translate sequences from both ends (output differes for
 #' out-of-frame sequences).
 #' 
 #' @return Vector of corresponding revese complemented or aminoacid sequences.
@@ -241,7 +241,7 @@ gc.content <- function (.nucseq) {
 #' @param .method Which method use: 'exact' for exact matching, 'hamm' for Hamming Distance, 'lev' for Levenshtein distance.
 #' @param .max.errors Max Hamming or Levenshtein distance between strings. Doesn't use in 'exact' setting.
 #' @param .verbose Should function print progress or not. // DON'T USE IT
-#' @param .clear If T than remove all sequences with character "*" or "~".
+#' @param .clear if T then remove all sequences with character "*" or "~".
 #' 
 #' @return Matrix with two columns [i,j], dist(data(i), data(j)) <= .max.errors.
 find.similar.sequences <- function (.data, .patterns = c(), .method = c('exact', 'hamm', 'lev'), .max.errors = 1, .verbose = T, .clear = F) {

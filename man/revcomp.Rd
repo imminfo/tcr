@@ -12,7 +12,7 @@ bunch.translate(.seq, .two.way = T)
 \arguments{
 \item{.seq}{Vector of nucleotide sequences.}
 
-\item{.two.way}{If T than translate sequences from both ends (output differes for
+\item{.two.way}{if T then translate sequences from both ends (output differes for
 out-of-frame sequences).}
 }
 \value{

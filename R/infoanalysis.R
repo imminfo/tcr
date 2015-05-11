@@ -43,12 +43,12 @@ assymetry<-function(.alpha, .beta = NULL, .by = 'CDR3.nucleotide.sequence'){
 #' @param .data2 NULL if .data is a list, or a second mitcr data.frame.
 #' @param .frame Character vector of length 1 specified which *-frames should be used:
 #' only in-frame ('in'), out-of-frame ('out') or all sequences ('all').
-#' @param .norm.entropy If T than divide result by mean entropy of 2 segments' frequencies. 
+#' @param .norm.entropy if T then divide result by mean entropy of 2 segments' frequencies. 
 #' @param .alphabet Parameter to \code{freq.segments()} and \code{freq.segments.2D()} functions.
 #' @param .meat Parameter to \code{freq.segments()} and \code{freq.segments.2D()} functions.
 #' @param .other Parameter to \code{freq.segments()} and \code{freq.segments.2D()} functions.
 #' @param .VJ If F than apply \code{freq.segments} function, else apply \code{freq.segments.2D} function.
-#' @param .verbose If T than print progress of function executing.
+#' @param .verbose if T then print progress of function executing.
 #' @param .laplace Parameter passed to \code{freq.segments}.
 #' 
 #' @return For \code{entropy.seg} - numeric integer with entropy value(s). For \code{js.div.seg} - integer of vector one if \code{.data} and \code{.data2} are provided;

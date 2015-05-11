@@ -26,7 +26,7 @@
 #' @param .frame Which *-frames to choose.
 #' @param .head Parameter to the head() function. Supply 0 to get all elements. \code{head} applied before subsetting, i.e.
 #' if .head == 500, you will get in-frames from the top 500 clonotypes.
-#' @param .coding If T than return only coding sequences, i.e. without stop-codon.
+#' @param .coding if T then return only coding sequences, i.e. without stop-codon.
 #' 
 #' @return Filtered data.frame or a list with such data.frames.
 get.inframes <- function (.data, .head = 0, .coding = T) { 
@@ -235,7 +235,7 @@ insertion.stats <- function (.data) {
 #' @param .target.col Character vector specifying name of columns in which function will search for a targets.
 #' Only first column's name will be used for matching by different method, others will match exactly.
 #' \code{.targets} should be a two-column character matrix or data frame with second column for V-segments.
-#' @param .verbose If T than print messages about the search process.
+#' @param .verbose if T then print messages about the search process.
 #' 
 #' @return Data.frame.
 #' 
@@ -413,9 +413,9 @@ find.clonotypes <- function (.data, .targets, .method = c('exact', 'hamm', 'lev'
 #' @param .ylab Name for a y-lab.
 #' @param .nrow Number of rows of sub-plots in the output plot.
 #' @param .legend.ncol Number of columns in the output legend.
-#' @param .logx If T than transform x-axis to log-scale.
-#' @param .logy If T than transform y-axis to log-scale.
-#' @param .verbose If T than plot a progress bar.
+#' @param .logx if T then transform x-axis to log-scale.
+#' @param .logy if T then transform y-axis to log-scale.
+#' @param .verbose if T then plot a progress bar.
 #' 
 #' @return
 #' \code{top.cross} - return list for each element in \code{.n} with intersection matrix (from \code{tcR::intersect}).
@@ -512,7 +512,7 @@ top.cross.plot <- function (.top.cross.res, .xlab = 'Top clones', .ylab = 'Norma
 #' @param .sim A character string indicating the type of simulation required. Possible values are
 #' "uniform" or "percentage". See "Details" for more details of type of simulation.
 #' @param .postfun Function applied to the resulting list: list of results from each processed sample.
-#' @param .verbose If T than show progress bar.
+#' @param .verbose if T then show progress bar.
 #' @param .prop.col Column with proportions for each clonotype.
 #' @param ... Further values passed to \code{.fun}.
 #' 

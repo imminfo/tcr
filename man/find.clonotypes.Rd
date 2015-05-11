@@ -27,7 +27,7 @@ find.clonotypes(.data, .targets, .method = c("exact", "hamm", "lev"),
 Only first column's name will be used for matching by different method, others will match exactly.
 \code{.targets} should be a two-column character matrix or data frame with second column for V-segments.}
 
-\item{.verbose}{If T than print messages about the search process.}
+\item{.verbose}{if T then print messages about the search process.}
 }
 \value{
 Data.frame.

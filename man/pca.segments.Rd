@@ -12,11 +12,11 @@ pca.segments.2D(.data, .cast.freq.seg = T, ..., .do.plot = T)
 \arguments{
 \item{.data}{Either data.frame or a list of data.frame or a result obtained from freq.segments or freq.segments.2D functions.}
 
-\item{.cast.freq.seg}{If T than case freq.segments or freq.segments.2D to the supplied data.}
+\item{.cast.freq.seg}{if T then case freq.segments or freq.segments.2D to the supplied data.}
 
 \item{...}{Further arguments passed to prcomp.}
 
-\item{.do.plot}{If T than plot a graphic, else return a pca object.}
+\item{.do.plot}{if T then plot a graphic, else return a pca object.}
 }
 \value{
 If .do.plot is T than ggplot object; else pca object.

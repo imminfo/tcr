@@ -4,8 +4,9 @@
 \alias{vis.heatmap}
 \title{Heatmap.}
 \usage{
-vis.heatmap(.data, .title = "Number of shared clonotypes", .labs = "Sample",
-  .legend = "Shared clonotypes", .na.value = NA, .text = T)
+vis.heatmap(.data, .title = "Number of shared clonotypes",
+  .labs = c("Sample", "Sample"), .legend = "Shared clonotypes",
+  .na.value = NA, .text = T)
 }
 \arguments{
 \item{.data}{Either a matrix with colnames and rownames specifyed or a data.frame with the first column of
@@ -13,13 +14,13 @@ strings for row names and other columns stands for values.}
 
 \item{.title}{Main title of the plot.}
 
-\item{.labs}{Labs names. Character vector of length 1 (for naming both axis with same name) or 2 (first elements stands for x-axis).}
+\item{.labs}{Labs names. Character vector of length 2 (for naming x-axis and y-axis).}
 
 \item{.legend}{Title for the legend.}
 
 \item{.na.value}{Replace NAs with this values.}
 
-\item{.text}{If T than print \code{.data} values at tiles.}
+\item{.text}{if T then print \code{.data} values at tiles.}
 }
 \value{
 ggplot object.

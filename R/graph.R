@@ -145,7 +145,7 @@ get.people.names <- function (.G, .V = V(.G), .paste = T) {
 #' @param .attr.name Name of the new vertex attribute.
 #' @param .V Indices of vertices.
 #' @param .groups List with integer vector with indices of subjects for each group.
-#' @param .paste If T than return character string with concatenated group names, else return list with character vectors
+#' @param .paste if T then return character string with concatenated group names, else return list with character vectors
 #' with group names.
 #' 
 #' @return igraph object with new vertex attribute \code{.attr.name} with binary strings for \code{set.group.vector}.
@@ -235,4 +235,56 @@ mutated.neighbours <- function (.G, .V, .order = 1) {
     colnames(res) <- list.vertex.attributes(.G)
     res
     } )
+}
+
+
+srcppl.distribution <- function (.G) {  
+  one.count <- sapply(strsplit(V(.G)$people, '', fixed = T, useBytes = T), function (x) sum(x == '1'))
+#   mean(V(.G)$npeople)
+mean(one.count)
+}
+
+
+neippl.distribution <- function (.G, .exclude.zeros = F) {
+  if (.exclude.zeros) {
+    .G <- induced.subgraph(.G, degree(.G) != 0)
+  }
+  
+  one.count <- sapply(strsplit(V(.G)$people, '', fixed = T, useBytes = T), function (x) sum(x == '1'))
+#   one.count <- V(.G)$npeople
+  quantile(sapply(neighborhood(.G, 1), function (x) {
+    if (length(x) == 1) {
+      0
+    } else {
+      mean(one.count[x[-1]]) / (length(x) - 1)
+    }
+  }), prob = c(.025, .975))
+}
+
+
+pplvar.distribution <- function (.G, .exclude.zeros = F) {
+  if (.exclude.zeros) {
+    .G <- induced.subgraph(.G, degree(.G) != 0)
+  }
+  
+  ppl.inds <- lapply(strsplit(V(.G)$people, '', fixed = T, useBytes = T), function (x) which(x == '1'))
+  c1 <- quantile(sapply(neighborhood(.G, 1), function (x) {
+    if (length(x) == 1) {
+      0
+    } else {
+#       length(unique(unlist(ppl.inds[x[-1]]))) / length(x[-1])
+      length(unique( unlist(ppl.inds[x[-1]]) [ !(unlist(ppl.inds[x[-1]]) %in% unlist(ppl.inds[x[1]])) ] ))
+    }
+  }), prob = c(.25, .75))
+
+  c2 <- mean(sapply(neighborhood(.G, 1), function (x) {
+    if (length(x) == 1) {
+      0
+    } else {
+#       length(unique(unlist(ppl.inds[x[-1]]))) / length(x[-1])
+      length(unique( unlist(ppl.inds[x[-1]]) [ !(unlist(ppl.inds[x[-1]]) %in% unlist(ppl.inds[x[1]])) ] ))
+    }
+  }))
+
+  c(c1[1], Mean = c2, c1[2])
 }

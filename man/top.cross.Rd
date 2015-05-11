@@ -25,7 +25,7 @@ top.cross.plot(.top.cross.res, .xlab = 'Top clones',
 
 \item{.norm}{Parameter .norm to the \code{tcR::intersect} function.}
 
-\item{.verbose}{If T than plot a progress bar.}
+\item{.verbose}{if T then plot a progress bar.}
 
 \item{.top.cross.res}{Result from the \code{top.cross} function.}
 
@@ -39,9 +39,9 @@ top.cross.plot(.top.cross.res, .xlab = 'Top clones',
 
 \item{.legend.ncol}{Number of columns in the output legend.}
 
-\item{.logx}{If T than transform x-axis to log-scale.}
+\item{.logx}{if T then transform x-axis to log-scale.}
 
-\item{.logy}{If T than transform y-axis to log-scale.}
+\item{.logy}{if T then transform y-axis to log-scale.}
 }
 \value{
 \code{top.cross} - return list for each element in \code{.n} with intersection matrix (from \code{tcR::intersect}).

@@ -15,7 +15,7 @@ for each time point for each clone.}
 
 \item{.upper}{Similar to .changed but values are upper bound for clonal count / frequency.}
 
-\item{.log}{If T than log-scale y-axis.}
+\item{.log}{if T then log-scale y-axis.}
 }
 \value{
 ggplot object.

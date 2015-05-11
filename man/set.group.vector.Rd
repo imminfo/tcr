@@ -18,7 +18,7 @@ get.group.names(.G, .attr.name, .V = V(.G), .paste = T)
 
 \item{.V}{Indices of vertices.}
 
-\item{.paste}{If T than return character string with concatenated group names, else return list with character vectors
+\item{.paste}{if T then return character string with concatenated group names, else return list with character vectors
 with group names.}
 }
 \value{
