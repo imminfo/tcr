@@ -4,18 +4,23 @@
 \alias{repOverlap}
 \title{General function for the repertoire overlap evaluation.}
 \usage{
-repOverlap(..., .method = c("exact", "hamm", "lev", "jaccard", "morisita",
+repOverlap(.data, .method = c("exact", "hamm", "lev", "jaccard", "morisita",
   "cosine", "tversky", "overlap", "horn"), .seq = c("nuc", "aa"),
   .quant = c("read.count", "bc.count", "read.prop", "bc.prop"), .vgene = F,
   .norm = T, .a = 0.5, .b = 0.5, .do.unique = T, .do.norm = T,
   .laplace = 0, .verbose = T)
 }
 \arguments{
-\item{...}{Input clonesets or a list(s) of clonesets.}
+\item{.data}{List of clonesets.}
 
 \item{.method}{Which method to use for the overlap evaluation. See "Details" for methods.}
 
-\item{.seq}{Which column to use for overlap:}
+\item{.seq}{Which clonotype sequences to use for the overlap: "nuc" for "CDR3.nucleotide.sequence", "aa" for
+"CDR3.amino.acid.sequence".}
+
+\item{.quant}{Which column to use for the quantity of clonotypes: "read.count" for the "Read.count" column,
+"bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column, "bc.prop" for
+the "Barcode.proportion" column. Ignored for all methods excluding "morisita".}
 }
 \description{
 General interface to all overlap functions.

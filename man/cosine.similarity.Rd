@@ -79,8 +79,8 @@ Formula for Morisita's overlap index is quite complicated and can't be easily sh
 \examples{
 \dontrun{
 jaccard.index(1:10, 2:20)
-a <- length(unique(immdata[[1]][, c('CDR3.amino.acid.sequence', 'V.segments')]))
-b <- length(unique(immdata[[2]][, c('CDR3.amino.acid.sequence', 'V.segments')]))
+a <- length(unique(immdata[[1]][, c('CDR3.amino.acid.sequence', 'V.gene')]))
+b <- length(unique(immdata[[2]][, c('CDR3.amino.acid.sequence', 'V.gene')]))
 jaccard.index(a, b, intersect(immdata[[1]], immdata[[2]], 'ave'))
 }
 }

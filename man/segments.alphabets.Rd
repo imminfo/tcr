@@ -2,45 +2,45 @@
 % Please edit documentation in R/docdata.R
 \docType{data}
 \name{segments.alphabets}
-\alias{HUMAN_TRAJ_ALPHABET}
-\alias{HUMAN_TRAV_ALPHABET}
-\alias{HUMAN_TRBD_ALPHABET}
-\alias{HUMAN_TRBJ_ALPHABET}
-\alias{HUMAN_TRBV_ALPHABET}
-\alias{HUMAN_TRBV_ALPHABET_MITCR}
-\alias{HUMAN_TRDD_ALPHABET}
-\alias{HUMAN_TRDJ_ALPHABET}
-\alias{HUMAN_TRDV_ALPHABET}
-\alias{HUMAN_TRGJ_ALPHABET}
-\alias{HUMAN_TRGV_ALPHABET}
+\alias{HUMAN_TRAJ}
+\alias{HUMAN_TRAV}
+\alias{HUMAN_TRBD}
+\alias{HUMAN_TRBJ}
+\alias{HUMAN_TRBV}
+\alias{HUMAN_TRBV_MITCR}
+\alias{HUMAN_TRDD}
+\alias{HUMAN_TRDJ}
+\alias{HUMAN_TRDV}
+\alias{HUMAN_TRGJ}
+\alias{HUMAN_TRGV}
 \alias{genealphabets}
 \alias{segments.alphabets}
 \title{Alphabets of TCR and Ig gene segments.}
-\format{Each \code{<SPECIES>_<GENES>_ALPHABET} is a character vector. <SPECIES> is an identifier of species, <GENES> is concatenated three
+\format{Each \code{<SPECIES>_<GENES>} is a character vector. <SPECIES> is an identifier of species, <GENES> is concatenated three
 identifiers of cell type ("TR**" for TCR, "IG**" for Ig), chain (e.g., "**A*" for alpha chains) and gene segment ("***V" for V(ariable) gene segment,
 "***J" for J(oining) gene segment, "***D" for D(iversity) gene segment).}
 \usage{
-HUMAN_TRAV_ALPHABET
+HUMAN_TRAV
 
-HUMAN_TRAJ_ALPHABET
+HUMAN_TRAJ
 
-HUMAN_TRBV_ALPHABET
+HUMAN_TRBV
 
-HUMAN_TRBD_ALPHABET
+HUMAN_TRBD
 
-HUMAN_TRBJ_ALPHABET
+HUMAN_TRBJ
 
-HUMAN_TRBV_ALPHABET_MITCR
+HUMAN_TRBV_MITCR
 
-HUMAN_TRGV_ALPHABET
+HUMAN_TRGV
 
-HUMAN_TRGJ_ALPHABET
+HUMAN_TRGJ
 
-HUMAN_TRDV_ALPHABET
+HUMAN_TRDV
 
-HUMAN_TRDD_ALPHABET
+HUMAN_TRDD
 
-HUMAN_TRDJ_ALPHABET
+HUMAN_TRDJ
 }
 \description{
 Character vector with names for segments. With \code{tcR} we provided alphabets for all alpha, beta,
@@ -48,7 +48,7 @@ gamma and delta chains gene segments.
 }
 \examples{
 \dontrun{
-HUMAN_TRBV_ALPHABET[1]  #  => "TRBV10-1"
+HUMAN_TRBV[1]  #  => "TRBV10-1"
 }
 }
 \keyword{datasets}

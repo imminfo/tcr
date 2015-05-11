@@ -4,19 +4,30 @@
 \alias{repDiversity}
 \title{General function for the repertoire diversity estimation.}
 \usage{
-repDiversity(..., .method = c("chao1", "gini.simp", "inv.simp", "gini", "div",
-  "entropy"), .quant = c("read.count", "bc.count", "read.prop", "bc.prop"),
-  .q = 5, .do.norm = NA, .laplace = 0)
+repDiversity(.data, .method = c("chao1", "gini.simp", "inv.simp", "gini",
+  "div", "entropy"), .quant = c("read.count", "bc.count", "read.prop",
+  "bc.prop"), .q = 5, .norm = F, .do.norm = NA, .laplace = 0,
+  .verbose = T)
 }
 \arguments{
+\item{.data}{Cloneset or a list of clonesets.}
+
 \item{.method}{Which method to use for the diversity estimation. See "Details" for methods.}
 
-\item{.data}{Input clonesets or a list(s) of clonesets.}
-
-\item{.seq}{Which column to use for overlap:}
+\item{.quant}{Which column to use for the quantity of clonotypes: "read.count" for the "Read.count" column,
+"bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column, "bc.prop" for
+the "Barcode.proportion" column.}
 }
 \description{
 General interface to all diversity functions.
+}
+\examples{
+\dontrun{
+data(twb)
+twb.div <- repDiversity(twb, "chao1", "read.count")
+ggplot(aes(), data = twb.div) +
+vis.group.boxplot()
+}
 }
 \seealso{
 \link{diversity}, \link{entropy}

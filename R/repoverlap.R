@@ -35,6 +35,6 @@ repOverlap <- function (.data,
   
   switch(.method[1], 
          exact = { .fun <- function (x) intersect(x, .norm = .norm, .verbose = .verbose) },
-         { .verbose.msg("You have specified an invalid method identifier. Choosed method: normalised number of shared nuc clonotypes. \n", .verbose); { ??? } })
+         { .verbose.msg("You have specified an invalid method identifier. Choosed method: normalised number of shared nuc clonotypes. \n", .verbose); { 1 + 1 } })
   
 }

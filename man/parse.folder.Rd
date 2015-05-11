@@ -50,11 +50,11 @@ The data frame has following columns:
 
 - "CDR3.amino.acid.sequence" - CDR3 amino acid sequence;
 
-- "V.segments" - names of aligned Variable gene segments;
+- "V.gene" - names of aligned Variable gene segments;
 
-- "J.segments" - names of aligned Joining gene segments;
+- "J.gene" - names of aligned Joining gene segments;
 
-- "D.segments" - names of aligned Diversity gene segments;
+- "D.gene" - names of aligned Diversity gene segments;
 
 - "V.end" - last positions of aligned V gene segments (1-based);
 

@@ -5,7 +5,7 @@
 \title{Make mutation network for the given repertoire.}
 \usage{
 mutation.network(.data, .method = c("hamm", "lev"), .max.errors = 1,
-  .label.col = "CDR3.amino.acid.sequence", .seg.col = "V.segments",
+  .label.col = "CDR3.amino.acid.sequence", .seg.col = "V.gene",
   .prob.col = "Probability")
 }
 \arguments{

@@ -6,17 +6,17 @@ if (getRversion() >= "2.15.1") {
 }
 
 
-#' V- and J-segments frequency.
+#' Variable and Joining gene usage.
 #' 
-#' @aliases freq.segments freq.segments.2D freq.Va freq.Vb freq.Ja freq.Jb
+#' @aliases geneUsage
 #' 
 #' @description Get frequencies or counts of gene segments ("V / J - usage").
 #' 
 #' @usage
-#' freq.segments(.data, .alphabet = 'TRBV', .count = F, .meat = F, .other = F,
+#' freq.segments(.data, .genes = 'TRBV', .count = F, .meat = F, .other = F,
 #'               .laplace = 0, .column = NULL, .sum.col = "Read.count")
 #' 
-#' freq.segments.2D(.data, .alphabet = 'beta', .count = F, .meat = F,
+#' freq.segments.2D(.data, .genes = 'beta', .count = F, .meat = F,
 #'                  .laplace = 0, .columns = NULL, .sum.col = "Read.count", ...)
 #' 
 #' freq.Va(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
@@ -28,7 +28,7 @@ if (getRversion() >= "2.15.1") {
 #' freq.Jb(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
 #' 
 #' @param .data Cloneset data frame or a list with clonesets.
-#' @param .alphabet Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
+#' @param .genes Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
 #' or one of the 'alpha' or 'beta' for freq.segments.2D or a list of length 2 with alphabets strings for freq.segments.2D.
 #' @param .count Should we return count or percentage?
 #' @param .meat Compute statistics using counts of elements (e.g., Read.count) or not.
@@ -41,15 +41,15 @@ if (getRversion() >= "2.15.1") {
 #' @param ... Don't use it, for internal purpose.
 #' 
 #' @return 
-#' If \code{.data} is a cloneset and \code{.alphabet} is NOT a list than return a data frame with first column "Gene" with genes and second with counts / proportions.
+#' If \code{.data} is a cloneset and \code{.genes} is NOT a list than return a data frame with first column "Gene" with genes and second with counts / proportions.
 #' 
-#' If \code{.data} is a list with clonesets and \code{.alphabet} is NOT a list than return a data frame with first column "Gene" 
+#' If \code{.data} is a list with clonesets and \code{.genes} is NOT a list than return a data frame with first column "Gene" 
 #' with genes and other columns with counts / proportions for each cloneset in the input list.
 #' 
-#' If \code{.data} is a cloneset and \code{.alphabet} IS a list than return a matrix with gene segments for the first gene in \code{.alphabet}
-#' and column names for the second gene in \code{.alphabet}. See "Examples".
+#' If \code{.data} is a cloneset and \code{.genes} IS a list than return a matrix with gene segments for the first gene in \code{.genes}
+#' and column names for the second gene in \code{.genes}. See "Examples".
 #' 
-#' If \code{.data} is a list with clonesets and \code{.alphabet} IS a list than return a list with matrices like in the previous case.
+#' If \code{.data} is a list with clonesets and \code{.genes} IS a list than return a list with matrices like in the previous case.
 #' 
 #' @seealso \code{\link{genealphabets}}, \code{\link{vis.gene.usage}}, \code{\link{pca.segments}}
 #' 
@@ -85,14 +85,14 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", 
   
   
   quant <- NA
-  if (!is.na(.quant)) { quant <- .column.choice(.quant, .verbose) }
+  if (!is.na(.quant[1])) { quant <- .column.choice(.quant, .verbose) }
   
   if (has.class(.data, 'data.frame')) { .data <- list(Sample = .data) }
   
-  if (has.class(.alphabet, 'list')) {    
-    genecols <- c(paste0(substr(.alphabet[[1]], 3, 3), ".gene"), paste0(substr(.alphabet[[2]], 3, 3), ".gene"))
+  if (has.class(.genes, 'list')) {    
+    genecols <- c(paste0(substr(.genes[[1]], 3, 3), ".gene"), paste0(substr(.genes[[2]], 3, 3), ".gene"))
   } else {
-    genecol1 <- paste0(substr(.alphabet[[1]], 3, 3), ".gene")
+    genecols <- paste0(substr(.genes[[1]], 3, 3), ".gene")
   }
   
   tbls <- lapply(.data, .process.df, .quant = quant, .cols = genecols)

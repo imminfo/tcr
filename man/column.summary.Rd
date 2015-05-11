@@ -34,10 +34,10 @@ of correspondingly divided \code{.target.column}.
 \dontrun{
 # Compute summary statistics of VD insertions
 # for each V-segment using all V-segments in the given data frame.
-column.summary(immdata[[1]], 'V.segments', 'Total.insertions')
+column.summary(immdata[[1]], 'V.gene', 'Total.insertions')
 # Compute summary statistics of VD insertions for each V-segment using only V-segments
-# from the HUMAN_TRBV_ALPHABET_MITCR
-column.summary(immdata[[1]], 'V.segments', 'Total.insertions', HUMAN_TRBV_ALPHABET_MITCR)
+# from the HUMAN_TRBV_MITCR
+column.summary(immdata[[1]], 'V.gene', 'Total.insertions', HUMAN_TRBV_MITCR)
 }
 }
 \seealso{

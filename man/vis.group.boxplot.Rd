@@ -5,7 +5,7 @@
 \title{Boxplot for groups of observations.}
 \usage{
 vis.group.boxplot(.data, .groups = list(A = c("A1", "A2"), D = c("D1", "D2"),
-  C = c("C1", "C2")), .labs = c("V segments", "Frequency"), .title = "",
+  C = c("C1", "C2")), .labs = c("V genes", "Frequency"), .title = "",
   .rotate.x = T, ...)
 }
 \arguments{

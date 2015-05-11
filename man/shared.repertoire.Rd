@@ -44,15 +44,15 @@ repertoire, than only the first appeared one will be choosed for a shared repert
 \code{shared.repertoire} - make a shared repertoire of sequences from the given list of data frames.
 
 \code{shared.matrix} - leave columns, which related to the count of sequences in people, and return them as a matrix.
-I.e., this functions will remove such columns as 'CDR3.amino.acid.sequence', 'V.segments', 'People'.
+I.e., this functions will remove such columns as 'CDR3.amino.acid.sequence', 'V.gene', 'People'.
 }
 \details{
 Parameter \code{.type} is a string of length 4, where:
 \enumerate{
  \item First character stands either for the letter 'a' for taking the "CDR3.amino.acid.sequence" column or
 for the letter 'n' for taking the "CDR3.nucleotide.sequence" column.
- \item Second character stands whether or not take the V.segments column. Possible values are '0' (zero) stands
-for taking no additional columns, 'v' stands for taking the "V.segments" column.
+ \item Second character stands whether or not take the V.gene column. Possible values are '0' (zero) stands
+for taking no additional columns, 'v' stands for taking the "V.gene" column.
  \item Third character stands for using either barcodes or reads in choosing the column with numeric characterisitc (see the next letter).
  \item Fourth character stands for name of the column to choose as numeric characteristic of sequences. It depends on the third letter. Possible values are
 "c" for the "Barcode.count" (if 3rd character is "b") / "Read.count" column (if 3rd character is "r"), "p" for the "Barcode.proportion" / "Read.proportion" column, "r" for the "Rank" column or "i" for the "Index" column.
@@ -66,7 +66,7 @@ If "Rank" or "Index" isn't in the given repertoire, than it will be created usin
 # if the "Rank" column hasn't been found.
 immdata <- set.rank(immdata)
 # Generate shared repertoire using "CDR3.amino.acid.sequence" and
-# "V.segments" columns and with rank.
+# "V.gene" columns and with rank.
 imm.shared.av <- shared.repertoire(immdata, 'avrc')
 }
 }

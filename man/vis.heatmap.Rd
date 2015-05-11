@@ -4,9 +4,8 @@
 \alias{vis.heatmap}
 \title{Heatmap.}
 \usage{
-vis.heatmap(.data, .title = "Number of shared clonotypes",
-  .labs = "Subject", .legend = "Shared clonotypes", .na.value = NA,
-  .text = T)
+vis.heatmap(.data, .title = "Number of shared clonotypes", .labs = "Sample",
+  .legend = "Shared clonotypes", .na.value = NA, .text = T)
 }
 \arguments{
 \item{.data}{Either a matrix with colnames and rownames specifyed or a data.frame with the first column of

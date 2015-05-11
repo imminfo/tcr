@@ -43,9 +43,9 @@ find.clonotypes(.data = immdata, .targets = head(immdata[[1]]$CDR3.amino.acid.se
                 .method = 'exact', .col.name = "Rank", .target.col = "CDR3.amino.acid.sequence")
 # Find close by levenhstein distance clonotypes with similar V-segments and return
 # their values in columns 'Read.count' and 'Total.insertions'.
-find.clonotypes(.data = twb, .targets = twb[[1]][, c('CDR3.amino.acid.sequence', 'V.segments')],
+find.clonotypes(.data = twb, .targets = twb[[1]][, c('CDR3.amino.acid.sequence', 'V.gene')],
                 .col.name = c('Read.count', 'Total.insertions'), .method = 'lev',
-                .target.col = c('CDR3.amino.acid.sequence', 'V.segments'))
+                .target.col = c('CDR3.amino.acid.sequence', 'V.gene'))
 }
 }
 

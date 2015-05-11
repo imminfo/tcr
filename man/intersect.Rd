@@ -68,8 +68,8 @@ Parameter \code{.type} of the \code{intersect} function is a string of length 3
  \item First character defines which elements intersect ("a" for elements from the column "CDR3.amino.acid.sequence",
  "n" for elements from the column "CDR3.nucleotide.sequence", other characters - intersect elements as specified);
  \item Second character defines which columns additionaly script should use
-('0' for cross with no additional columns, 'v' for cross using the "V.segments" column,
-'j' for cross using "J.segments" column, 'a' for cross using both "V.segments" and "J.segments" columns);
+('0' for cross with no additional columns, 'v' for cross using the "V.gene" column,
+'j' for cross using "J.gene" column, 'a' for cross using both "V.gene" and "J.gene" columns);
  \item Third character defines a method of search for similar sequences is use:
  "e" stands for the exact match of sequnces, "h" for match elements which have the Hamming distance between them
  equal to or less than 1, "l" for match elements which have the Levenshtein distance between tham equal to or less than 1.
@@ -85,7 +85,7 @@ data(twb)
 twb.12.n0e <- intersect(twb[[1]], twb[[2]], 'n0e')
 stopifnot(twb.12.n0e == 46)
 # First "a" stands for "CDR3.amino.acid.sequence" column.
-# Second "v" means that intersect should also use the "V.segments" column.
+# Second "v" means that intersect should also use the "V.gene" column.
 intersect(twb[[1]], twb[[2]], 'ave')
 # Works also on lists, performs all possible pairwise intersections.
 intersect(twb, 'ave')
@@ -94,8 +94,8 @@ vis.heatmap(intersect(twb, 'ave'), .title = 'twb - (ave)-intersection', .labs = 
 # Get elements which are in both twb[[1]] and twb[[2]].
 # Elements are tuples of CDR3 nucleotide sequence and corresponding V-segment
 imm.1.2 <- intersectLogic(twb[[1]], twb[[2]],
-                           .col = c('CDR3.amino.acid.sequence', 'V.segments'))
-head(twb[[1]][imm.1.2, c('CDR3.amino.acid.sequence', 'V.segments')])
+                           .col = c('CDR3.amino.acid.sequence', 'V.gene'))
+head(twb[[1]][imm.1.2, c('CDR3.amino.acid.sequence', 'V.gene')])
 }
 \seealso{
 \link{repOverlap}, \link{vis.heatmap}, \link{vis.group.boxplot}
