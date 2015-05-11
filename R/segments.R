@@ -30,15 +30,10 @@ if (getRversion() >= "2.15.1") {
 #' @param .data Cloneset data frame or a list with clonesets.
 #' @param .genes Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
 #' or one of the 'alpha' or 'beta' for freq.segments.2D or a list of length 2 with alphabets strings for freq.segments.2D.
-#' @param .count Should we return count or percentage?
-#' @param .meat Compute statistics using counts of elements (e.g., Read.count) or not.
-#' @param .other Should elements not in the given alphabet be shown in the result matrix.
-#' @param .laplace Value for the Laplace correction.
-#' @param .column,.columns Column's name with elements from the given alphabet for the freq.segments or a character vector of length two for freq.segments.2D.
 #' @param .quant Which column to use for the quantity of clonotypes: NA for computing only number of genes without using clonotype counts, 
 #' "read.count" for the "Read.count" column, "bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column,
 #' "bc.prop" for the "Barcode.proportion" column.
-#' @param ... Don't use it, for internal purpose.
+#' @param .norm If T then return proportions of resulting counting of genes.
 #' 
 #' @return 
 #' If \code{.data} is a cloneset and \code{.genes} is NOT a list than return a data frame with first column "Gene" with genes and second with counts / proportions.
@@ -61,26 +56,30 @@ if (getRversion() >= "2.15.1") {
 #' seg <- freq.segments(twb, "TRBV")
 #' # equivalent to the previos one
 #' seg <- freq.segments(twb, HUMAN_TRBV, .column = "V.gene")
-#' # plot V-segments frequencies as a grid
-#' vis.grid.stats(seg)
+#' # plot V-segments frequencies as a heatmap
+#' vis.heatmap(seg, .labs = c("Sample", "V gene"))
 #' # plot V-segments frequencies from the data
 #' vis.V.usage(twb)
 #' 
 #' # Compute V-J joint usage.
 #' geneUsage(twb, list(HUMAN_TRBV, HUMAN_TRBJ))
 #' }
-geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", "bc.count", "read.prop", "bc.prop"), .other = F, .laplace = 0) {
+geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", "bc.count", "read.prop", "bc.prop"), .norm = F) {
   
   .process.df <- function (.df, .quant, .cols) {
     cast.fun <- dcast
-    if (length(.cols) == 2) { cast.fun <- acast }
+    if (length(.cols) == 2) { cast.fun <- acast; len <- 2 }
+    
+    for (i in 1:length(.cols)) {
+      .df[ which(!(.df[[.cols[i]]] %in% .genes[[i]])), .cols[i] ] <- "Ambiguous"
+    }
     
     count.fun <- "n()"
     if (!is.na(.quant)) { count.fun <- paste0("sum(", .quant, ")", collapse = "", sep = "")}
     
-    if (length(.cols) == 1) { .cols <- c(.cols, '.')}
+    if (length(.cols) == 1) { .cols <- c(.cols, '.'); len <- 1}
     
-    cast.fun(summarise_(grouped_df(.df, lapply(.cols, as.name)), Freq = count.fun), as.formula(paste0(.cols[1], "~", .cols[2])), value.var = 'Freq')
+    cast.fun(summarise_(grouped_df(select_(.df, .dots = as.list(na.exclude(c(.quant, .cols[1:len])))), lapply(.cols[1:len], as.name)), Freq = count.fun), as.formula(paste0(.cols[1], " ~ ", .cols[2])), value.var = 'Freq')
   }
   
   
@@ -90,99 +89,36 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", 
   if (has.class(.data, 'data.frame')) { .data <- list(Sample = .data) }
   
   if (has.class(.genes, 'list')) {    
-    genecols <- c(paste0(substr(.genes[[1]], 3, 3), ".gene"), paste0(substr(.genes[[2]], 3, 3), ".gene"))
+    genecols <- c(paste0(substr(.genes[[1]][1], 4, 4), ".gene"), paste0(substr(.genes[[2]][1], 4, 4), ".gene"))
   } else {
-    genecols <- paste0(substr(.genes[[1]], 3, 3), ".gene")
+    genecols <- paste0(substr(.genes[1], 4, 4), ".gene")
+    .genes <- list(.genes)
   }
   
   tbls <- lapply(.data, .process.df, .quant = quant, .cols = genecols)
   
-  if (.other) {
-    for (i in 1:length(.data)) {
-      
+  if (length(.genes) == 2) {
+    if (.norm) {
+      tbls <- lapply(tbls, function (x) x / sum(x))
     }
+    if (length(.data) == 1) { return(tbls[[1]]) }
+    else { return(tbls) }
   }
-}
-
-
-freq.segments <- function (.data, .alphabet='TRBV', .count=F, .meat=F, .other=F, .laplace=0, .column = NULL, .sum.col = "Read.count") {
-  if (class(.data) == 'list') {
-    res <- freq.segments(.data[[1]], .alphabet=.alphabet, .count=.count, .meat = .meat, .other = .other, .laplace=.laplace, .column = .column)
-    names(res)[2] <- names(.data)[1]
+  
+  res <- tbls[[1]]
+  colnames(res) <- c("Gene", names(.data)[1])
+  
+  if (length(.data) > 1) {
     for (i in 2:length(.data)) {
-      res<-merge(res, freq.segments(.data[[i]],.alphabet=.alphabet,.count=.count, .meat = .meat, .other = .other, .column = .column, .sum.col= .sum.col, .laplace = .laplace), by = 'Segment', all = T)
-      names(res)[length(names(res))] <- names(.data)[i]
+      colnames(tbls[[i]]) <- c("Gene", names(.data)[i])
+      res <- merge(res, tbls[[i]], by = "Gene", all = T)
     }
-    res$Segment <- as.character(res$Segment)
-    return(res)
   }
   
-  if (.alphabet == "TRBV")      { .column <- 'V.gene'; alphabet <- HUMAN_TRBV_MITCR }
-  else if (.alphabet == "TRAV") { .column <- 'V.gene'; alphabet <- HUMAN_TRAV }
-  else if (.alphabet == "TRBJ") { .column <- 'J.gene'; alphabet <- HUMAN_TRBJ }
-  else if (.alphabet == "TRAJ") { .column <- 'J.gene'; alphabet <- HUMAN_TRAJ }
-  else                          { alphabet <- .alphabet }
-  seg <- .data[[.column]]
-  
-  read.count <- rep.int(1, nrow(.data))
-  if (.meat) { read.count <- .data[, .sum.col] }
-  
-  counts.l <- tapply(read.count, seg, sum)
-  freqs <- as.numeric(counts.l[alphabet])
-  freqs[is.na(freqs)] <- 0
-  res <- data.frame(Segment = alphabet, Freq = freqs, stringsAsFactors = F, row.names=NULL)
-  if (.other) {
-    res <- rbind(res, Other = data.frame(Segment = 'Other', Freq = sum(unlist(lapply(counts.l[is.na(match(names(counts.l), alphabet))], sum)), na.rm=T), stringsAsFactors = F))
-  }
-  res$Freq <- res$Freq + .laplace
-  if (!.count) { res$Freq <- res$Freq / sum(res$Freq) }
-  res[order(res$Segment),]
-}
-
-freq.Va <- function (.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRAV', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
-freq.Vb <- function (.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRBV', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
-freq.Ja <- function (.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRAJ', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
-freq.Jb <- function (.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count") { freq.segments(.data, .alphabet='TRBJ', .count, .meat, .other, .laplace, .sum.col = .sum.col) }
-
-freq.segments.2D <- function (.data, .alphabet = "beta", .count = F, .meat = F, .laplace = 0, .columns = NULL, .sum.col = "Read.count", ...) {
-  if (has.class(.data, 'list')) {
-    return(lapply(.data, freq.segments.2D, .alphabet = .alphabet, .count = .count, .meat = .meat, .laplace = .laplace, .columns = .columns, .sum.col = .sum.col, ...))
+  if (.norm) {
+    res[,-1] <- apply(res[,-1], 2, function (col) col / sum(col))
   }
   
-  if (.alphabet=="beta") {
-    .columns <- c('V.gene', 'J.gene')
-    alphabetV <- HUMAN_TRBV_MITCR
-    alphabetJ <- HUMAN_TRBJ
-  } else if (.alphabet=="alpha") {
-    .columns <- c('V.gene', 'J.gene')
-    alphabetV <- HUMAN_TRAV
-    alphabetJ <- HUMAN_TRAJ
-  } else {
-    alphabetV <- .alphabet[[1]]
-    alphabetJ <- .alphabet[[2]]
-  }
-  segV <- c(as.character(.data[, .columns[1]]))
-  segJ <- c(as.character(.data[, .columns[2]]))
-  counts <- c(rep.int(1, length(segV)))
-  if (.meat) counts <- c(.data[, .sum.col])
-  
-  logic <- !is.na(match(segJ, alphabetJ)) & !is.na(match(segV, alphabetV))
-  segV <- segV[logic]
-  segJ <- segJ[logic]
-  counts <- counts[logic]
-
-  res <- matrix(.laplace, nrow=length(alphabetV), ncol=length(alphabetJ))
-  row.names(res) <- alphabetV
-  colnames(res) <- alphabetJ
-  
-  for (i in 1:length(segV)) {
-    res[segV[i], segJ[i]] <- res[segV[i], segJ[i]] + counts[i]
-  }
-  
-  if (!.count) { res <- prop.table(res) }
-  res <- data.frame(alphabetV, res, stringsAsFactors=F)
-  names(res) <- c("Segment", alphabetJ)
-  row.names(res) <- NULL
   res
 }
 
@@ -200,9 +136,9 @@ freq.segments.2D <- function (.data, .alphabet = "beta", .count = F, .meat = F, 
 #' pca.segments.2D(.data, .cast.freq.seg = T, ..., .do.plot = T)
 #' 
 #' @param .data Either data.frame or a list of data.frame or a result obtained from freq.segments or freq.segments.2D functions.
-#' @param .cast.freq.seg If T than case freq.segments or freq.segments.2D to the supplied data.
+#' @param .cast.freq.seg if T then case freq.segments or freq.segments.2D to the supplied data.
 #' @param ... Further arguments passed to prcomp.
-#' @param .do.plot If T than plot a graphic, else return a pca object.
+#' @param .do.plot if T then plot a graphic, else return a pca object.
 #' 
 #' @return If .do.plot is T than ggplot object; else pca object.
 #' 
