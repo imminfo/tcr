@@ -117,6 +117,10 @@ data(twb)
 <pre><code>vis.gene.usage(twb, HUMAN_TRBV, .dodge = T)
 </code></pre>
 
+<p>Compute joint V-J beta usage of the second human subject:</p>
+<pre><code>geneUsage(twb[[2]], list(HUMAN_TRBV, HUMAN_TRBJ))
+</code></pre>
+
 <p>Compute a pairwise normalised number of shared clonotypes and plot a heatmap of them:</p>
 <pre><code>twb.int <- repOverlap(twb, "exact")
 vis.heatmap(twb.int)
