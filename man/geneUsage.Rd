@@ -2,7 +2,7 @@
 % Please edit documentation in R/segments.R
 \name{geneUsage}
 \alias{geneUsage}
-\title{Variable and Joining gene usage.}
+\title{Gene usage.}
 \usage{
 geneUsage(.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count",
   "bc.count", "read.prop", "bc.prop"), .norm = F)
@@ -31,7 +31,7 @@ and column names for the second gene in \code{.genes}. See "Examples".
 If \code{.data} is a list with clonesets and \code{.genes} IS a list than return a list with matrices like in the previous case.
 }
 \description{
-et frequencies or counts of gene segments ("V / J - usage").
+Compute frequencies or counts of gene segments ("V / J - usage").
 }
 \examples{
 \dontrun{

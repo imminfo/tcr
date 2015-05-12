@@ -6,12 +6,12 @@ if (getRversion() >= "2.15.1") {
 }
 
 
-#' Variable and Joining gene usage.
+#' Gene usage.
 #' 
 #' @aliases geneUsage
 #' 
 #' @description 
-#' et frequencies or counts of gene segments ("V / J - usage").
+#' Compute frequencies or counts of gene segments ("V / J - usage").
 #' 
 #' @param .data Cloneset data frame or a list with clonesets.
 #' @param .genes Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments

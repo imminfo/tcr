@@ -42,7 +42,7 @@ immdata <- head(immdata, N)
 
 ```{r seqstats,warning=FALSE,message=F}
 cloneset.stats(immdata)
-lib.cloneset.stats(immdata)
+repseq.stats(immdata)
 ```
 
 
@@ -55,10 +55,10 @@ lib.cloneset.stats(immdata)
 ```{r vusagehist, fig.width=16, fig.height=5,warning=FALSE,message=F}
 if (has.class(immdata, 'list')) {
   for (i in 1:length(immdata)) {
-    plot(vis.V.usage(immdata[[i]], .main = paste0(names(immdata)[i], ' ', 'V-usage')))
+    plot(vis.gene.usage(immdata[[i]], HUMAN_TRBV, .main = paste0(names(immdata)[i], ' ', 'V-usage')))
   }
 } else {
-  vis.V.usage(immdata, .coord.flip=F)
+  vis.gene.usage(immdata, HUMAN_TRBV, .coord.flip=F)
 }
 ```
 
@@ -68,10 +68,10 @@ if (has.class(immdata, 'list')) {
 ```{r jusagehist, fig.width=14, fig.height=5,warning=FALSE,message=F}
 if (has.class(immdata, 'list')) {
   for (i in 1:length(immdata)) {
-    plot(vis.J.usage(immdata[[i]], .main = paste0(names(immdata)[i], ' ', 'J-usage')))
+    plot(vis.gene.usage(immdata[[i]], HUMAN_TRBJ, .main = paste0(names(immdata)[i], ' ', 'J-usage')))
   }
 } else {
-  vis.J.usage(immdata, .coord.flip=F)
+  vis.gene.usage(immdata, HUMAN_TRBJ, .coord.flip=F)
 }
 ```
 

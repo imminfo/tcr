@@ -19,17 +19,15 @@ repOverlap(.data, .method = c("exact", "hamm", "lev", "jaccard", "morisita",
 
 \item{.quant}{Which column to use for the quantity of clonotypes: "read.count" for the "Read.count" column,
 "bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column, "bc.prop" for
-the "Barcode.proportion" column. Ignored for all methods excluding "morisita".}
+the "Barcode.proportion" column. Used in "morisita" and "horn".}
 
-\item{.vgene}{}
+\item{.vgene}{If T than use V genes in computing shared or similar clonotypes. Used in methods "exact", "hamm", "lev", "morisita", "jaccard".}
 
-\item{.norm}{}
+\item{.norm}{If T than compute the normalised number of shared clonotypes. Used in "exact".}
 
-\item{.a}{}
+\item{.a,.b}{Alpha and beta parameters for "tversky". Default values gives the Jaccard index measure.}
 
-\item{.b}{}
-
-\item{.do.unique}{}
+\item{.do.unique}{If T than remove duplicates from the input data, but add their quantities to their clones.}
 
 \item{.verbose}{If T than output the data processing progress bar.}
 }
@@ -37,7 +35,11 @@ the "Barcode.proportion" column. Ignored for all methods excluding "morisita".}
 General interface to all cloneset overlap functions.
 }
 \details{
-Overlap methods:
+You can see a more detailed description for each overlap method at \link{intersectClonesets} and \link{similarity}.
+
+Parameter \code{.method} can have one of the following value each corresponding to the specific method:
+
+- "exact" for the true diversity, or the effective number of types (basic function \code{diversity}).
 }
 \seealso{
 \link{intersectClonesets}, \link{similarity}, \link{repDiversity}

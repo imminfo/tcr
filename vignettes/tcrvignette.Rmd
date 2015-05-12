@@ -365,10 +365,9 @@ The most straightforward yet a quite effective way to evaluate similarity of two
 ```{r eval=TRUE, echo=T, fig.align='center', warning=FALSE}
 # Equivalent to intersect(twb[[1]]$CDR3.nucleotide.sequence,
 #                         twb[[2]]$CDR3.nucleotide.sequence)
-# or intersectCount(twb[[1]]$CDR3.nucleotide.sequence,
-#                    twb[[2]]$CDR3.nucleotide.sequence)
 repOverlap(twb[1:2], 'exact', 'nuc')
 
+# Equivalent to intersectClonesets(twb, "n0e", .norm = T)
 repOverlap(twb, 'exact', 'nuc', .norm = T)
 # Intersect by amino acid clonotypes + V genes
 repOverlap(twb, 'exact', 'aa', .vgene = T)
