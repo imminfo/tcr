@@ -163,8 +163,8 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' \dontrun{
 #' # Load your data.
 #' load('immdata.rda')
-#' # Perform intersection by amino acid sequences with V-segments.
-#' imm.av <- intersect(immdata, 'ave')
+#' # Perform cloneset overlap by amino acid sequences with V-segments.
+#' imm.av <- repOverlap(immdata, .seq = 'aa', .vgene = T)
 #' # Plot a heatmap.
 #' vis.heatmap(imm.av, .title = 'Immdata - (ave)-intersection')
 #' }
@@ -483,7 +483,7 @@ vis.pca <- function (.data, .groups = NA) {
 #' @param .ncol Number of columns in the grid.
 #' @param .expand Interger vector of length 2, for \code{scale_y_continous(expand = .expand)} function.
 #' 
-#' @seealso \code{intersect} \code{js.div}
+#' @seealso \link{repOverlap}, \link{js.div}
 #' 
 #' @examples
 #' \dontrun{

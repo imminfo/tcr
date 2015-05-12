@@ -106,6 +106,8 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 #' 
 #' - Horn's overlap index based on Shannon's entropy.
 #' 
+#' Use the \link{repOverlap} function for computing similarities of clonesets.
+#' 
 #' @usage
 #' cosine.similarity(.alpha, .beta, .do.norm = NA, .laplace = 0)
 #' 
@@ -151,14 +153,17 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 #' 
 #' @return Value of similarity between the given sets or vectors.
 #' 
-#' @seealso \link{intersect}, \link{entropy}, \link{diversity}
+#' @seealso \link(repOverlap), \link{intersectClonesets}, \link{entropy}, \link{diversity}
 #' 
 #' @examples
 #' \dontrun{
 #' jaccard.index(1:10, 2:20)
 #' a <- length(unique(immdata[[1]][, c('CDR3.amino.acid.sequence', 'V.gene')]))
 #' b <- length(unique(immdata[[2]][, c('CDR3.amino.acid.sequence', 'V.gene')]))
-#' jaccard.index(a, b, intersect(immdata[[1]], immdata[[2]], 'ave'))
+#' # Next
+#' jaccard.index(a, b, repOverlap(immdata[1:2], .seq = 'aa', .vgene = T))
+#' # is equal to
+#' repOverlap(immdata[1:2], 'jaccard', seq = 'aa', .vgene = T)
 #' }
 cosine.similarity <- function (.alpha, .beta, .do.norm = NA, .laplace = 0) {
   .alpha <- check.distribution(.alpha, .do.norm, .laplace)

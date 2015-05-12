@@ -11,8 +11,11 @@
 }
 
 
+#' Choose the right column.
 #' 
-#' 
+#' @param .x Character vector with column IDs.
+#' @param .verbose If T then print the error mesasge.
+#' @return Character.
 .column.choice <- function (x, .verbose = T) {
   x <- switch(x[1],
               read.count = "Read.count",
@@ -21,6 +24,23 @@
               bc.prop = "Barcode.proportion",
               { .verbose.msg("You have specified an invalid column identifier. Choosed column: Read.count\n", .verbose); "Read.count" })
   x
+}
+
+
+#' Fix names in lists.
+#' 
+#' @param .datalist List with data frames.
+#' @return List with fixed names.
+.fix.listnames <- function (.datalist) {
+  if (is.null(names(.datalist))) { names(.datalist) <- paste0("Sample.", 1:length(.datalist)) }
+  else {
+    for (i in 1:length(.datalist)) {
+      if (names(.datalist)[i] == "" || is.na(names(.datalist)[i])) {
+        names(.datalist)[i] <- paste0("Sample.", i)
+      }
+    }
+  }
+  .datalist
 }
 
 
@@ -227,7 +247,8 @@ sample2D <- function (.table, .count = 1) {
 #' 
 #' @examples
 #' \dontrun{
-#' apply.symm(immdata, intersect, .type = 'a0e') # equivalent to intersect(immdata, 'a0e')
+#' # equivalent to intersectClonesets(immdata, 'a0e')
+#' apply.symm(immdata, intersectClonesets, .type = 'a0e')
 #' }
 apply.symm <- function (.datalist, .fun, ..., .diag = NA, .verbose = T) {
   res <- matrix(0, length(.datalist), length(.datalist))

@@ -26,6 +26,6 @@ vis.radarlike(imm.js)
 }
 }
 \seealso{
-\code{intersect} \code{js.div}
+\link{repOverlap}, \link{js.div}
 }
 

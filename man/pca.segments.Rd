@@ -12,7 +12,7 @@ pca.segments.2D(.data, .cast.freq.seg = T, ..., .do.plot = T)
 \arguments{
 \item{.data}{Either data.frame or a list of data.frame or a result obtained from freq.segments or freq.segments.2D functions.}
 
-\item{.cast.freq.seg}{if T then case freq.segments or freq.segments.2D to the supplied data.}
+\item{.cast.freq.seg}{if T then apply \code{freq.segments} to the supplied data.}
 
 \item{...}{Further arguments passed to prcomp.}
 
@@ -22,7 +22,7 @@ pca.segments.2D(.data, .cast.freq.seg = T, ..., .do.plot = T)
 If .do.plot is T than ggplot object; else pca object.
 }
 \description{
-Perform PCA on segments frequency data for V- and J-segments and either return pca object or plot the results.
+Perform PCA on gene segments frequency data for V- and J-segments and either return pca object or plot the results.
 }
 \examples{
 \dontrun{

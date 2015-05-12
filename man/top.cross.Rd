@@ -4,7 +4,7 @@
 \alias{top.cross}
 \alias{top.cross.plot}
 \alias{top.cross.vec}
-\title{Perform sequential cross starting from the top of a data.frame.}
+\title{Perform sequential cross starting from the top of a data frame.}
 \usage{
 top.cross(.data, .n = NA, .data2 = NULL, .type = 'ave', .norm = F, .verbose = T)
 
@@ -44,7 +44,7 @@ top.cross.plot(.top.cross.res, .xlab = 'Top clones',
 \item{.logy}{if T then transform y-axis to log-scale.}
 }
 \value{
-\code{top.cross} - return list for each element in \code{.n} with intersection matrix (from \code{tcR::intersect}).
+\code{top.cross} - return list for each element in \code{.n} with intersection matrix (from \code{tcR::intersectClonesets}).
 
 \code{top.cross.vec} - vector of length \code{.n} with \code{.i}:\code{.j} elements of each matrix.
 

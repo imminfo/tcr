@@ -56,6 +56,8 @@ Functions for computing similarity between two vectors or sets. See "Details" fo
 - Morisita's overlap index is a statistical measure of dispersion of individuals in a population. It is used to compare overlap among samples (Morisita 1959). This formula is based on the assumption that increasing the size of the samples will increase the diversity because it will include different habitats (i.e. different faunas).
 
 - Horn's overlap index based on Shannon's entropy.
+
+Use the \link{repOverlap} function for computing similarities of clonesets.
 }
 \details{
 For \code{morisitas.index} input data are matrices or data.frames with two columns: first column is
@@ -81,10 +83,13 @@ Formula for Morisita's overlap index is quite complicated and can't be easily sh
 jaccard.index(1:10, 2:20)
 a <- length(unique(immdata[[1]][, c('CDR3.amino.acid.sequence', 'V.gene')]))
 b <- length(unique(immdata[[2]][, c('CDR3.amino.acid.sequence', 'V.gene')]))
-jaccard.index(a, b, intersect(immdata[[1]], immdata[[2]], 'ave'))
+# Next
+jaccard.index(a, b, repOverlap(immdata[1:2], .seq = 'aa', .vgene = T))
+# is equal to
+repOverlap(immdata[1:2], 'jaccard', seq = 'aa', .vgene = T)
 }
 }
 \seealso{
-\link{intersect}, \link{entropy}, \link{diversity}
+\link(repOverlap), \link{intersectClonesets}, \link{entropy}, \link{diversity}
 }
 

@@ -382,7 +382,7 @@ find.clonotypes <- function (.data, .targets, .method = c('exact', 'hamm', 'lev'
 }
 
 
-#' Perform sequential cross starting from the top of a data.frame.
+#' Perform sequential cross starting from the top of a data frame.
 #' 
 #' @aliases top.cross top.cross.vec top.cross.plot
 #' 
@@ -418,7 +418,7 @@ find.clonotypes <- function (.data, .targets, .method = c('exact', 'hamm', 'lev'
 #' @param .verbose if T then plot a progress bar.
 #' 
 #' @return
-#' \code{top.cross} - return list for each element in \code{.n} with intersection matrix (from \code{tcR::intersect}).
+#' \code{top.cross} - return list for each element in \code{.n} with intersection matrix (from \code{tcR::intersectClonesets}).
 #' 
 #' \code{top.cross.vec} - vector of length \code{.n} with \code{.i}:\code{.j} elements of each matrix.
 #' 
@@ -443,7 +443,7 @@ top.cross <- function (.data, .n = NA, .data2 = NULL, .type = 'ave', .norm = F, 
 #   res <- lapply(.n, function(i) apply.symm(.data, cross, .head = i, .type = .type, .norm = .norm, .verbose=F))
   res <- lapply(.n, function(i) {
     if (.verbose) cat('Head == ', i, ' :\n', sep = '')
-    intersect(.data, .type, .head = i, .norm = .norm, .verbose = .verbose)})
+    intersectClonesets(.data, .type, .head = i, .norm = .norm, .verbose = .verbose)})
   names(res) <- .n
   res
 }

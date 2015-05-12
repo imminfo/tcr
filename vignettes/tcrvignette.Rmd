@@ -304,19 +304,19 @@ imm1.vj[1:5, 1:5]
 ```
 
 
-You can also directly visualise gene usage with functions `vis.V.usage` and `vis.J.usage` with argument `.cast.freq` equal to TRUE:
+You can also directly visualise gene usage with the function `vis.gene.usage` (if you pass the gene alphabet as a second argument):
 
 ```{r eval=TRUE, echo=TRUE, message=FALSE, fig.align='center', fig.height=5, fig.width=7}
 # Put ".dodge = F" to get distinct plot for every data frame in the given list.
-vis.J.usage(twb, .cast.freq = T, .main = 'twb J-usage dodge', .dodge = T)
+vis.gene.usage(twb, HUMAN_TRBJ, .main = 'twb J-usage dodge', .dodge = T)
 ```
 
 ```{r eval=TRUE, echo=TRUE, message=FALSE, fig.align='center', fig.height=6, fig.width=9}
-vis.J.usage(twb, .cast.freq = T, .main = 'twb J-usage column', .dodge = F, .ncol = 2)
+vis.gene.usage(twb, HUMAN_TRBJ, .main = 'twb J-usage column', .dodge = F, .ncol = 2)
 ```
 
 ```{r eval=TRUE, echo=TRUE, message=FALSE, fig.align='center', fig.height=5, fig.width=7}
-vis.V.usage(imm1.vs, .cast.freq = F, .main = 'twb[[1]] V-usage', .coord.flip = F)
+vis.gene.usage(imm1.vs, NA, .main = 'twb[[1]] V-usage', .coord.flip = F)
 ```
 
 
@@ -356,25 +356,25 @@ class(pca.segments(twb, .do.plot = F))  # Return object of class "prcomp"
 
 
 ### Overlap quantification
+The general interface to all functions for computing cloneset overlap coefficients is the `repOverlap` function.
+
 
 #### Number of shared clonotypes
-The most straightforward yet a quite effective way to evaluate similarity of two clonesets is compute the number of shared clonotypes. *tcR* overrides default function `intersect`, adding new parameters, thought `intersect(x,y)` works as the old function `base::intersect` if *x* and *y* both are not data frames. For data frames `base::intersect` isn't working, but `tcR::intersect` is: by default the function intersects the "CDR3.nucleotide.sequence" columns of the given data frames, but user can change target columns by using arguments *.type* or *.col*. As in the `find.clonotypes`, user can choose which method apply to the elements: exact match of elements, match by Hamming distance or match by Levenshtein distance. Logical argument *.norm* is used to perform normalisation of the number of shared clonotypes by dividing this number by multiplication of clonesets' sizes (**strongly** recommended otherwise your results will be correlating with clonesets' sizes).
+The most straightforward yet a quite effective way to evaluate similarity of two clonesets is compute the number of shared clonotypes. *tcR* adds the new function `intersectClonesets` (`repOverlap(your_data, 'exact')`) which is by default computes the number of shared clonotypes using the "CDR3.nucleotide.sequence" columns of the given data frames, but user can change target columns by using arguments *.type* or *.col*. As in the `find.clonotypes`, user can choose which method apply to the elements: exact match of elements, match by Hamming distance or match by Levenshtein distance. Logical argument *.norm* is used to perform normalisation of the number of shared clonotypes by dividing this number by multiplication of clonesets' sizes (**strongly** recommended otherwise your results will be correlating with clonesets' sizes).
 
 ```{r eval=TRUE, echo=T, fig.align='center', warning=FALSE}
 # Equivalent to intersect(twb[[1]]$CDR3.nucleotide.sequence,
 #                         twb[[2]]$CDR3.nucleotide.sequence)
 # or intersectCount(twb[[1]]$CDR3.nucleotide.sequence,
 #                    twb[[2]]$CDR3.nucleotide.sequence)
-# "n" stands for a "CDR3.nucleotide.sequence" column, "e" for exact match.
-intersect(twb[[1]], twb[[2]], 'n0e')
-intersect(twb[[1]], twb[[2]], 'n0e', .norm = T)
-# "a" stands for "CDR3.amino.acid.sequence" column.
-# "v" means that intersect should also use the "V.genes" column.
-intersect(twb[[1]], twb[[2]], 'ave')
-# Works also on lists, performs all possible pairwise intersections.
-intersect(twb, 'ave')
+repOverlap(twb[1:2], 'exact', 'nuc')
+
+repOverlap(twb, 'exact', 'nuc', .norm = T)
+# Intersect by amino acid clonotypes + V genes
+repOverlap(twb, 'exact', 'aa', .vgene = T)
+
 # Plot a heatmap of the number of shared clonotypes.
-vis.heatmap(intersect(twb, 'ave'), .title = 'twb - (ave)-intersection', .labs = '')
+vis.heatmap(repOverlap(twb, 'exact', 'aa', .vgene = T), .title = 'twb - (ave)-intersection', .labs = '')
 ```
 
 
@@ -393,7 +393,7 @@ head(twb[[1]][imm.1.2, c('CDR3.amino.acid.sequence', 'V.gene')])
 
 
 #### "Top cross"
-Number of shared clonotypes among the most abundant clonotypes may differ signigicantly from those with lesses count. To support research *tcR* offers the `top.cross` function, that apply `tcR::intersect`, e.g., to the first 1000 clonotypes, 2000, 3000 and so on up to the first 100000 clones, if supplied `.n == seq(1000, 100000, 1000)`.
+Number of shared clonotypes among the most abundant clonotypes may differ signigicantly from those with lesses count. To support research *tcR* offers the `top.cross` function, that apply `tcR::intersectClonesets`, e.g., to the first 1000 clonotypes, 2000, 3000 and so on up to the first 100000 clones, if supplied `.n == seq(1000, 100000, 1000)`.
 
 ```{r eval=TRUE, echo=T, fig.align='center', fig.height=6.5, fig.width=10, warning=FALSE}
 twb.top <- top.cross(.data = twb, .n = seq(500, 10000, 500), .verbose = F, .norm = T)
@@ -404,28 +404,28 @@ top.cross.plot(twb.top)
 #### More complex similarity measures
 *tcR* also provides more complex similarity measures for evaluating the similarity of sets.
 
- - Cosine similarity (function `cosine.similarity`) is a measure of similarity between two vectors of an inner product space that measures the cosine of the angle between them.
+ - Tversky index (`repOverlap(your_data, 'tversky')` for clonesets or `tversky.index` for vectors) is an asymmetric similarity measure on sets that compares a variant to a prototype. If using default arguments, it's similar to Dice's coefficient.
 
- - Tversky index (function `tversky.index`) is an asymmetric similarity measure on sets that compares a variant to a prototype. If using default arguments, it's similar to Dice's coefficient.
-
- - Overlap coefficient (function `overlap.coef`) is a similarity measure that measures the overlap between two sets, and is defined as the size of the intersection divided by the smaller of the size of the two sets.
+ - Overlap coefficient (`repOverlap(your_data, 'overlap')` for clonesets or `overlap.coef` for vectors) is a similarity measure that measures the overlap between two sets, and is defined as the size of the intersection divided by the smaller of the size of the two sets.
  
- - Jaccard index (function `jaccard.index`) is a statistic used for comparing the similarity and diversity of sample sets.
+ - Jaccard index (`repOverlap(your_data, 'jaccard')` for clonesets or `jaccard.index` for vectors) is a statistic used for comparing the similarity and diversity of sample sets.
 
- - Morisita's overlap index (function `morisitas.index`) is a statistical measure of dispersion of individuals in a population and is used to compare overlap among samples. The formula is based on the assumption that increasing the size of the samples will increase the diversity because it will include different habitats (i.e. different faunas) (Morisita, 1959).
+ - Morisita's overlap index (`repOverlap(your_data, 'morisita')` for clonesets or `morisitas.index` for other data) is a statistical measure of dispersion of individuals in a population and is used to compare overlap among samples. The formula is based on the assumption that increasing the size of the samples will increase the diversity because it will include different habitats (i.e. different faunas) (Morisita, 1959).
 
 To visualise similarity among repertoires the `vis.heatmap` function is appropriate.
 
 ```{r eval=TRUE, echo=TRUE, results='hold'}
 # Apply the Morisitas overlap index to the each pair of repertoires.
+# Next two calls are equal. Here is why you need to use the repOverlap fun.
 repOverlap(twb, 'morisita', 'aa', 'read.count', .verbose = F)
+
 cols <- c('CDR3.amino.acid.sequence', 'Read.count')
 apply.symm(twb, function (x,y) morisitas.index(x[, cols], y[, cols]), .verbose = F)
 ```
 
 
 ### Shared repertoire
-To investigate a shared among a several repertoires clonotypes ("shared repertoire") the package provided the `shared.repertoire` function along with functions for computing the shared repertoire statistics. The `shared.representation` function computes the number of shared clonotypes for each repertoire for each degree of sharing (i.e., number of people, in which indicated amount of clones have been found). The function `shared.summary` is equivalent to `intersection` but applies to the shared repertoire data frame. Measuring distances among repertoires using the cosine similarity on vector of counts of shared sequences is also possible with the `cosine.sharing` function.
+To investigate a shared among a several repertoires clonotypes ("shared repertoire") the package provided the `shared.repertoire` function along with functions for computing the shared repertoire statistics. The `shared.representation` function computes the number of shared clonotypes for each repertoire for each degree of sharing (i.e., number of people, in which indicated amount of clones have been found). The function `shared.summary` is equivalent to `repOverlap(, 'exact')` but applies to the shared repertoire data frame. Measuring distances among repertoires using the cosine similarity on vector of counts of shared sequences is also possible with the `cosine.sharing` function.
 
 ```{r eval=TRUE, echo=TRUE}
 # Compute shared repertoire of amino acid CDR3 sequences and V genes
@@ -439,7 +439,7 @@ cosine.sharing(imm.shared)         # Compute cosing similarity on shared sequenc
 
 
 ## Diversity evaluation
-For assessing the distribution of clonotypes in the given repertoire, *tcR* provides functions for evaluating the diversity (functions `diversity` and `inverse.simpson`) and the skewness of the clonal distribution (functions `gini` and `gini.simpson`), and a general interface to all of this functions `repDiversity`, which user should use. Function `diversity` (`repDiversity(your_clonesets, "div")`) computes the ecological diversity index (with parameter `.q` for penalties for clones with large count). Function `inverse.simpson` (`repDiversity(your_clonesets, "inv.simp")`) computes the Inverse Simpson Index (i.e., inverse probability of choosing two similar clonotypes). Function `gini` (`repDiversity(your_clonesets, "gini")`) computes the economical Gini index of clonal distribution. Function `gini.simpson` (`repDiversity(your_clonesets, "gini.simp")`) computes the Gini-Simpson index. Function `chao1` (`repDiversity(your_clonesets, "chao1")`) computes the Chao1 index, its SD and two 95 perc CI. Function `repDiversity` accepts single clonesets as well as a list of clonesets. Parameter `.quant` specifies which column to use for computing the diversity (print `?repDiversity` to see more information about input arguments).
+For assessing the distribution of clonotypes in the given repertoire, *tcR* provides functions for evaluating the diversity (functions `diversity` and `inverse.simpson`) and the skewness of the clonal distribution (functions `gini` and `gini.simpson`), and a general interface to all of this functions `repDiversity`, which user should use to estimate the diversity of clonesets. Function `diversity` (`repDiversity(your_clonesets, "div")`) computes the ecological diversity index (with parameter `.q` for penalties for clones with large count). Function `inverse.simpson` (`repDiversity(your_clonesets, "inv.simp")`) computes the Inverse Simpson Index (i.e., inverse probability of choosing two similar clonotypes). Function `gini` (`repDiversity(your_clonesets, "gini")`) computes the economical Gini index of clonal distribution. Function `gini.simpson` (`repDiversity(your_clonesets, "gini.simp")`) computes the Gini-Simpson index. Function `chao1` (`repDiversity(your_clonesets, "chao1")`) computes the Chao1 index, its SD and two 95 perc CI. Function `repDiversity` accepts single clonesets as well as a list of clonesets. Parameter `.quant` specifies which column to use for computing the diversity (print `?repDiversity` to see more information about input arguments).
 
 ```{r eval=TRUE, echo=TRUE, results='hold'}
 # Evaluate the diversity of clones by the ecological diversity index.

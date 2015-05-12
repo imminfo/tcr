@@ -32,8 +32,8 @@ Plot a heatmap from a matrix or a data.frame
 \dontrun{
 # Load your data.
 load('immdata.rda')
-# Perform intersection by amino acid sequences with V-segments.
-imm.av <- intersect(immdata, 'ave')
+# Perform cloneset overlap by amino acid sequences with V-segments.
+imm.av <- repOverlap(immdata, .seq = 'aa', .vgene = T)
 # Plot a heatmap.
 vis.heatmap(imm.av, .title = 'Immdata - (ave)-intersection')
 }

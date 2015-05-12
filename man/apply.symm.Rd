@@ -29,7 +29,8 @@ symmetrical (i.e. fun(x,y) == fun(y,x)) or assymmetrical (i.e. fun(x,y) != fun(y
 }
 \examples{
 \dontrun{
-apply.symm(immdata, intersect, .type = 'a0e') # equivalent to intersect(immdata, 'a0e')
+# equivalent to intersectClonesets(immdata, 'a0e')
+apply.symm(immdata, intersectClonesets, .type = 'a0e')
 }
 }
 

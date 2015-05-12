@@ -6,8 +6,7 @@
 \usage{
 repDiversity(.data, .method = c("chao1", "gini.simp", "inv.simp", "gini",
   "div", "entropy"), .quant = c("read.count", "bc.count", "read.prop",
-  "bc.prop"), .q = 5, .norm = F, .do.norm = NA, .laplace = 0,
-  .verbose = T)
+  "bc.prop"), .q = 5, .norm = F, .do.norm = NA, .laplace = 0)
 }
 \arguments{
 \item{.data}{Cloneset or a list of clonesets.}
@@ -17,16 +16,41 @@ repDiversity(.data, .method = c("chao1", "gini.simp", "inv.simp", "gini",
 \item{.quant}{Which column to use for the quantity of clonotypes: "read.count" for the "Read.count" column,
 "bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column, "bc.prop" for
 the "Barcode.proportion" column.}
+
+\item{.q}{q-parameter for the Diversity index.}
+
+\item{.norm}{If T than compute the normsalised entropy.}
+
+\item{.do.norm}{One of the three values - NA, T or F. If NA than check for distrubution (sum(.data) == 1)
+and normalise it with the given laplace correction value if needed. if T then do normalisation and laplace
+correction. If F than don't do normalisaton and laplace correction.}
+
+\item{.laplace}{Value for Laplace correction.}
 }
 \description{
-General interface to all diversity functions.
+General interface to all cloneset diversity functions.
+}
+\details{
+You can see a more detailed description for each diversity method at \link{diversity}.
+
+Parameter \code{.method} can have one of the following value each corresponding to the specific method:
+
+- "div" for the true diversity, or the effective number of types (basic function \code{diversity}).
+
+- "inv.simp" for the inverse Simpson index (basic function \code{inverse.simpson}).
+
+- "gini" for the Gini coefficient (basic function \code{gini}).
+
+- "gini.simp" for the Gini-Simpson index (basic function \code{gini.simpson}).
+
+- "chao1" for the Chao1 estimator (basic function \code{chao1}).
+
+- "entropy" for the Shannon entropy measure (basic function \code{entropy}).
 }
 \examples{
 \dontrun{
 data(twb)
 twb.div <- repDiversity(twb, "chao1", "read.count")
-ggplot(aes(), data = twb.div) +
-vis.group.boxplot()
 }
 }
 \seealso{

@@ -5,10 +5,9 @@
 \title{General function for the repertoire overlap evaluation.}
 \usage{
 repOverlap(.data, .method = c("exact", "hamm", "lev", "jaccard", "morisita",
-  "cosine", "tversky", "overlap", "horn"), .seq = c("nuc", "aa"),
+  "tversky", "overlap", "horn"), .seq = c("nuc", "aa"),
   .quant = c("read.count", "bc.count", "read.prop", "bc.prop"), .vgene = F,
-  .norm = T, .a = 0.5, .b = 0.5, .do.unique = T, .do.norm = T,
-  .laplace = 0, .verbose = T)
+  .norm = T, .a = 0.5, .b = 0.5, .do.unique = T, .verbose = T)
 }
 \arguments{
 \item{.data}{List of clonesets.}
@@ -21,11 +20,26 @@ repOverlap(.data, .method = c("exact", "hamm", "lev", "jaccard", "morisita",
 \item{.quant}{Which column to use for the quantity of clonotypes: "read.count" for the "Read.count" column,
 "bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column, "bc.prop" for
 the "Barcode.proportion" column. Ignored for all methods excluding "morisita".}
+
+\item{.vgene}{}
+
+\item{.norm}{}
+
+\item{.a}{}
+
+\item{.b}{}
+
+\item{.do.unique}{}
+
+\item{.verbose}{If T than output the data processing progress bar.}
 }
 \description{
-General interface to all overlap functions.
+General interface to all cloneset overlap functions.
+}
+\details{
+Overlap methods:
 }
 \seealso{
-\link{intersect}, \link{similarity}
+\link{intersectClonesets}, \link{similarity}, \link{repDiversity}
 }
 

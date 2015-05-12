@@ -10,22 +10,8 @@ if (getRversion() >= "2.15.1") {
 #' 
 #' @aliases geneUsage
 #' 
-#' @description Get frequencies or counts of gene segments ("V / J - usage").
-#' 
-#' @usage
-#' freq.segments(.data, .genes = 'TRBV', .count = F, .meat = F, .other = F,
-#'               .laplace = 0, .column = NULL, .sum.col = "Read.count")
-#' 
-#' freq.segments.2D(.data, .genes = 'beta', .count = F, .meat = F,
-#'                  .laplace = 0, .columns = NULL, .sum.col = "Read.count", ...)
-#' 
-#' freq.Va(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
-#' 
-#' freq.Vb(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
-#' 
-#' freq.Ja(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
-#' 
-#' freq.Jb(.data, .count = F, .meat = F, .other = F, .laplace = 0, .sum.col = "Read.count")
+#' @description 
+#' et frequencies or counts of gene segments ("V / J - usage").
 #' 
 #' @param .data Cloneset data frame or a list with clonesets.
 #' @param .genes Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
@@ -53,14 +39,13 @@ if (getRversion() >= "2.15.1") {
 #' # Load your data
 #' data(twb)
 #' # compute V-segments frequencies of human TCR beta.
-#' seg <- freq.segments(twb, "TRBV")
-#' # equivalent to the previos one
-#' seg <- freq.segments(twb, HUMAN_TRBV, .column = "V.gene")
+#' seg <- geneUsage(twb, HUMAN_TRBV, .norm = T)
 #' # plot V-segments frequencies as a heatmap
 #' vis.heatmap(seg, .labs = c("Sample", "V gene"))
-#' # plot V-segments frequencies from the data
-#' vis.V.usage(twb)
-#' 
+#' # plot V-segments frequencies directly from clonesets
+#' vis.gene.usage(twb, HUMAN_TRBV)
+#' # plot V-segments frequencies from the gene frequencies
+#' vis.gene.usage(seg, NA)
 #' # Compute V-J joint usage.
 #' geneUsage(twb, list(HUMAN_TRBV, HUMAN_TRBJ))
 #' }
@@ -128,7 +113,7 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", 
 #' @aliases pca.segments pca.segments.2D
 #' 
 #' @description
-#' Perform PCA on segments frequency data for V- and J-segments and either return pca object or plot the results.
+#' Perform PCA on gene segments frequency data for V- and J-segments and either return pca object or plot the results.
 #' 
 #' @usage
 #' pca.segments(.data, .cast.freq.seg = T, ..., .do.plot = T)
@@ -136,7 +121,7 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", 
 #' pca.segments.2D(.data, .cast.freq.seg = T, ..., .do.plot = T)
 #' 
 #' @param .data Either data.frame or a list of data.frame or a result obtained from freq.segments or freq.segments.2D functions.
-#' @param .cast.freq.seg if T then case freq.segments or freq.segments.2D to the supplied data.
+#' @param .cast.freq.seg if T then apply \code{freq.segments} to the supplied data.
 #' @param ... Further arguments passed to prcomp.
 #' @param .do.plot if T then plot a graphic, else return a pca object.
 #' 
