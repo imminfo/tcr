@@ -182,7 +182,8 @@ overlap.coef <- function (.alpha, .beta) {
 
 jaccard.index <- function (.alpha, .beta, .intersection.number = NA) {
   if (is.na(.intersection.number)) {
-    length(intersect(.alpha, .beta)) / (length(unique(.alpha)) + length(unique(.beta)) - length(intersect(.alpha, .beta)))
+    abin <- length(intersect(.alpha, .beta))
+    abin / (length(unique(.alpha)) + length(unique(.beta)) - abin)
   } else {
     .intersection.number / (.alpha + .beta - .intersection.number)
   }
