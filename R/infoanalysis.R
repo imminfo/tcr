@@ -50,7 +50,7 @@ assymetry<-function(.alpha, .beta = NULL, .by = 'CDR3.nucleotide.sequence'){
 #' @return For \code{entropy.seg} - numeric integer with entropy value(s). For \code{js.div.seg} - integer of vector one if \code{.data} and \code{.data2} are provided;
 #' esle matrix length(.data) X length(.data) if \code{.data} is a list.
 #' 
-#' @seealso \link{vis.heatmap}, \link{vis.group.boxplot}, \link{freq.segments}
+#' @seealso \link{vis.heatmap}, \link{vis.group.boxplot}, \link{geneUsage}
 entropy.seg <- function (.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out'),
                          .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"),
                          .ambig = F) {  
@@ -67,14 +67,20 @@ entropy.seg <- function (.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'ou
   }
 }
 
-js.div.seg <- function (.data, .data2 = NULL, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out'),
+js.div.seg <- function (.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out'),
                         .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"), .norm.entropy = T,
-                        .ambig = F) {  
+                        .ambig = F, .verbose = F, .data2 = NULL) {  
   if (class(.data) == 'list') {
-    return(apply.symm(.data, js.div.seg, .quant = .quant, .frame = .frame, .ambig = .ambig, .norm.entropy = .norm.entropy, .genes = .genes))
+    if (length(.data) == 2) {
+      js.div.seg(.data[[1]], .genes, .frame, .quant, .norm.entropy, .ambig, .verbose, .data2 = .data[[2]])
+    } else {
+      return(apply.symm(.data, function (x, y) { js.div.seg(.data = x, .data2 = y, .quant = .quant, .frame = .frame, .ambig = .ambig, .norm.entropy = .norm.entropy, .genes = .genes) }, .verbose = .verbose))
+    }
+    
   }
   
   .data <- get.frames(.data, .frame)
+  .data2 <- get.frames(.data2, .frame)
   
   if (has.class(.genes, "list") && length(.genes) == 2) {
     freq.alpha <- geneUsage(.data, .genes = .genes, .ambig = .ambig)

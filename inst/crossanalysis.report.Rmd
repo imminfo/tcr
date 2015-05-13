@@ -114,14 +114,14 @@ vis.gene.usage(immdata, HUMAN_TRBJ, .coord.flip=F, .ncol = 2)
 ### V-segments Jennsen - Shannon Divergence among repertoires
 
 ```{r vdiv, fig.width=13,warning=FALSE,message=F}
-res <- js.div.seg(immdata, .frame='all', .verbose = F)
+res <- js.div.seg(immdata, HUMAN_TRBV, .frame='all', .verbose = F)
 vis.heatmap(round(res, 5))
 ```
 
 ### V-segments Jennsen - Shannon Divergence radarplot
 
 ```{r radars, fig.width=13,warning=FALSE,message=F}
-res <- js.div.seg(immdata, .frame='all', .verbose = F)
+res <- js.div.seg(immdata, HUMAN_TRBV, .frame='all', .verbose = F)
 vis.radarlike(res, .ncol = 2)
 ```
 

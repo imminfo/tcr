@@ -14,8 +14,8 @@ if (getRversion() >= "2.15.1") {
 #' Compute frequencies or counts of gene segments ("V / J - usage").
 #' 
 #' @param .data Cloneset data frame or a list with clonesets.
-#' @param .genes Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
-#' or one of the 'alpha' or 'beta' for freq.segments.2D or a list of length 2 with alphabets strings for freq.segments.2D.
+#' @param .genes Either one of the gene alphabet (e.g., HUMAN_TRBV, \link{genealphabets}) or list with two gene alphabets for computing 
+#' joint distribution.
 #' @param .quant Which column to use for the quantity of clonotypes: NA for computing only number of genes without using clonotype counts, 
 #' "read.count" for the "Read.count" column, "umi.count" for the "Umi.count" column, "read.prop" for the "Read.proportion" column,
 #' "umi.prop" for the "Umi.proportion" column.
@@ -156,9 +156,9 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
 #' 
 #' pca.segments.2D(.data, .cast.freq.seg = T, ..., .do.plot = T)
 #' 
-#' @param .data Either data.frame or a list of data.frame or a result obtained from freq.segments or freq.segments.2D functions.
-#' @param .cast.freq.seg if T then apply \code{freq.segments} to the supplied data.
-#' @param ... Further arguments passed to prcomp.
+#' @param .data Either data.frame or a list of data.frame or a result obtained from the \code{geneUsage} function.
+#' @param .cast.freq.seg if T then apply code{geneUsage} to the supplied data.
+#' @param ... Further arguments passed to \code{prcomp} or \code{geneUsage}.
 #' @param .do.plot if T then plot a graphic, else return a pca object.
 #' 
 #' @return If .do.plot is T than ggplot object; else pca object.
@@ -171,7 +171,7 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
 #' pca.segments(twb, T, scale. = T)
 #' }
 pca.segments <- function(.data, .cast.freq.seg = T, ..., .do.plot = T){
-  if (.cast.freq.seg) { .data <- freq.segments(.data)[,-1] }
+  if (.cast.freq.seg) { .data <- geneUsage(.data, ...)[,-1] }
   pca.res <- prcomp(t(as.matrix(.data)), ...)
   if (.do.plot) {
     pca.res <- data.frame(PC1 = pca.res$x[,1], PC2 = pca.res$x[,2], Subject = names(.data))
@@ -184,7 +184,7 @@ pca.segments <- function(.data, .cast.freq.seg = T, ..., .do.plot = T){
 }
 
 pca.segments.2D <- function(.data, .cast.freq.seg = T, ..., .do.plot = T){
-  if (.cast.freq.seg) { .data <- lapply(freq.segments.2D(.data), function (x) as.vector(as.matrix(x[,-1]))) }
+  if (.cast.freq.seg) { .data <- lapply(geneUsage(.data, ...), function (x) as.vector(x)) }
   pca.res <- prcomp(do.call(rbind, .data), ...)
   if (.do.plot) {
     pca.res <- data.frame(PC1 = pca.res$x[,1], PC2 = pca.res$x[,2], Subject = names(.data))

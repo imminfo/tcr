@@ -2,7 +2,7 @@
 
 
 if (getRversion() >= "2.15.1") {
-  utils::globalVariables(c("Segment", 'Size', 'Freq', 'Subject', 'V.gene', 'J.gene', '..count..', 'Time.point', 'Proportion', 'Sequence',
+  utils::globalVariables(c("Segment", 'Size', 'Freq', 'Sample', 'V.gene', 'J.gene', '..count..', 'Time.point', 'Proportion', 'Sequence',
                            'Lower', 'Upper', 'Lengths', 'Read.count', 'Var', 'Value', 'Group', 'variable', 'name', 'value', 'Kmers',
                            'Count', 'People', 'First', 'Second', 'Var1', 'Q0.025', 'Q0.975', 'Mean', 'Type', 'Clone.size', 'Q1', 'Q2', 'Symbol', 'Gene', 'Genes', 'Sample'))
 }
@@ -235,12 +235,12 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
 vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D1', 'D2'), C = c('C1', 'C2')), .labs = c('V genes', 'Frequency'), .title = '', .rotate.x = T, ...) {
   .data <- melt(.data, ...)
   
-  colnames(.data) <- c('Var', 'Subject', 'Value')
-  .data$Group <- as.character(.data$Subject)
+  colnames(.data) <- c('Var', 'Sample', 'Value')
+  .data$Group <- as.character(.data$Sample)
   if (!is.na(.groups)[1]) {
     for (i in 1:length(.groups)) {
       for (name in .groups[[i]]) {
-        .data$Group[.data$Subject == name] <- names(.groups)[i]
+        .data$Group[.data$Sample == name] <- names(.groups)[i]
       }
     }
   }
@@ -271,7 +271,7 @@ vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D
 #' @param .ncol Number of columns in a grid of histograms if \code{.data} is a list and \code{.dodge} is F.
 #' @param .coord.flip if T then flip coordinates.
 #' @param .dodge If \code{.data} is a list, than if this is T plot V-usage for all data frames to the one histogram.
-#' @param ... Parameter passed to \code{freq.segments}. By default the function compute V-usage or J-usage for beta chains
+#' @param ... Parameter passed to \code{geneUsage}. By default the function compute V-usage or J-usage for beta chains
 #' w/o using read counts and w/ "Other" segments.
 #' 
 #' @return ggplot object.
@@ -304,7 +304,7 @@ vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3,
       res <- res[1:nrow(res), ]  # something bad with melt
       colnames(res) <- c('Gene', 'Sample', 'Freq')
       p <- ggplot() + 
-        geom_bar(aes(x = Gene, y = Freq, fill = Subject), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
+        geom_bar(aes(x = Gene, y = Freq, fill = Sample), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
         theme_linedraw() + 
         theme(axis.text.x = element_text(angle=90)) + 
         .colourblind.discrete(length(.data)) +
@@ -353,11 +353,11 @@ vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3,
 vis.pca <- function (.data, .groups = NA) {
   if (has.class(.data, 'data.frame')) {
     dnames <- row.names(.data)
-    .data <- data.frame(First = .data[,1], Second = .data[,2], Subject = row.names(.data),
+    .data <- data.frame(First = .data[,1], Second = .data[,2], Sample = row.names(.data),
                         Group = rep('group0', times = length(.data[,2])), stringsAsFactors=F)
   } else {
     dnames <- row.names(.data$x)
-    .data <- data.frame(First = .data$x[,1], Second = .data$x[,2], Subject = row.names(.data$x),
+    .data <- data.frame(First = .data$x[,1], Second = .data$x[,2], Sample = row.names(.data$x),
                         Group = rep('group0', times = length(.data$x[,2])), stringsAsFactors=F)
   }
   
@@ -373,7 +373,7 @@ vis.pca <- function (.data, .groups = NA) {
   
   ggplot() + 
     geom_point(aes(x = First, y = Second, colour = Group), data = .data) + 
-    geom_text(aes(x = First, y = Second, label = Subject), data = .data, hjust=0, vjust=0) +
+    geom_text(aes(x = First, y = Second, label = Sample), data = .data, hjust=0, vjust=0) +
     theme_linedraw() +
     .colourblind.discrete(length(.groups), T)
 }
@@ -409,7 +409,7 @@ vis.radarlike <- function (.data, .ncol = 3, .expand = c(.25, 0)) {
       coord_polar() + 
       ggtitle(names(.data)[l]) +
       scale_y_continuous(expand = .expand) + 
-      guides(fill = guide_legend(title="Subject")) +
+      guides(fill = guide_legend(title="Sample")) +
       theme_linedraw() + xlab('') + ylab('')
     })
   for (i in 1:length(data.names)) {
@@ -459,7 +459,7 @@ vis.top.proportions <- function (.data, .head = c(10, 100, 1000, 10000, 30000, 1
     theme_linedraw()  + 
     theme(axis.text.x  = element_text(angle=90)) +
     ylab("Clonal proportion") + 
-    xlab("Subject") + 
+    xlab("Sample") + 
     ggtitle("Summary proportion of the top N clones")  + 
     guides(fill = guide_legend("Top N clones")) + .colourblind.discrete(length(.head))
 #     scale_y_continuous(expand = c(0, 0))
@@ -589,13 +589,13 @@ vis.clonal.dynamics <- function (.changed, .lower, .upper, .log = T) {
 }
 
 
-#' Visualise occupied by clones homeostatic space among subjects or groups.
+#' Visualise occupied by clones homeostatic space among Samples or groups.
 #' 
 #' @description
 #' Visualise which clones how much space occupy.
 #' 
 #' @param .clonal.space.data Data from the \code{fclonal.space.homeostasis} function.
-#' @param .groups List of named character vector with names of subjects 
+#' @param .groups List of named character vector with names of Samples 
 #' in \code{.clonal.space.data} for grouping them together.
 #' 
 #' @seealso \link{clonal.space.homeostasis}
@@ -603,15 +603,15 @@ vis.clonal.dynamics <- function (.changed, .lower, .upper, .log = T) {
 #' @return ggplot object.
 vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
   melted <- melt(.clonal.space.data)
-  colnames(melted) <- c('Subject', 'Clone.size', 'Proportion')
-  melted$Subject <- as.character(melted$Subject)
+  colnames(melted) <- c('Sample', 'Clone.size', 'Proportion')
+  melted$Sample <- as.character(melted$Sample)
   melted$Proportion <- as.numeric(as.character(melted$Proportion))
-  melted$Group <- melted$Subject
+  melted$Group <- melted$Sample
   
   if (!is.null(.groups)) { 
     for (i in 1:length(.groups)) {
       for (j in 1:length(.groups[[i]])) {
-        melted$Group[melted$Subject == .groups[[i]][j] ] <- names(.groups)[i]
+        melted$Group[melted$Sample == .groups[[i]][j] ] <- names(.groups)[i]
       }
     }
     
@@ -623,11 +623,11 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
     p <- ggplot() +
       geom_bar(aes(x = Group, y = Mean, fill = Clone.size), data = melted, colour = 'black', stat = 'identity') +
       geom_errorbar(aes(x = Group, ymin = Q1, ymax = Q2), data = melted, colour = 'black') +
-      xlab("Subject")
+      xlab("Sample")
   } else {
     p <- ggplot() +
       geom_bar(aes(x = Group, y = Proportion, fill = Clone.size), data = melted, colour = 'black', stat = 'identity', position = 'stack') +
-      xlab("Subject")
+      xlab("Sample")
       
   }
     

@@ -10,8 +10,8 @@ geneUsage(.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.count",
 \arguments{
 \item{.data}{Cloneset data frame or a list with clonesets.}
 
-\item{.genes}{Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
-or one of the 'alpha' or 'beta' for freq.segments.2D or a list of length 2 with alphabets strings for freq.segments.2D.}
+\item{.genes}{Either one of the gene alphabet (e.g., HUMAN_TRBV, \link{genealphabets}) or list with two gene alphabets for computing
+joint distribution.}
 
 \item{.quant}{Which column to use for the quantity of clonotypes: NA for computing only number of genes without using clonotype counts,
 "read.count" for the "Read.count" column, "umi.count" for the "Umi.count" column, "read.prop" for the "Read.proportion" column,

@@ -36,6 +36,6 @@ Information approach to repertoire analysis. Function \code{entropy.seg} applies
 Function \code{js.div.seg} applied Jensen-Shannon divergence to V-usage of two or more data frames and hence measures distance among this V-usages.
 }
 \seealso{
-\link{vis.heatmap}, \link{vis.group.boxplot}, \link{freq.segments}
+\link{vis.heatmap}, \link{vis.group.boxplot}, \link{geneUsage}
 }
 

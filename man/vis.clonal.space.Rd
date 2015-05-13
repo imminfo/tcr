@@ -2,14 +2,14 @@
 % Please edit documentation in R/plots.R
 \name{vis.clonal.space}
 \alias{vis.clonal.space}
-\title{Visualise occupied by clones homeostatic space among subjects or groups.}
+\title{Visualise occupied by clones homeostatic space among Samples or groups.}
 \usage{
 vis.clonal.space(.clonal.space.data, .groups = NULL)
 }
 \arguments{
 \item{.clonal.space.data}{Data from the \code{fclonal.space.homeostasis} function.}
 
-\item{.groups}{List of named character vector with names of subjects
+\item{.groups}{List of named character vector with names of Samples
 in \code{.clonal.space.data} for grouping them together.}
 }
 \value{

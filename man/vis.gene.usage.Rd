@@ -20,7 +20,7 @@ vis.gene.usage(.data, .genes = NA, .main = "Gene usage", .ncol = 3,
 
 \item{.dodge}{If \code{.data} is a list, than if this is T plot V-usage for all data frames to the one histogram.}
 
-\item{...}{Parameter passed to \code{freq.segments}. By default the function compute V-usage or J-usage for beta chains
+\item{...}{Parameter passed to \code{geneUsage}. By default the function compute V-usage or J-usage for beta chains
 w/o using read counts and w/ "Other" segments.}
 
 \item{.cast.freq}{if T then cast \code{freq.Vb} (for \code{vis.V.usage}) or \code{freq.Jb} (for \code{vis.J.usage}) on \code{.data} before plotting.}

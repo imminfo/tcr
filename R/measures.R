@@ -55,13 +55,13 @@ entropy <- function (.data, .norm = F, .do.norm = NA, .laplace = 1e-12) {
   }
 }
 
-kl.div <- function (.alpha, .beta, .do.norm = NA, .laplace = 0) {
+kl.div <- function (.alpha, .beta, .do.norm = NA, .laplace = 1e-12) {
   .alpha <- check.distribution(.alpha, .do.norm, .laplace, .warn.zero = T)
   .beta <- check.distribution(.beta, .do.norm, .laplace, .warn.zero = T)
   sum(log2(.alpha / .beta) * .alpha)
 }
 
-js.div <- function (.alpha, .beta, .do.norm = NA, .laplace = 0, .norm.entropy = F) {
+js.div <- function (.alpha, .beta, .do.norm = NA, .laplace = 1e-12, .norm.entropy = F) {
   .alpha <- check.distribution(.alpha, .do.norm, .laplace, .warn.zero = T)
   .beta <- check.distribution(.beta, .do.norm, .laplace, .warn.zero = T)
   nrm = if (.norm.entropy) 0.5 * (entropy(.alpha, F) + entropy(.beta, F)) else 1
