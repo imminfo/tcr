@@ -43,8 +43,8 @@
 #' for taking no additional columns, 'v' stands for taking the "V.gene" column.
 #'  \item Third character stands for using either barcodes or reads in choosing the column with numeric characterisitc (see the next letter).
 #'  \item Fourth character stands for name of the column to choose as numeric characteristic of sequences. It depends on the third letter. Possible values are
-#' "c" for the "Barcode.count" (if 3rd character is "b") / "Read.count" column (if 3rd character is "r"), "p" for the "Barcode.proportion" / "Read.proportion" column, "r" for the "Rank" column or "i" for the "Index" column.
-#' If "Rank" or "Index" isn't in the given repertoire, than it will be created using \code{set.rank} function using "Barcode.count" / "Read.count" column.
+#' "c" for the "Umi.count" (if 3rd character is "b") / "Read.count" column (if 3rd character is "r"), "p" for the "Umi.proportion" / "Read.proportion" column, "r" for the "Rank" column or "i" for the "Index" column.
+#' If "Rank" or "Index" isn't in the given repertoire, than it will be created using \code{set.rank} function using "Umi.count" / "Read.count" column.
 #' }
 #' 
 #' @return
@@ -80,11 +80,11 @@ shared.repertoire <- function (.datalist, .type = 'avrc', .min.ppl = 1, .head = 
       if (.sc == 'Read.rank') {
         .data <- set.rank(.data, 'Read.count')
       } else if (.sc == 'Barcode.rank') {
-        .data <- set.rank(.data, 'Barcode.count')
+        .data <- set.rank(.data, 'Umi.count')
       } else if (.sc == 'Read.rank') {
         .data <- set.index(.data, 'Read.count')
       } else {
-        .data <- set.index(.data, 'Barcode.count')
+        .data <- set.index(.data, 'Umi.count')
       }
     }
     
@@ -109,16 +109,16 @@ shared.repertoire <- function (.datalist, .type = 'avrc', .min.ppl = 1, .head = 
     # barcode count
     if (substr(.type, 3, 3) == 'b') {
       if (substr(.type, 4, 4) == 'c') {
-        .sum.col <- 'Barcode.count'
+        .sum.col <- 'Umi.count'
       } else if (substr(.type, 4, 4) == 'p') {
-        .sum.col <- 'Barcode.proportion'
+        .sum.col <- 'Umi.proportion'
       } else if (substr(.type, 4, 4) == 'r') {
         .sum.col <- 'Barcode.rank'
       } else if (substr(.type, 4, 4) == 'i') {
         .sum.col <- 'Barcode.index'
       } else {
         # As a default option.
-        .sum.col <- 'Barcode.count'
+        .sum.col <- 'Umi.count'
       }
     } else {
       # read count

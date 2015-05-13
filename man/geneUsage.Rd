@@ -4,8 +4,8 @@
 \alias{geneUsage}
 \title{Gene usage.}
 \usage{
-geneUsage(.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count",
-  "bc.count", "read.prop", "bc.prop"), .norm = F)
+geneUsage(.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.count",
+  "umi.count", "read.prop", "umi.prop"), .norm = F, .ambig = F)
 }
 \arguments{
 \item{.data}{Cloneset data frame or a list with clonesets.}
@@ -14,10 +14,12 @@ geneUsage(.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count",
 or one of the 'alpha' or 'beta' for freq.segments.2D or a list of length 2 with alphabets strings for freq.segments.2D.}
 
 \item{.quant}{Which column to use for the quantity of clonotypes: NA for computing only number of genes without using clonotype counts,
-"read.count" for the "Read.count" column, "bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column,
-"bc.prop" for the "Barcode.proportion" column.}
+"read.count" for the "Read.count" column, "umi.count" for the "Umi.count" column, "read.prop" for the "Read.proportion" column,
+"umi.prop" for the "Umi.proportion" column.}
 
 \item{.norm}{If T then return proportions of resulting counting of genes.}
+
+\item{.ambig}{If F than remove from counting genes which are not presented in the given gene alphabet(s).}
 }
 \value{
 If \code{.data} is a cloneset and \code{.genes} is NOT a list than return a data frame with first column "Gene" with genes and second with counts / proportions.

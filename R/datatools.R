@@ -19,9 +19,9 @@
 .column.choice <- function (x, .verbose = T) {
   x <- switch(x[1],
               read.count = "Read.count",
-              bc.count = "Barcode.count",
+              umi.count = "Umi.count",
               read.prop = "Read.proportion",
-              bc.prop = "Barcode.proportion",
+              umi.prop = "Umi.proportion",
               { .verbose.msg("You have specified an invalid column identifier. Choosed column: Read.count\n", .verbose); "Read.count" })
   x
 }

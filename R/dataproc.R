@@ -517,16 +517,16 @@ clonal.proportion <- function (.data, .perc = 10, .col = 'Read.count') {
 #' Rearrange columns with counts for clonesets.
 #' 
 #' @description
-#' Replace Read.count with Barcode.count, recompute Percentage and sort data.
+#' Replace Read.count with Umi.count, recompute Percentage and sort data.
 #' 
-#' @param .data Data frame with columns "Barcode.count" and "Read.count".
+#' @param .data Data frame with columns "Umi.count" and "Read.count".
 #' 
 #' @return Data frame with new "Read.count" and "Percentage" columns.
 barcodes.to.reads <- function (.data) {
   if (has.class(.data, 'list')) {
     return(lapply(.data, barcodes.to.reads))
   }
-  .data$Read.count <- .data$Barcode.count
+  .data$Read.count <- .data$Umi.count
   .data$Percentage <- .data$Read.count / sum(.data$Read.count)
   .data[order(.data$Percentage, decreasing = T),]
 }
@@ -536,7 +536,7 @@ barcodes.to.reads <- function (.data) {
 #' 
 #' @description
 #' Resample data frame using values from the column with number of clonesets. Number of clonestes (i.e., rows of a MiTCR data frame)
-#' are reads (usually the "Read.count" column) or UMIs (i.e., barcodes, usually the "Barcode.count" column).
+#' are reads (usually the "Read.count" column) or UMIs (i.e., barcodes, usually the "Umi.count" column).
 #' 
 #' @param .data Data frame with the column \code{.col} or list of such data frames.
 #' @param .n Number of values / reads / UMIs to choose.
@@ -556,7 +556,7 @@ barcodes.to.reads <- function (.data) {
 #' # Get 100K reads (not clones!).
 #' immdata.1.100k <- get.n.barcodes(immdata[[1]], 100000, .col = "Read.count")
 #' }
-get.n.barcodes <- function (.data, .n = -1, .col = 'Barcode.count') {
+get.n.barcodes <- function (.data, .n = -1, .col = 'Umi.count') {
   if (has.class(.data, 'list')) {
     if (length(.n) != length(.data)) {
       .n <- c(.n, rep.int(-1, length(.data) - length(.n)))

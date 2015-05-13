@@ -20,7 +20,7 @@ a list with data frames, than matrix with statistics for each data frame.
 }
 \description{
 Compute basic statistics of TCR repertoires: number of clones, number of clonotypes,
-number of in-frame and out-of-frame sequences, summary of "Read.count", "Barcode.count" and other.
+number of in-frame and out-of-frame sequences, summary of "Read.count", "Umi.count" and other.
 }
 \examples{
 \dontrun{

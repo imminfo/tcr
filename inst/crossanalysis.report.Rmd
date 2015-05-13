@@ -171,8 +171,8 @@ shared.representation(imm.sh)
 
 ```{r muc, fig.width=11,warning=FALSE,message=F}
 clmn <- 'Read.count'
-if (!is.na(immdata[[1]]$Barcode.count[1])) {
-  clmn <- 'Barcode.count'
+if (!is.na(immdata[[1]]$Umi.count[1])) {
+  clmn <- 'Umi.count'
 }
 vis.rarefaction(rarefaction(immdata, .col = clmn, .verbose = F), list(A = c("Subj.A", "Subj.B"), B = c("Subj.C", "Subj.D")), .log = T)
 ```

@@ -17,8 +17,8 @@ if (getRversion() >= "2.15.1") {
 #' @param .genes Vector of elements in the alphabet for freq.segments, one of the strings 'TRBV' (for using HUMAN_TRBV_MITCR variable, that user should load before calling functions (same for other strings)), 'TRAV', 'TRBJ', 'TRAJ' for V- and J-segments alphabets for freq.segments
 #' or one of the 'alpha' or 'beta' for freq.segments.2D or a list of length 2 with alphabets strings for freq.segments.2D.
 #' @param .quant Which column to use for the quantity of clonotypes: NA for computing only number of genes without using clonotype counts, 
-#' "read.count" for the "Read.count" column, "bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column,
-#' "bc.prop" for the "Barcode.proportion" column.
+#' "read.count" for the "Read.count" column, "umi.count" for the "Umi.count" column, "read.prop" for the "Read.proportion" column,
+#' "umi.prop" for the "Umi.proportion" column.
 #' @param .norm If T then return proportions of resulting counting of genes.
 #' @param .ambig If F than remove from counting genes which are not presented in the given gene alphabet(s).
 #' 
@@ -50,7 +50,7 @@ if (getRversion() >= "2.15.1") {
 #' # Compute V-J joint usage.
 #' geneUsage(twb, list(HUMAN_TRBV, HUMAN_TRBJ))
 #' }
-geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.count", "bc.count", "read.prop", "bc.prop"), .norm = F, .ambig = F) {
+geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"), .norm = F, .ambig = F) {
   
   .process.df <- function (.df, .quant, .cols) {
     cast.fun <- dcast

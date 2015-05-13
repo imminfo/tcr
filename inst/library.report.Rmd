@@ -127,12 +127,12 @@ vis.kmer.histogram(kms, .position = 'fill')
 ```{r muc, fig.width=11,warning=FALSE,message=F}
 clmn <- 'Read.count'
 if (has.class(immdata, 'list')) {
-  if (!is.na(immdata[[1]]$Barcode.count[1])) {
-    clmn <- 'Barcode.count'
+  if (!is.na(immdata[[1]]$Umi.count[1])) {
+    clmn <- 'Umi.count'
   }
 } else {
-  if (!is.na(immdata$Barcode.count[1])) {
-    clmn <- 'Barcode.count'
+  if (!is.na(immdata$Umi.count[1])) {
+    clmn <- 'Umi.count'
   }
 }
 vis.rarefaction(rarefaction(immdata, .col = clmn, .verbose = F), .log = T)

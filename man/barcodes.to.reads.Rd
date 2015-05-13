@@ -7,12 +7,12 @@
 barcodes.to.reads(.data)
 }
 \arguments{
-\item{.data}{Data frame with columns "Barcode.count" and "Read.count".}
+\item{.data}{Data frame with columns "Umi.count" and "Read.count".}
 }
 \value{
 Data frame with new "Read.count" and "Percentage" columns.
 }
 \description{
-Replace Read.count with Barcode.count, recompute Percentage and sort data.
+Replace Read.count with Umi.count, recompute Percentage and sort data.
 }
 

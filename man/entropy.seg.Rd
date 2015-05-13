@@ -6,34 +6,26 @@
 \title{Repertoires' analysis using information measures applied to V- and J- segment frequencies.}
 \usage{
 entropy.seg(.data, .frame = c('all', 'in', 'out'),
-            .alphabet = if (.VJ) "beta" else 'TRBV',
+            .genes = if (.VJ) "beta" else 'TRBV',
             .meat = F, .other = T, .VJ = F, .laplace = 1)
 
 js.div.seg(.data, .data2 = NULL, .frame = c('all', 'in', 'out'), .norm.entropy = T,
-           .alphabet = if (.VJ) "beta" else 'TRBV', .meat = F, .other = T, .VJ = F,
+           .genes = if (.VJ) "beta" else 'TRBV', .meat = F, .other = T, .VJ = F,
            .verbose = T, .laplace = 1)
 }
 \arguments{
 \item{.data}{Mitcr data.frame or a list with mitcr data.frames.}
 
+\item{.genes}{Parameter to the \code{geneUsage} function.}
+
 \item{.frame}{Character vector of length 1 specified which *-frames should be used:
 only in-frame ('in'), out-of-frame ('out') or all sequences ('all').}
 
-\item{.alphabet}{Parameter to \code{freq.segments()} and \code{freq.segments.2D()} functions.}
-
-\item{.meat}{Parameter to \code{freq.segments()} and \code{freq.segments.2D()} functions.}
-
-\item{.other}{Parameter to \code{freq.segments()} and \code{freq.segments.2D()} functions.}
-
-\item{.VJ}{If F than apply \code{freq.segments} function, else apply \code{freq.segments.2D} function.}
-
-\item{.laplace}{Parameter passed to \code{freq.segments}.}
+\item{.ambig}{Parameter passed to \code{geneUsage}.}
 
 \item{.data2}{NULL if .data is a list, or a second mitcr data.frame.}
 
 \item{.norm.entropy}{if T then divide result by mean entropy of 2 segments' frequencies.}
-
-\item{.verbose}{if T then print progress of function executing.}
 }
 \value{
 For \code{entropy.seg} - numeric integer with entropy value(s). For \code{js.div.seg} - integer of vector one if \code{.data} and \code{.data2} are provided;

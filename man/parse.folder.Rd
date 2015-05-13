@@ -38,9 +38,9 @@ parse.migec(.filename)
 Data frame with immune receptor repertoire data. Each row in this data frame corresponds to a clonotype.
 The data frame has following columns:
 
-- "Barcode.count" - number of barcodes (events, UMIs);
+- "Umi.count" - number of barcodes (events, UMIs);
 
-- "Barcode.proportion" - proportion of barcodes (events, UMIs);
+- "Umi.proportion" - proportion of barcodes (events, UMIs);
 
 - "Read.count" - number of reads;
 

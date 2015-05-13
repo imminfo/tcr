@@ -29,9 +29,11 @@ In this vignette, I will cover procedures for TCR repertoire analysis provided w
 
 Terms:
 
-- Clonotype:
+- Clonotype: a group of T / B cell clones with equal CDR3 nucleotide sequences and equal Variable genes.
 
-- Cloneset / repertoire:
+- Cloneset / repertoire: a set of clonotypes. Represented as a data frame in which each row corresponds to a unique clonotype.
+
+- UMI: Unique Molecular Identifier (see this [paper](http://www.nature.com/nmeth/journal/v9/n1/full/nmeth.1778.html) for details)
 
 
 ```{r eval=TRUE,echo=FALSE,warning=FALSE,message=FALSE}
@@ -123,8 +125,8 @@ immdata <- parse.folder("~/migec_data/", 'migec')
 ### Cloneset representation
 Clonesets represented in *tcR* as data frames with each row corresponding to the one nucleotide clonotype and with specific column names:
 
-  - *Barcode.count* - number of barcodes (events, UMIs);
-  - *Barcode.proportion* - proportion of barcodes (events, UMIs);
+  - *Umi.count* - number of UMIs;
+  - *Umi.proportion* - proportion of UMIs;
   - *Read.count* - number of reads;
   - *Read.proportion* - proportion of reads;
   - *CDR3.nucleotide.sequence* - CDR3 nucleotide sequence;

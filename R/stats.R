@@ -84,7 +84,7 @@ clonotypescount <- function(.data, .head = 0) {
 #' 
 #' @description
 #' Compute basic statistics of TCR repertoires: number of clones, number of clonotypes, 
-#' number of in-frame and out-of-frame sequences, summary of "Read.count", "Barcode.count" and other.
+#' number of in-frame and out-of-frame sequences, summary of "Read.count", "Umi.count" and other.
 #' 
 #' @param .data tcR data frames or a list with tcR data frames.
 #' @param .head How many top clones use to comput summary.
@@ -118,8 +118,8 @@ cloneset.stats <- function (.data, .head = 0) {
   res2 <- c(Sum = sum(.data$Read.count), summary(.data$Read.count))
   names(res2) <- sub('.', '', names(res2), fixed = T)
   names(res2) <- paste0(names(res2), '.reads')
-  if (!is.na(.data$Barcode.count)[1]) {
-    res3 <- c(Sum = sum(.data$Barcode.count), summary(.data$Barcode.count))
+  if (!is.na(.data$Umi.count)[1]) {
+    res3 <- c(Sum = sum(.data$Umi.count), summary(.data$Umi.count))
     names(res3) <- sub('.', '', names(res3), fixed = T)
     names(res3) <- paste0(names(res3), '.barcodes')
     res2 <- c(res2, res3)
@@ -133,7 +133,7 @@ repseq.stats = function(.data, .head=0) {
     dimnames(res)[[2]]=names(.data)
     return(t(res))
   }else{
-    .umi <- !is.na(.data$Barcode.count[1])
+    .umi <- !is.na(.data$Umi.count[1])
     .head= if (.head==0){nrow(.data)} else {.head}
     .data=head(.data, .head)
     if (!.umi) {
@@ -141,7 +141,7 @@ repseq.stats = function(.data, .head=0) {
       names(res)=c('Clones', "Sum.reads", "Reads.per.clone")
       return(res)
     }else{
-      res=c(nrow(.data), sum(.data$'Read.count'), sum(.data$'Barcode.count'), round(sum(.data$'Read.count') / sum(.data$'Barcode.count'), digits = 2), round(sum(.data$'Barcode.count') / nrow(.data), digits = 2))
+      res=c(nrow(.data), sum(.data$'Read.count'), sum(.data$'Umi.count'), round(sum(.data$'Read.count') / sum(.data$'Umi.count'), digits = 2), round(sum(.data$'Umi.count') / nrow(.data), digits = 2))
       names(res)=c('Clones', "Sum.reads", "Sum.UMIs", "Reads.per.UMI", "UMI.per.clone")
       return(res)
     }

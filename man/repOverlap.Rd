@@ -6,8 +6,9 @@
 \usage{
 repOverlap(.data, .method = c("exact", "hamm", "lev", "jaccard", "morisita",
   "tversky", "overlap", "horn"), .seq = c("nuc", "aa"),
-  .quant = c("read.count", "bc.count", "read.prop", "bc.prop"), .vgene = F,
-  .norm = T, .a = 0.5, .b = 0.5, .do.unique = T, .verbose = T)
+  .quant = c("read.count", "umi.count", "read.prop", "umi.prop"),
+  .vgene = F, .norm = T, .a = 0.5, .b = 0.5, .do.unique = T,
+  .verbose = T)
 }
 \arguments{
 \item{.data}{List of clonesets.}
@@ -18,8 +19,8 @@ repOverlap(.data, .method = c("exact", "hamm", "lev", "jaccard", "morisita",
 "CDR3.amino.acid.sequence".}
 
 \item{.quant}{Which column to use for the quantity of clonotypes: "read.count" for the "Read.count" column,
-"bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column, "bc.prop" for
-the "Barcode.proportion" column. Used in "morisita" and "horn".}
+"umi.count" for the "Umi.count" column, "read.prop" for the "Read.proportion" column, "umi.prop" for
+the "Umi.proportion" column. Used in "morisita" and "horn".}
 
 \item{.vgene}{If T than use V genes in computing shared or similar clonotypes. Used in all methods.}
 

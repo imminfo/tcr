@@ -4,7 +4,7 @@
 \alias{get.n.barcodes}
 \title{Resample data frame using values from the column with number of clonesets.}
 \usage{
-get.n.barcodes(.data, .n = -1, .col = "Barcode.count")
+get.n.barcodes(.data, .n = -1, .col = "Umi.count")
 }
 \arguments{
 \item{.data}{Data frame with the column \code{.col} or list of such data frames.}
@@ -18,7 +18,7 @@ Data frame with \code{sum(.data[, .col]) == .n}.
 }
 \description{
 Resample data frame using values from the column with number of clonesets. Number of clonestes (i.e., rows of a MiTCR data frame)
-are reads (usually the "Read.count" column) or UMIs (i.e., barcodes, usually the "Barcode.count" column).
+are reads (usually the "Read.count" column) or UMIs (i.e., barcodes, usually the "Umi.count" column).
 }
 \details{
 Using multinomial distribution, compute the number of occurences for each cloneset, than remove zero-number clonotypes and

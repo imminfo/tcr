@@ -5,8 +5,8 @@
 \title{General function for the repertoire diversity estimation.}
 \usage{
 repDiversity(.data, .method = c("chao1", "gini.simp", "inv.simp", "gini",
-  "div", "entropy"), .quant = c("read.count", "bc.count", "read.prop",
-  "bc.prop"), .q = 5, .norm = F, .do.norm = NA, .laplace = 0)
+  "div", "entropy"), .quant = c("read.count", "umi.count", "read.prop",
+  "umi.prop"), .q = 5, .norm = F, .do.norm = NA, .laplace = 0)
 }
 \arguments{
 \item{.data}{Cloneset or a list of clonesets.}
@@ -14,8 +14,8 @@ repDiversity(.data, .method = c("chao1", "gini.simp", "inv.simp", "gini",
 \item{.method}{Which method to use for the diversity estimation. See "Details" for methods.}
 
 \item{.quant}{Which column to use for the quantity of clonotypes: "read.count" for the "Read.count" column,
-"bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column, "bc.prop" for
-the "Barcode.proportion" column.}
+"umi.count" for the "Umi.count" column, "read.prop" for the "Read.proportion" column, "umi.prop" for
+the "Umi.proportion" column.}
 
 \item{.q}{q-parameter for the Diversity index.}
 

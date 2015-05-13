@@ -8,8 +8,8 @@
 #' @param .seq Which clonotype sequences to use for the overlap: "nuc" for "CDR3.nucleotide.sequence", "aa" for 
 #' "CDR3.amino.acid.sequence".
 #' @param .quant Which column to use for the quantity of clonotypes: "read.count" for the "Read.count" column, 
-#' "bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column, "bc.prop" for 
-#' the "Barcode.proportion" column. Used in "morisita" and "horn".
+#' "umi.count" for the "Umi.count" column, "read.prop" for the "Read.proportion" column, "umi.prop" for 
+#' the "Umi.proportion" column. Used in "morisita" and "horn".
 #' @param .vgene If T than use V genes in computing shared or similar clonotypes. Used in all methods.
 #' @param .norm If T than compute the normalised number of shared clonotypes. Used in "exact".
 #' @param .a,.b Alpha and beta parameters for "tversky". Default values gives the Jaccard index measure.
@@ -35,7 +35,7 @@
 repOverlap <- function (.data,
                         .method = c("exact", "hamm", "lev", "jaccard", "morisita", "tversky", "overlap", "horn"), 
                         .seq = c("nuc", "aa"), 
-                        .quant = c("read.count", "bc.count", "read.prop", "bc.prop"),
+                        .quant = c("read.count", "umi.count", "read.prop", "umi.prop"),
                         .vgene = F,
                         .norm = T,
                         .a = .5,

@@ -52,7 +52,7 @@ assymetry<-function(.alpha, .beta = NULL, .by = 'CDR3.nucleotide.sequence'){
 #' 
 #' @seealso \link{vis.heatmap}, \link{vis.group.boxplot}, \link{freq.segments}
 entropy.seg <- function (.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out'),
-                         .quant = c(NA, "read.count", "bc.count", "read.prop", "bc.prop"),
+                         .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"),
                          .ambig = F) {  
   if (class(.data) == 'list') {
     return(sapply(.data, entropy.seg, .quant = .quant, .frame = .frame, .genes = .genes, .ambig = .ambig))
@@ -63,7 +63,7 @@ entropy.seg <- function (.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'ou
 }
 
 js.div.seg <- function (.data, .data2 = NULL, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out'),
-                        .quant = c(NA, "read.count", "bc.count", "read.prop", "bc.prop"), .norm.entropy = T,
+                        .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"), .norm.entropy = T,
                         .ambig = F) {  
   if (class(.data) == 'list') {
     return(apply.symm(.data, js.div.seg, .quant = .quant, .frame = .frame, .ambig = .ambig, .norm.entropy = .norm.entropy, .genes = .genes))
