@@ -6,7 +6,7 @@
 \alias{vis.gene.usage}
 \title{Histogram of segments usage.}
 \usage{
-vis.gene.usage(.data, .alphabet = NA, .main = "Gene usage", .ncol = 3,
+vis.gene.usage(.data, .genes = NA, .main = "Gene usage", .ncol = 3,
   .coord.flip = F, .dodge = F, .labs = c("Gene", "Frequency"), ...)
 }
 \arguments{
@@ -46,7 +46,7 @@ vis.V.usage(imm1.vs, .cast.freq = F, .main = 'Immdata V-usage [2]', .dodge = T)
 vis.V.usage(immdata, .cast.freq = T, .main = 'Immdata V-usage [3]', .dodge = F, .other = F)
 # Plot alpha V-usage
 vis.V.usage(immdata[[1]], .cast.freq = T, .main = 'Immdata V-usage [4]',
-.dodge = F, .other = F, .alphabet = HUMAN_TRAV)
+.dodge = F, .other = F, .genes = HUMAN_TRAV)
 }
 }
 

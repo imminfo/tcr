@@ -153,7 +153,7 @@ loglikelihood <- function (.data, .base = 2, .do.norm = NA, .laplace = 0.0000000
 #' 
 #' @return Value of similarity between the given sets or vectors.
 #' 
-#' @seealso \link(repOverlap), \link{intersectClonesets}, \link{entropy}, \link{diversity}
+#' @seealso \link{repOverlap}, \link{intersectClonesets}, \link{entropy}, \link{diversity}
 #' 
 #' @examples
 #' \dontrun{

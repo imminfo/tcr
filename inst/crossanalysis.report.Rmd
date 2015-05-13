@@ -26,9 +26,6 @@ save(immdata, file = '/home/username/immdata.rda')
 load('../data/twb.rda')
 immdata <- twb
 library(tcR)
-library(gridExtra)
-library(ggplot2)
-data(human.alphabets)
 ```
 
 
@@ -174,7 +171,7 @@ shared.representation(imm.sh)
 
 ```{r muc, fig.width=11,warning=FALSE,message=F}
 clmn <- 'Read.count'
-if ('Barcode.count' %in% names(immdata)[[1]]) {
+if (!is.na(immdata[[1]]$Barcode.count[1])) {
   clmn <- 'Barcode.count'
 }
 vis.rarefaction(rarefaction(immdata, .col = clmn, .verbose = F), list(A = c("Subj.A", "Subj.B"), B = c("Subj.C", "Subj.D")), .log = T)

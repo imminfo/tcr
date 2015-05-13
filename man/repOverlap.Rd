@@ -21,7 +21,7 @@ repOverlap(.data, .method = c("exact", "hamm", "lev", "jaccard", "morisita",
 "bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column, "bc.prop" for
 the "Barcode.proportion" column. Used in "morisita" and "horn".}
 
-\item{.vgene}{If T than use V genes in computing shared or similar clonotypes. Used in methods "exact", "hamm", "lev", "morisita", "jaccard".}
+\item{.vgene}{If T than use V genes in computing shared or similar clonotypes. Used in all methods.}
 
 \item{.norm}{If T than compute the normalised number of shared clonotypes. Used in "exact".}
 
@@ -39,7 +39,13 @@ You can see a more detailed description for each overlap method at \link{interse
 
 Parameter \code{.method} can have one of the following value each corresponding to the specific method:
 
-- "exact" for the true diversity, or the effective number of types (basic function \code{diversity}).
+- "exact" for the shared number of clonotypes (basic function \code{intersectClonesets(..., .type = "..e")}).
+
+- "hamm" for the number of similar clonotypes by the Hamming distance (basic function \code{intersectClonesets(..., .type = "..h")}).
+
+- "lev" for the number of similar clonotypes by the Levenshtein distance (basic function \code{intersectClonesets(..., .type = "..l")}).
+
+-
 }
 \seealso{
 \link{intersectClonesets}, \link{similarity}, \link{repDiversity}

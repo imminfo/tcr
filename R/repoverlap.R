@@ -21,8 +21,13 @@
 #' 
 #' Parameter \code{.method} can have one of the following value each corresponding to the specific method:
 #' 
-#' - "exact" for the true diversity, or the effective number of types (basic function \code{diversity}).
+#' - "exact" for the shared number of clonotypes (basic function \code{intersectClonesets(..., .type = "..e")}).
 #' 
+#' - "hamm" for the number of similar clonotypes by the Hamming distance (basic function \code{intersectClonesets(..., .type = "..h")}).
+#' 
+#' - "lev" for the number of similar clonotypes by the Levenshtein distance (basic function \code{intersectClonesets(..., .type = "..l")}).
+#' 
+#' - 
 #' 
 #' 
 #' @seealso  \link{intersectClonesets}, \link{similarity}, \link{repDiversity}
@@ -65,7 +70,19 @@ repOverlap <- function (.data,
   if (.seq[1] == "aa") { seqcol <- "CDR3.amino.acid.sequence" }
   
   if (.method[1] %in% c("exact", "hamm", "lev")) {
-    .fun <- function (x) intersectClonesets(x, )
+    let1 <- "n"
+    if (.seq[1] == "aa") { let1 <- "a" }
+    let2 <- "0"
+    if (.vgene) { let2 <- "v" }
+    let3 <- substr(.method[1], 1, 1)
+    .type <- paste0(let1, let2, let3)
+    
+    if (length(.data) != 2) {
+      intersectClonesets(.data, .type = .type, .norm = .norm, .verbose = .verbose)
+    } else {
+      params <- list(.type = .type, .norm = .norm, .verbose = .verbose)
+      do.call(intersectClonesets, c(list(.data[[1]], .data[[2]]), params))
+    }
   }
   else if (.method[1] %in% c("morisita", "horn")) {
     .fun <- function (x, y) { horn.index(x, y, F) }
@@ -73,10 +90,10 @@ repOverlap <- function (.data,
       .fun <- function (x, y) { morisitas.index(x, y, F) }
     }
     
-    .merge.with.v(.data, .seqcol, .vgene)
+    new.data <- .merge.with.v(.data, .seqcol, .vgene)
     
     if (.do.unique) {
-      
+      # aggregate
     }
     
     .pair.fun(new.data,

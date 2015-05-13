@@ -26,7 +26,6 @@ save(immdata, file = '/home/username/immdata.rda')
 load('../data/twb.rda')
 immdata <- twb[1:2]
 library(tcR)
-data(human.alphabets)
 ```
 
 
@@ -128,11 +127,11 @@ vis.kmer.histogram(kms, .position = 'fill')
 ```{r muc, fig.width=11,warning=FALSE,message=F}
 clmn <- 'Read.count'
 if (has.class(immdata, 'list')) {
-  if ('Barcode.count' %in% names(immdata[[1]])) {
+  if (!is.na(immdata[[1]]$Barcode.count[1])) {
     clmn <- 'Barcode.count'
   }
 } else {
-  if ('Barcode.count' %in% names(immdata)) {
+  if (!is.na(immdata$Barcode.count[1])) {
     clmn <- 'Barcode.count'
   }
 }

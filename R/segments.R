@@ -20,6 +20,7 @@ if (getRversion() >= "2.15.1") {
 #' "read.count" for the "Read.count" column, "bc.count" for the "Barcode.count" column, "read.prop" for the "Read.proportion" column,
 #' "bc.prop" for the "Barcode.proportion" column.
 #' @param .norm If T then return proportions of resulting counting of genes.
+#' @param .ambig If F than remove from counting genes which are not presented in the given gene alphabet(s).
 #' 
 #' @return 
 #' If \code{.data} is a cloneset and \code{.genes} is NOT a list than return a data frame with first column "Gene" with genes and second with counts / proportions.
@@ -49,7 +50,7 @@ if (getRversion() >= "2.15.1") {
 #' # Compute V-J joint usage.
 #' geneUsage(twb, list(HUMAN_TRBV, HUMAN_TRBJ))
 #' }
-geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", "bc.count", "read.prop", "bc.prop"), .norm = F) {
+geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.count", "bc.count", "read.prop", "bc.prop"), .norm = F, .ambig = F) {
   
   .process.df <- function (.df, .quant, .cols) {
     cast.fun <- dcast
@@ -68,6 +69,21 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", 
   }
   
   
+  .fix.ambig <- function (.res, .ambig) {
+    if (length(.genes) == 2) {
+      
+      
+      if (length(.data) == 1) {
+        .res <- .res[[1]]
+      }
+      
+      .res
+    } else {
+      .res[.res[,1] != "Ambiguous", ]
+    }
+  }
+  
+  
   quant <- NA
   if (!is.na(.quant[1])) { quant <- .column.choice(.quant, .verbose) }
   
@@ -82,14 +98,23 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", 
   
   tbls <- lapply(.data, .process.df, .quant = quant, .cols = genecols)
   
+  
+  # JOINT GENE DISTRIBUTION
   if (length(.genes) == 2) {
+    if (.ambig) {
+      tbls <- lapply(tbls, function (x) {
+        
+        x
+      })
+    }
+    
     if (.norm) {
       tbls <- lapply(tbls, function (x) x / sum(x))
     }
-    if (length(.data) == 1) { return(tbls[[1]]) }
-    else { return(tbls) }
+    return(.fix.ambig(tbls, .ambig))
   }
   
+  # SINGLE GENE DISTRIBUTION
   res <- tbls[[1]]
   colnames(res) <- c("Gene", names(.data)[1])
   
@@ -99,9 +124,20 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV, .quant = c(NA, "read.count", 
       res <- merge(res, tbls[[i]], by = "Gene", all = T)
     }
   }
+  res <- merge(res, data.frame(Gene = .genes[[1]], Something = 0, stringsAsFactors = F), by = "Gene", all = T)
+  res <- res[, -ncol(res)]
+  res[is.na(res)] <- 0
+  
+  if (!.ambig) {
+    res <- .fix.ambig(res, .ambig)
+  }
   
   if (.norm) {
-    res[,-1] <- apply(res[,-1], 2, function (col) col / sum(col))
+    if (length(.genes) == 1) {
+      res[,-1] <- apply(res[,-1], 2, function (col) col / sum(col))
+    } else {
+      res <- res / sum(res)
+    }
   }
   
   res

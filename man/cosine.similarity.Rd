@@ -90,6 +90,6 @@ repOverlap(immdata[1:2], 'jaccard', seq = 'aa', .vgene = T)
 }
 }
 \seealso{
-\link(repOverlap), \link{intersectClonesets}, \link{entropy}, \link{diversity}
+\link{repOverlap}, \link{intersectClonesets}, \link{entropy}, \link{diversity}
 }
 

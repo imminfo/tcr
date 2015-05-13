@@ -291,13 +291,13 @@ vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D
 #' vis.V.usage(immdata, .cast.freq = T, .main = 'Immdata V-usage [3]', .dodge = F, .other = F)
 #' # Plot alpha V-usage
 #' vis.V.usage(immdata[[1]], .cast.freq = T, .main = 'Immdata V-usage [4]',
-#' .dodge = F, .other = F, .alphabet = HUMAN_TRAV)
+#' .dodge = F, .other = F, .genes = HUMAN_TRAV)
 #' }
-vis.gene.usage <- function (.data, .alphabet = NA, .main = "Gene usage", .ncol = 3, .coord.flip = F, .dodge = F, .labs = c("Gene", "Frequency"), ...) {
+vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3, .coord.flip = F, .dodge = F, .labs = c("Gene", "Frequency"), ...) {
   if (has.class(.data, 'list')) {    
     if (.dodge) {
-      if (!is.na(.alphabet)) {
-        .data <- geneUsage(.data, .alphabet, ...)
+      if (!is.na(.genes)) {
+        .data <- geneUsage(.data, .genes, ...)
       }
       
       res <- melt(.data)
@@ -312,7 +312,7 @@ vis.gene.usage <- function (.data, .alphabet = NA, .main = "Gene usage", .ncol =
       return(p)
     } else {
       ps <- lapply(1:length(.data), function (i) {
-        vis.gene.usage(.data[[i]], .cast.freq, names(.data)[i], 0, .coord.flip, .labs = .labs, ...) 
+        vis.gene.usage(.data[[i]], .genes, names(.data)[i], 0, .coord.flip, .labs = .labs, ...) 
       })
       p <- do.call(grid.arrange, c(ps, ncol = .ncol, main = .main) )
       return(p)
@@ -321,11 +321,11 @@ vis.gene.usage <- function (.data, .alphabet = NA, .main = "Gene usage", .ncol =
   }
   
   else {
-    if (!is.na(.alphabet)) {
-      .data <- geneUsage(.data, .alphabet, ...)
+    if (!is.na(.genes)) {
+      .data <- geneUsage(.data, .genes, ...)
     }
     
-    p <- ggplot() + geom_bar(aes(x = Gene, y = Freq, fill = Freq), data = .data, stat = 'identity', colour = 'black')
+    p <- ggplot() + geom_bar(aes(x = Gene, y = Sample, fill = Sample), data = .data, stat = 'identity', colour = 'black')
     
     if (.coord.flip) { p <- p + coord_flip() }
     
@@ -336,101 +336,6 @@ vis.gene.usage <- function (.data, .alphabet = NA, .main = "Gene usage", .ncol =
       scale_y_continuous(expand = c(.02,0)) + 
       xlab(.labs[1]) + ylab(.labs[2])
   }
-}
-
-
-
-
-vis.V.usage <- function (.data, .cast.freq = T, .main = 'V-usage', .ncol = 3, .coord.flip = F, .dodge = F, ...) {
-  if (has.class(.data, 'list')) {
-    if (.dodge) {
-      res <- melt(freq.Vb(.data))
-      res <- res[1:nrow(res), ]  # something bad with melt
-      colnames(res) <- c('Segment', 'Subject', 'Freq')
-      p <- ggplot() + 
-        geom_bar(aes(x = Segment, y = Freq, fill = Subject), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
-        theme_linedraw() + 
-        theme(axis.text.x = element_text(angle=90)) + 
-        .colourblind.discrete(length(.data)) +
-        scale_y_continuous(expand = c(0,0))
-      return(p)
-    } else {
-      ps <- lapply(1:length(.data), function (i) {
-        vis.V.usage(.data[[i]], .cast.freq, names(.data)[i], 0, .coord.flip, ...) 
-      })
-      p <- do.call(grid.arrange, c(ps, ncol = .ncol, main = .main) )
-      return(p)
-    }
-  }
-  
-  if (.cast.freq) { 
-    if (! '.alphabet' %in% names(list(...))) {
-      .data <- freq.segments(.data, 'TRBV', ...)
-    } else {
-      .data <- freq.segments(.data, ...)
-    }
-  }
-  
-  if (names(.data)[1] == 'Segment') {
-    # If result from freq.segments functions.
-    p <- ggplot() + geom_bar(aes(x = Segment, y = Freq, fill = Freq), data = .data, stat = 'identity', colour = 'black')
-  }
-  else {
-    # If mitcr data.frame.
-    p <- ggplot() + geom_histogram(aes(x = V.gene, fill = ..count..), data = .data, colour = 'black')
-  }
-  if (.coord.flip) { p <- p + coord_flip() }
-  p + theme_linedraw() + 
-    theme(axis.text.x = element_text(angle=90)) + 
-    ggtitle(.main) + 
-    .colourblind.gradient() +
-    scale_y_continuous(expand = c(.02,0))
-}
-
-vis.J.usage <- function (.data, .cast.freq = T, .main = 'J-usage', .ncol = 3, .coord.flip = F, .dodge = F, ...) {
-  if (has.class(.data, 'list')) {
-    if (.dodge) {
-      res <- melt(freq.Jb(.data))
-      res <- res[1:nrow(res), ]  # something bad with melt
-      colnames(res) <- c('Segment', 'Subject', 'Freq')
-      p <- ggplot() + 
-        geom_bar(aes(x = Segment, y = Freq, fill = Subject), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
-        theme_linedraw() + 
-        theme(axis.text.x = element_text(angle=90)) + 
-        .colourblind.discrete(length(.data)) +
-        scale_y_continuous(expand = c(0,0))
-      return(p)
-    } else {
-      p <- do.call(grid.arrange, 
-                   c(lapply(1:length(.data), function (i) {
-                     vis.J.usage(.data[[i]], .cast.freq, names(.data)[i], 0, .coord.flip, ...) 
-                   }), ncol = .ncol, main = .main) )
-      return(p)
-    }
-  }
-  
-  if (.cast.freq) { 
-    if (! '.alphabet' %in% names(list(...))) {
-      .data <- freq.segments(.data, 'TRBJ', ...)
-    } else {
-      .data <- freq.segments(.data, ...)
-    }
-  }
-  
-  if (names(.data)[1] == 'Segment') {
-    # If result from freq.segments functions.
-    p <- ggplot() + geom_bar(aes(x = Segment, y = Freq, fill = Freq), data = .data, stat = 'identity', colour = 'black')
-  }
-  else {
-    # If mitcr data.frame.
-    p <- ggplot() + geom_histogram(aes(x = J.gene, fill = ..count..), data = .data, colour = 'black')
-  }
-  if (.coord.flip) { p <- p + coord_flip() }
-  p + theme_linedraw() + 
-    theme(axis.text.x = element_text(angle=90)) + 
-    ggtitle(.main) + 
-    .colourblind.gradient() +
-    scale_y_continuous(expand = c(.02,0))
 }
 
 
