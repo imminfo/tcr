@@ -71,12 +71,12 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
   
   .fix.ambig <- function (.res, .ambig) {
     if (length(.genes) == 2) {
-      
-      
+      .res <- lapply(.res, function (x) {
+        x[row.names(x) != "Ambiguous", ][, colnames(x) != "Ambiguous"]
+      })
       if (length(.data) == 1) {
         .res <- .res[[1]]
       }
-      
       .res
     } else {
       .res[.res[,1] != "Ambiguous", ]
@@ -101,12 +101,22 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
   
   # JOINT GENE DISTRIBUTION
   if (length(.genes) == 2) {
-    if (.ambig) {
-      tbls <- lapply(tbls, function (x) {
-        
-        x
-      })
-    }
+    tbls <- lapply(tbls, function (x) {
+      genrows <- .genes[[1]][is.na(match(.genes[[1]], row.names(x)))]
+      gencols <- .genes[[2]][is.na(match(.genes[[2]], colnames(x)))]
+      if (length(genrows) > 0) {
+        x <- do.call(rbind, c(list(x), rep.int(0, length(genrows))))
+        row.names(x)[(nrow(x) - length(genrows) + 1):nrow(x)] <- genrows
+      }
+      
+      if (length(gencols) > 0) {
+        x <- do.call(rbind, c(list(x), rep.int(0, length(gencols))))
+        colnames(x)[(ncol(x) - length(gencols) + 1):ncol(x)] <- gencols
+      }
+
+      x[is.na(x)] <- 0
+      x[order(.genes[[1]]), ][, order(.genes[[2]])]
+    })
     
     if (.norm) {
       tbls <- lapply(tbls, function (x) x / sum(x))
