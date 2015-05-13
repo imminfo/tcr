@@ -32,55 +32,47 @@ assymetry<-function(.alpha, .beta = NULL, .by = 'CDR3.nucleotide.sequence'){
 #' 
 #' @usage
 #' entropy.seg(.data, .frame = c('all', 'in', 'out'),
-#'             .alphabet = if (.VJ) "beta" else 'TRBV',
+#'             .genes = if (.VJ) "beta" else 'TRBV',
 #'             .meat = F, .other = T, .VJ = F, .laplace = 1)
 #' 
 #' js.div.seg(.data, .data2 = NULL, .frame = c('all', 'in', 'out'), .norm.entropy = T,
-#'            .alphabet = if (.VJ) "beta" else 'TRBV', .meat = F, .other = T, .VJ = F,
+#'            .genes = if (.VJ) "beta" else 'TRBV', .meat = F, .other = T, .VJ = F,
 #'            .verbose = T, .laplace = 1)
 #' 
 #' @param .data Mitcr data.frame or a list with mitcr data.frames.
 #' @param .data2 NULL if .data is a list, or a second mitcr data.frame.
+#' @param .genes Parameter to the \code{geneUsage} function.
 #' @param .frame Character vector of length 1 specified which *-frames should be used:
 #' only in-frame ('in'), out-of-frame ('out') or all sequences ('all').
 #' @param .norm.entropy if T then divide result by mean entropy of 2 segments' frequencies. 
-#' @param .alphabet Parameter to \code{freq.segments()} and \code{freq.segments.2D()} functions.
-#' @param .meat Parameter to \code{freq.segments()} and \code{freq.segments.2D()} functions.
-#' @param .other Parameter to \code{freq.segments()} and \code{freq.segments.2D()} functions.
-#' @param .VJ If F than apply \code{freq.segments} function, else apply \code{freq.segments.2D} function.
-#' @param .verbose if T then print progress of function executing.
-#' @param .laplace Parameter passed to \code{freq.segments}.
+#' @param .ambig Parameter passed to \code{geneUsage}.
 #' 
 #' @return For \code{entropy.seg} - numeric integer with entropy value(s). For \code{js.div.seg} - integer of vector one if \code{.data} and \code{.data2} are provided;
 #' esle matrix length(.data) X length(.data) if \code{.data} is a list.
 #' 
 #' @seealso \link{vis.heatmap}, \link{vis.group.boxplot}, \link{freq.segments}
-entropy.seg <- function (.data, .frame = c('all', 'in', 'out'),
-                         .alphabet = if (.VJ) "beta" else 'TRBV',
-                         .meat = F, .other = T, .VJ = F, .laplace = 1) {
-  if (.VJ) .fun <- freq.segments.2D
-  else     .fun <- freq.segments
-  
+entropy.seg <- function (.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out'),
+                         .quant = c(NA, "read.count", "bc.count", "read.prop", "bc.prop"),
+                         .ambig = F) {  
   if (class(.data) == 'list') {
-    return(sapply(.data, entropy.seg, .frame = .frame, .alphabet = .alphabet, .meat = .meat, .other = .other, .VJ = .VJ, .laplace = .laplace))
+    return(sapply(.data, entropy.seg, .quant = .quant, .frame = .frame, .genes = .genes, .ambig = .ambig))
   }
   
   .data <- get.frames(.data, .frame)
-  entropy(as.matrix(.fun(.data, .alphabet = .alphabet, .meat = .meat, .other = .other)[,-1]))
+  entropy(as.matrix(geneUsage(.data, .genes = .genes, .quant = .quant)[,-1]))
 }
 
-js.div.seg <- function (.data, .data2 = NULL, .frame = c('all', 'in', 'out'), .norm.entropy = T, .alphabet = if (.VJ) "beta" else 'TRBV', .meat = F, .other = T, .VJ = F, .verbose = T, .laplace = 1) {
-  if (.VJ) .fun <- freq.segments.2D
-  else     .fun <- freq.segments
-  
+js.div.seg <- function (.data, .data2 = NULL, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out'),
+                        .quant = c(NA, "read.count", "bc.count", "read.prop", "bc.prop"), .norm.entropy = T,
+                        .ambig = F) {  
   if (class(.data) == 'list') {
-    return(apply.symm(.data, js.div.seg, .frame = .frame, .norm.entropy = .norm.entropy, .alphabet = .alphabet, .meat = .meat, .other = .other, .VJ = .VJ, .verbose= .verbose, .laplace = .laplace))
+    return(apply.symm(.data, js.div.seg, .quant = .quant, .frame = .frame, .ambig = .ambig, .norm.entropy = .norm.entropy, .genes = .genes))
   }
   
   .data <- get.frames(.data, .frame)
   
-  freq.alpha <- as.matrix(.fun(.data, .alphabet = .alphabet, .meat = .meat, .other = .other, .laplace = .laplace)[,-1])
-  freq.beta <- as.matrix(.fun(.data2, .alphabet = .alphabet, .meat = .meat, .other = .other, .laplace = .laplace)[,-1])
+  freq.alpha <- as.matrix(geneUsage(.data, .genes = .genes, .ambig = .ambig)[,-1])
+  freq.beta <- as.matrix(geneUsage(.data2, .genes = .genes, .ambig = .ambig)[,-1])
   nrm = if (.norm.entropy) 0.5 * (entropy(freq.alpha) + entropy(freq.beta)) else 1
   js.div(freq.alpha, freq.beta) / nrm
 }
