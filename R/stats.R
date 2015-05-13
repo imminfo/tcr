@@ -121,7 +121,7 @@ cloneset.stats <- function (.data, .head = 0) {
   if (!is.na(.data$Umi.count)[1]) {
     res3 <- c(Sum = sum(.data$Umi.count), summary(.data$Umi.count))
     names(res3) <- sub('.', '', names(res3), fixed = T)
-    names(res3) <- paste0(names(res3), '.barcodes')
+    names(res3) <- paste0(names(res3), '.UMIs')
     res2 <- c(res2, res3)
   }
   c(res, res2)
@@ -508,7 +508,7 @@ top.cross.plot <- function (.top.cross.res, .xlab = 'Top clones', .ylab = 'Norma
 #' @param .fun Function applied to each sample.
 #' @param .n Number of iterations (i.e., size of a resulting distribution).
 #' @param .size Size of samples. For \code{.sim} == "uniform" stands for number of rows to take.
-#' For \code{.sim} == "percentage" stands for number of barcodes / read counts to take.
+#' For \code{.sim} == "percentage" stands for number of UMIs / read counts to take.
 #' @param .sim A character string indicating the type of simulation required. Possible values are
 #' "uniform" or "percentage". See "Details" for more details of type of simulation.
 #' @param .postfun Function applied to the resulting list: list of results from each processed sample.

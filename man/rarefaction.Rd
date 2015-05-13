@@ -14,7 +14,7 @@ rarefaction(.data, .step = 30000, .quantile = c(0.025, 0.975),
 
 \item{.quantile}{Numeric vector of length 2 with quantiles for confidence intervals.}
 
-\item{.extrapolation}{If N > 0 than perform extrapolation of all samples to the size of the max one +N reads or barcodes.}
+\item{.extrapolation}{If N > 0 than perform extrapolation of all samples to the size of the max one +N reads or UMIs.}
 
 \item{.col}{Column's name from which choose frequency of each clone.}
 

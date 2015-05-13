@@ -53,9 +53,9 @@ Parameter \code{.type} is a string of length 4, where:
 for the letter 'n' for taking the "CDR3.nucleotide.sequence" column.
  \item Second character stands whether or not take the V.gene column. Possible values are '0' (zero) stands
 for taking no additional columns, 'v' stands for taking the "V.gene" column.
- \item Third character stands for using either barcodes or reads in choosing the column with numeric characterisitc (see the next letter).
+ \item Third character stands for using either UMIs or reads in choosing the column with numeric characterisitc (see the next letter).
  \item Fourth character stands for name of the column to choose as numeric characteristic of sequences. It depends on the third letter. Possible values are
-"c" for the "Umi.count" (if 3rd character is "b") / "Read.count" column (if 3rd character is "r"), "p" for the "Umi.proportion" / "Read.proportion" column, "r" for the "Rank" column or "i" for the "Index" column.
+"c" for the "Umi.count" (if 3rd character is "u") / "Read.count" column (if 3rd character is "r"), "p" for the "Umi.proportion" / "Read.proportion" column, "r" for the "Rank" column or "i" for the "Index" column.
 If "Rank" or "Index" isn't in the given repertoire, than it will be created using \code{set.rank} function using "Umi.count" / "Read.count" column.
 }
 }

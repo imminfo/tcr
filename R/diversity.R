@@ -142,7 +142,7 @@ chao1 <- function (.data) {
 #' @param .data Data frame or a list with data frames.
 #' @param .step Step's size.
 #' @param .quantile Numeric vector of length 2 with quantiles for confidence intervals.
-#' @param .extrapolation If N > 0 than perform extrapolation of all samples to the size of the max one +N reads or barcodes.
+#' @param .extrapolation If N > 0 than perform extrapolation of all samples to the size of the max one +N reads or UMIs.
 #' @param .col Column's name from which choose frequency of each clone.
 #' @param .verbose if T then print progress bar.
 #' 

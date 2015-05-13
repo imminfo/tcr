@@ -59,7 +59,12 @@ entropy.seg <- function (.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'ou
   }
   
   .data <- get.frames(.data, .frame)
-  entropy(as.matrix(geneUsage(.data, .genes = .genes, .quant = .quant)[,-1]))
+  
+  if (has.class(.genes, "list") && length(.genes) == 2) {
+    entropy(as.matrix(geneUsage(.data, .genes = .genes, .quant = .quant)[,-1]))
+  } else {
+    entropy(geneUsage(.data, .genes = .genes, .quant = .quant))
+  }
 }
 
 js.div.seg <- function (.data, .data2 = NULL, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out'),
@@ -71,8 +76,13 @@ js.div.seg <- function (.data, .data2 = NULL, .genes = HUMAN_TRBV, .frame = c('a
   
   .data <- get.frames(.data, .frame)
   
-  freq.alpha <- as.matrix(geneUsage(.data, .genes = .genes, .ambig = .ambig)[,-1])
-  freq.beta <- as.matrix(geneUsage(.data2, .genes = .genes, .ambig = .ambig)[,-1])
+  if (has.class(.genes, "list") && length(.genes) == 2) {
+    freq.alpha <- geneUsage(.data, .genes = .genes, .ambig = .ambig)
+    freq.beta <- geneUsage(.data2, .genes = .genes, .ambig = .ambig)
+  } else {
+    freq.alpha <- as.matrix(geneUsage(.data, .genes = .genes, .ambig = .ambig)[,-1])
+    freq.beta <- as.matrix(geneUsage(.data2, .genes = .genes, .ambig = .ambig)[,-1])
+  }
   nrm = if (.norm.entropy) 0.5 * (entropy(freq.alpha) + entropy(freq.beta)) else 1
   js.div(freq.alpha, freq.beta) / nrm
 }

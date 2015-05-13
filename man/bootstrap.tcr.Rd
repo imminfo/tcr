@@ -16,7 +16,7 @@ bootstrap.tcr(.data, .fun = entropy.seg, .n = 1000, .size = nrow(.data),
 \item{.n}{Number of iterations (i.e., size of a resulting distribution).}
 
 \item{.size}{Size of samples. For \code{.sim} == "uniform" stands for number of rows to take.
-For \code{.sim} == "percentage" stands for number of barcodes / read counts to take.}
+For \code{.sim} == "percentage" stands for number of UMIs / read counts to take.}
 
 \item{.sim}{A character string indicating the type of simulation required. Possible values are
 "uniform" or "percentage". See "Details" for more details of type of simulation.}
