@@ -12,8 +12,6 @@ gibbs.sampler(.data, .k = 5, .niter = 500, .meat = T)
 \item{.k}{Motif's length.}
 
 \item{.niter}{Number of iterations.}
-
-\item{.meat}{Should function use the count of every sequence or not.}
 }
 \value{
 Vector of possible motifs.

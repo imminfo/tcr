@@ -315,10 +315,9 @@ kmer.profile <- function (.data, .names = rep('Noname', times=length(.data)), .v
 #' @param .data Vector of characters or data.frame of characters (1st col) and their numbers (2nd col) if .meat == T.
 #' @param .k Motif's length.
 #' @param .niter Number of iterations.
-#' @param .meat Should function use the count of every sequence or not.
 #' 
 #' @return Vector of possible motifs.
-gibbs.sampler <- function (.data, .k = 5, .niter = 500, .meat = T) {
+gibbs.sampler <- function (.data, .k = 5, .niter = 500) {
   .n <- .k
   
   .get.best.motif <- function (.seq, .profile) {
@@ -350,7 +349,7 @@ gibbs.sampler <- function (.data, .k = 5, .niter = 500, .meat = T) {
   }
   
   .score <- function (.kmers) {
-    sc <- rep.int(0, 5)
+    sc <- rep.int(0, .n)
     for (i in 1:.n) {
       tab <- table(substr(.kmers, i, i))
       sc[i] <- sum(tab) - max(tab)
