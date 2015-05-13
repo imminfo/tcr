@@ -307,11 +307,12 @@ check.distribution <- function (.data, .do.norm = NA, .laplace = 1, .na.val = 0,
   if (is.na(.do.norm)) {
     .data[is.na(.data)] <- .na.val
     if (sum(.data) != 1) {
-      .data <- (.data + .laplace) / sum(.data + .laplace)
+      .data <- .data + .laplace
+      .data <- prop.table(.data + .laplace)
     }
   } else if (.do.norm) {
     .data[is.na(.data)] <- .na.val
-    .data <- (.data + .laplace) / sum(.data + .laplace)
+    .data <- prop.table(.data + .laplace)
   }
   
   if (.warn.zero && (0 %in% .data)) {
