@@ -265,11 +265,11 @@ vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D
 #' Plot a histogram or a grid of histograms of V- / J-usage.
 #' 
 #' @param .data Mitcr data frame or a list with mitcr data frames.
-#' 
-#' @param .cast.freq if T then cast \code{freq.Vb} (for \code{vis.V.usage}) or \code{freq.Jb} (for \code{vis.J.usage}) on \code{.data} before plotting.
+#' @param .genes Gene alphabet passed to \link{geneUsage}.
 #' @param .main Main title of the plot.
 #' @param .ncol Number of columns in a grid of histograms if \code{.data} is a list and \code{.dodge} is F.
 #' @param .coord.flip if T then flip coordinates.
+#' @param .labs Character vector of length 2 with names for x-axis and y-axis.
 #' @param .dodge If \code{.data} is a list, than if this is T plot V-usage for all data frames to the one histogram.
 #' @param ... Parameter passed to \code{geneUsage}. By default the function compute V-usage or J-usage for beta chains
 #' w/o using read counts and w/ "Other" segments.
@@ -281,17 +281,12 @@ vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D
 #' # Load your data.
 #' load('immdata.rda')
 #' # Compute V-usage statistics.
-#' imm1.vs <- freq.Vb(immdata[[1]])
-#' # Two eqivalent calls for plotting the V-usage for all data frames on the one plot:
-#' vis.V.usage(immdata, .cast.freq = T, .main = 'Immdata V-usage [1]', .dodge = T)
+#' imm1.vs <- geneUsage(immdata[[1]], HUMAN_TRBV)
+#' vis.V.usage(immdata, HUMAN_TRBV, .main = 'Immdata V-usage [1]', .dodge = T)
 #' # Plot a histogram for one data frame using all gene segment data from V.gene column.
-#' vis.V.usage(immdata[[1]], .cast.freq = F, .main = 'Immdata V-usage [1]')
-#' vis.V.usage(imm1.vs, .cast.freq = F, .main = 'Immdata V-usage [2]', .dodge = T)
+#' vis.V.usage(imm1.vs, NA, .main = 'Immdata V-usage [1]')
 #' # Plot a grid of histograms - one histogram for V-usage for each data frame in .data.
-#' vis.V.usage(immdata, .cast.freq = T, .main = 'Immdata V-usage [3]', .dodge = F, .other = F)
-#' # Plot alpha V-usage
-#' vis.V.usage(immdata[[1]], .cast.freq = T, .main = 'Immdata V-usage [4]',
-#' .dodge = F, .other = F, .genes = HUMAN_TRAV)
+#' vis.V.usage(immdata, HUMAN_TRBV, .main = 'Immdata V-usage', .dodge = F, .other = F)
 #' }
 vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3, .coord.flip = F, .dodge = F, .labs = c("Gene", "Frequency"), ...) {  
   if (!is.na(.genes[1])) {

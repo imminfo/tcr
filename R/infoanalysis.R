@@ -46,6 +46,10 @@ assymetry<-function(.alpha, .beta = NULL, .by = 'CDR3.nucleotide.sequence'){
 #' only in-frame ('in'), out-of-frame ('out') or all sequences ('all').
 #' @param .norm.entropy if T then divide result by mean entropy of 2 segments' frequencies. 
 #' @param .ambig Parameter passed to \code{geneUsage}.
+#' @param .quant Which column to use for the quantity of clonotypes: "read.count" for the "Read.count" column, 
+#' "umi.count" for the "Umi.count" column, "read.prop" for the "Read.proportion" column, "umi.prop" for 
+#' the "Umi.proportion" column.
+#' @param .verbose If T than output the data processing progress bar.
 #' 
 #' @return For \code{entropy.seg} - numeric integer with entropy value(s). For \code{js.div.seg} - integer of vector one if \code{.data} and \code{.data2} are provided;
 #' esle matrix length(.data) X length(.data) if \code{.data} is a list.

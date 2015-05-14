@@ -27,11 +27,24 @@
 #' 
 #' - "lev" for the number of similar clonotypes by the Levenshtein distance (basic function \code{intersectClonesets(..., .type = "..l")}).
 #' 
-#' - 
+#' - "jaccard" for the Jaccard index (basic function \code{jaccard.index}).
 #' 
+#' - "morisita" for the Morisita's overlap index (basic function \code{morisita.index}).
+#' 
+#' - "tversky" for the Tversky index (basic function \code{tversky.index}).
+#' 
+#' - "overlap" for the overlap coefficient (basic function \code{overlap.coef}).
+#' 
+#' - "horn" for the Horn's index (basic function \code{horn.index}).
 #' 
 #' @seealso  \link{intersectClonesets}, \link{similarity}, \link{repDiversity}
 #' 
+#' @examples
+#' \dontrun{
+#' data(twb)
+#' repOverlap(twb, "exact", .seq = "nuc", .vgene = F)
+#' repOverlap(twb, "morisita", .seq = "aa", .vgene = T, .quant = "umi.count")
+#' }
 repOverlap <- function (.data,
                         .method = c("exact", "hamm", "lev", "jaccard", "morisita", "tversky", "overlap", "horn"), 
                         .seq = c("nuc", "aa"), 

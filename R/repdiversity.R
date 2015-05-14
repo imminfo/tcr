@@ -47,7 +47,7 @@ repDiversity <- function (.data,
                           .do.norm = NA,
                           .laplace = 0) {
   
-  quant <- .column.choice(.quant, .verbose)
+  quant <- .column.choice(.quant, T)
   
   fun <- switch(.method[1], 
                 chao1 = function (x, ...) chao1(x),
