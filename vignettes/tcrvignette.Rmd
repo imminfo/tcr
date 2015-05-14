@@ -332,14 +332,11 @@ To assess the diversity of genes usage user can use the `entropy` function. Kull
 ```{r eval=T, echo=TRUE, fig.align='center'}
                               # Transform "0:100" to distribution with Laplace correction 
 entropy(0:100, .laplace = 1)  # (i.e., add "1" to every value before transformation).
-                  # Compute entropy of V-segment usage for each data frame. Same to
-entropy.seg(twb)  # apply(freq.Vb(twb)[,-1], 2, entropy)
+                              
+entropy.seg(twb, HUMAN_TRBV)  # Compute entropy of V-segment usage for each data frame.
                   
-# Next expression is equivalent to the expression
-# js.div(freq.Vb(twb[[1]])[,2], freq.Vb(twb[[2]])[,2], .norm.entropy = T)
-js.div.seg(twb[[1]], twb[[2]], .verbose = F)
-# Also works when input arguments are list of data frames.
-imm.js <- js.div.seg(twb, .verbose = F) 
+js.div.seg(twb[1:2], HUMAN_TRBV, .verbose = F)
+imm.js <- js.div.seg(twb, HUMAN_TRBV, .verbose = F) 
 vis.radarlike(imm.js, .ncol = 2)
 ```
 
@@ -348,8 +345,10 @@ vis.radarlike(imm.js, .ncol = 2)
 Principal component analysis (PCA) is a statistical procedure for transforming a set of observations to a set of special values for analysis. In *tcR* implemented functions `pca.segments` for performing PCA on V- or J-usage, and `pca.segments.2D` for performing PCA on VJ-usage. For plotting the PCA results see the `vis.pca` function.
 
 ```{r eval=TRUE, echo=TRUE, fig.align='center', fig.height=4.5, fig.width=6}
-pca.segments(twb)  # Plot PCA results of V-segment usage.
-class(pca.segments(twb, .do.plot = F))  # Return object of class "prcomp"
+pca.segments(twb, .genes = HUMAN_TRBV)  # Plot PCA results of V-segment usage.
+
+# Return object of class "prcomp"
+class(pca.segments(twb, .do.plot = F, .genes = HUMAN_TRBV))
 ```
 
 
@@ -367,15 +366,15 @@ The most straightforward yet a quite effective way to evaluate similarity of two
 ```{r eval=TRUE, echo=T, fig.align='center', warning=FALSE}
 # Equivalent to intersect(twb[[1]]$CDR3.nucleotide.sequence,
 #                         twb[[2]]$CDR3.nucleotide.sequence)
-repOverlap(twb[1:2], 'exact', 'nuc')
+repOverlap(twb[1:2], 'exact', 'nuc', .verbose = F)
 
 # Equivalent to intersectClonesets(twb, "n0e", .norm = T)
-repOverlap(twb, 'exact', 'nuc', .norm = T)
+repOverlap(twb, 'exact', 'nuc', .norm = T, .verbose = F)
 # Intersect by amino acid clonotypes + V genes
-repOverlap(twb, 'exact', 'aa', .vgene = T)
+repOverlap(twb, 'exact', 'aa', .vgene = T, .verbose = F)
 
 # Plot a heatmap of the number of shared clonotypes.
-vis.heatmap(repOverlap(twb, 'exact', 'aa', .vgene = T), .title = 'twb - (ave)-intersection', .labs = '')
+vis.heatmap(repOverlap(twb, 'exact', 'aa', .vgene = T, .verbose = F), .title = 'twb - (ave)-intersection', .labs = '')
 ```
 
 
@@ -417,11 +416,9 @@ To visualise similarity among repertoires the `vis.heatmap` function is appropri
 
 ```{r eval=TRUE, echo=TRUE, results='hold'}
 # Apply the Morisitas overlap index to the each pair of repertoires.
-# Next two calls are equal. Here is why you need to use the repOverlap fun.
-repOverlap(twb, 'morisita', 'aa', 'read.count', .verbose = F)
-
-cols <- c('CDR3.amino.acid.sequence', 'Read.count')
-apply.symm(twb, function (x,y) morisitas.index(x[, cols], y[, cols]), .verbose = F)
+# Use information about V genes (i.e. one CDR3 clonotype is equal to another
+# if and only if their CDR3 aa sequences are equal and their V genes are equal)
+repOverlap(twb, 'morisita', 'aa', 'read.count', .vgene = T, .verbose = F)
 ```
 
 
@@ -435,7 +432,6 @@ To investigate a shared among a several repertoires clonotypes ("shared repertoi
 imm.shared <- shared.repertoire(.data = twb, .type = 'avrc', .min.ppl = 2, .verbose = F)
 head(imm.shared)
 shared.representation(imm.shared)  # Number of shared sequences.
-cosine.sharing(imm.shared)         # Compute cosing similarity on shared sequences.
 ```
 
 
@@ -470,19 +466,21 @@ sapply(twb, function (x) chao1(x$Read.count))
 ## Visualisation
 
 ### CDR3 length and read count distributions plot
-Plots of the distribution of CDR3 nucleotide sequences length (function `vis.count.len`) and the histogram of counts (function `vis.number.count`). Input data is either a data frame or a list with data frames. Argument *.col* specifies column's name with clonotype counts. Argument *.ncol* specifies a number of column
-in plot with multiple distribution, i.e., if the input data is a list with data frames.
+Plots of the distribution of CDR3 nucleotide sequences length (function `vis.count.len`) and the histogram of counts (function `vis.number.count`). Input data is either a data frame or a list with data frames. Argument *.col* specifies column's name with clonotype counts. Argument *.ncol* specifies a number of columns in a plot with multiple distribution, i.e., if the input data is a list with data frames.
 
 ```{r eval=TRUE, echo=TRUE, fig.height=4, fig.width=5.5, fig.align='center'}
 vis.count.len(twb[[1]], .name = "twb[[1]] CDR3 lengths", 
               .col = "Read.count")
+```
+
+```{r eval=TRUE, echo=TRUE, fig.height=4, fig.width=5.5, fig.align='center', warning=FALSE, message=FALSE}
 vis.number.count(twb[[1]], .name = "twb[[1]] count distribution", 
                  .col = "Read.count")
 ```
 
 
 ### Top proportions bar plot
-For visualisation of proportions of the most abundant clonotypes in a repertoire *tcR* offers the `vis.top.proportions` function. As input the function receives either data frame or a list with data frames (argument *.data*), an integer vector with number of clonotypes for computing proportions of count for this clonotypes (argument *.head*), and a column's name with clonotype counts (argument *.col*).
+For the visualisation of proportions of the most abundant clonotypes in a repertoire *tcR* offers the `vis.top.proportions` function. As input the function receives either data frame or a list with data frames (argument *.data*), an integer vector with number of clonotypes for computing proportions of count for this clonotypes (argument *.head*), and a column's name with clonotype counts (argument *.col*).
 
 ```{r echo=TRUE, eval=TRUE, fig.height=4, fig.width=5.5, message=FALSE, fig.align='center'}
 vis.top.proportions(twb, c(10, 500, 3000, 10000), .col = "Read.count")
@@ -490,30 +488,67 @@ vis.top.proportions(twb, c(10, 500, 3000, 10000), .col = "Read.count")
 
 
 ### Clonal space homeostasis bar plot
+For the visualisation of how much space occupied each group of clonotypes, divided into groups by their proportions in the data, use the `vis.clonal.space` function. As an input it receives the output of the `clonal.space.homeostasis` function.
+
+```{r eval=TRUE, echo=TRUE, fig.height=4, fig.width=6.5, fig.align='center'}
+twb.space <- clonal.space.homeostasis(twb)
+vis.clonal.space(twb.space)
+```
 
 
 ### Heat map
-Pairwise distances or similarity can be represented as qudratic matrices or data frames, where every row and column represented a cloneset, and each value in every cell (i, j) is a distance between repertoires with indices i and j. Such plots called "heatmaps". For plotting heatmaps in *tcR* implemented the `vis.heatmap` function.
+Pairwise distances or similarity of repertoires can be represented as qudratic matrices, in which each row and column represented a cloneset, and each value in every cell (i, j) is a distance between repertoires with indices i and j. One way to visalise such matrices is using "heatmaps". For plotting heatmaps in *tcR* implemented the `vis.heatmap` function. With changing input arguments user can change names of labs, title and legend.
 
-```{r eval=TRUE, echo=TRUE, fig.align='center'}
-
+```{r eval=TRUE, echo=TRUE, fig.align='center', warning=FALSE, message=FALSE}
+twb.shared <- repOverlap(twb, "exact", .norm = F, .verbose = F)
+vis.heatmap(twb.shared, .title = "Twins shared nuc clonotypes", 
+            .labs = c("Sample in x", "Sample in y"), .legend = "# clonotypes")
 ```
 
 
 ### Radar-like plot
-Another way to repsent distances among objects is "radar-like" plots (because this plots is not exactly radar plots) realised in *tcR* throught the `vis.radarlike` function.
+Another way to repsent distances among objects is "radar-like" plots (because this plots is not exactly radar plots) realised in *tcR* throught the `vis.radarlike` function. Argument *.ncol* specifies a number of columns of radar-like plots in a viewport.
+
+```{r eval=T, echo=TRUE, fig.align='center'}
+twb.js <- js.div.seg(twb, HUMAN_TRBV, .verbose = F) 
+vis.radarlike(twb.js, .ncol = 2)
+```
 
 
 ### Gene usage histogram
+For the visualisation of gene usage *tcR* employes subroutines for making classical histograms using the `vis.gene.usage` function. The function accept clonesets, lists of clonesets or output from the `geneUsage` function. If input is a cloneset(s), then user should specify a gene alphabet (e.g., `HUMAN_TRBV`) in order to compute the gene usage. Using a parameter \code{.dodge}, user can change type of the output between an output as histograms for each cloneset in the input list (`.dodge = F`) or an output as an one histogram for all data, which is very useful for comparing distribution of genes (`.dodge = T`). If `.dodge=F` and input are lists of clonesets or a gene usage of a few clonesets, than user with argument `.ncol` can specify how many columns of histograms will be outputted. With `.coord.flip` user can flip coordinates so genes will be at the left side of the plot.
+
+```{r eval=TRUE, echo=TRUE, message=FALSE, fig.align='center', fig.height=5, fig.width=7}
+vis.gene.usage(twb[[1]], HUMAN_TRBV, .main = 'Sample I V-usage')
+```
+
+```{r eval=TRUE, echo=TRUE, message=FALSE, fig.align='center', fig.height=7, fig.width=5}
+vis.gene.usage(twb[[2]], HUMAN_TRBV, .main = 'Sample II V-usage', .coord.flip = T)
+```
+
+```{r eval=TRUE, echo=TRUE, message=FALSE, fig.align='center', fig.height=5, fig.width=7}
+twb.jusage <- geneUsage(twb, HUMAN_TRBJ)
+vis.gene.usage(twb.jusage, .main = 'Twins J-usage', .dodge = T)
+```
+
+```{r eval=TRUE, echo=TRUE, message=FALSE, fig.align='center', fig.height=6, fig.width=9}
+vis.gene.usage(twb, HUMAN_TRBJ, .main = 'Twins J-usage', .dodge = F, .ncol = 2)
+```
 
 
 ### PCA visualisation
+For the visualisation of results from the `prcomp` function (i.e., objects of class `prcomp`), *tcR* provides the `vis.pca` function. Input arguments for the function are an object of class `prcomp` and a (if needed) list with groups (vectors of indices of samples) for colouring points in the plot.
+
+```{r eval=TRUE, echo=TRUE, fig.align='center', fig.height=4.5, fig.width=6}
+twb.pca <- pca.segments(twb, .do.plot = F) 
+vis.pca(pca.segments(twb, .do.plot = F, .genes = HUMAN_TRBV), .groups = list(GroupA = c(1,2), GroupB = c(3,4)))
+```
 
 
 ### Logo-like plot
 Logo-like graphs for visualisation of nucleotide or amino acid motif sequences / profiles.
 
-```{r eval=TRUE, echo=TRUE, fig.align='center', fig.width=6, fig.height=5.5}
+```{r eval=TRUE, echo=TRUE, fig.align='center', fig.width=6, fig.height=5.5, warning=FALSE, message=FALSE}
 km <- get.kmers(twb[[1]]$CDR3.amino.acid.sequence, .head = 100, .k = 7, .verbose = F)
 d <- kmer.profile(km)
 vis.logo(d)

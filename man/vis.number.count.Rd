@@ -8,7 +8,7 @@ vis.number.count(.data, .ncol = 3,
   .name = "Histogram of clonotypes read counts", .col = "Read.count")
 }
 \arguments{
-\item{.data}{Data frame with columns 'CDR3.nucleotide.sequence' and 'Read.count' or list with such data frames.}
+\item{.data}{Cloneset data frame or a list of clonesets.}
 
 \item{.ncol}{If .data is a list, than number of columns in a grid of histograms for each data frame in \code{.data}. Else not used.}
 

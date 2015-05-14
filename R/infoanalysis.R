@@ -61,9 +61,9 @@ entropy.seg <- function (.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'ou
   .data <- get.frames(.data, .frame)
   
   if (has.class(.genes, "list") && length(.genes) == 2) {
-    entropy(as.matrix(geneUsage(.data, .genes = .genes, .quant = .quant)[,-1]))
+    entropy(geneUsage(.data, .genes = .genes, .quant = .quant, .ambig = .ambig))
   } else {
-    entropy(geneUsage(.data, .genes = .genes, .quant = .quant))
+    entropy(as.matrix(geneUsage(.data, .genes = .genes, .quant = .quant, .ambig = .ambig)[,-1]))
   }
 }
 

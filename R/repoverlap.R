@@ -90,13 +90,17 @@ repOverlap <- function (.data,
       .fun <- function (x, y) { morisitas.index(x, y, F) }
     }
     
-    new.data <- .merge.with.v(.data, .seqcol, .vgene)
+    new.data <- .merge.with.v(.data, seqcol, .vgene)
+    new.reads <- lapply(.data, "[[", quant)
     
     if (.do.unique) {
-      # aggregate
+      for (i in 1:length(.data)) {
+        .data[[i]] <- as.data.frame(summarise(grouped_df(data.frame(Sequence = new.data[[i]], Count = new.reads[[i]], stringsAsFactors = F),
+                                           list(as.name("Sequence"))), Count = sum(Count)), stringsAsFactors = F)
+      }
     }
     
-    .pair.fun(new.data,
+    .pair.fun(.data,
               function (x, y) { .fun(x, y) },
               .verbose)
   }

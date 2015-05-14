@@ -452,7 +452,7 @@ top.cross.vec <- function (.top.cross.res, .i, .j) {
   sapply(.top.cross.res, function (mat) mat[.i, .j] )
 }
 
-top.cross.plot <- function (.top.cross.res, .xlab = 'Top clones', .ylab = 'Normalised number of shared clones', .nrow = 2, .legend.ncol = 1, .logx = T, .logy = T) {
+top.cross.plot <- function (.top.cross.res, .xlab = 'Top X clonotypes', .ylab = 'Normalised number of shared clonotypes', .nrow = 2, .legend.ncol = 1, .logx = T, .logy = T) {
   data.names <- colnames(.top.cross.res[[1]])
   len <- length(data.names)
   ps <- lapply(1:len, function (i) { 
@@ -494,7 +494,7 @@ top.cross.plot <- function (.top.cross.res, .xlab = 'Top clones', .ylab = 'Norma
   sample.plot <- p + .colourblind.discrete(len, T)
   
   leg <- gtable_filter(ggplot_gtable(ggplot_build(sample.plot + guides(colour=guide_legend(title = 'Subject', ncol=.legend.ncol)))), "guide-box")
-  grid.arrange(do.call(arrangeGrob, c(ps, nrow = .nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, main ='Top crosses')
+  grid.arrange(do.call(arrangeGrob, c(lapply(ps, function (x) x + theme(legend.position="none")), nrow = .nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, main ='Top crosses')
 #   arrangeGrob(do.call(arrangeGrob, c(ps[1:2], nrow = .nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, main ='Top cross')
 }
 

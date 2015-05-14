@@ -103,7 +103,7 @@ vis.count.len <- function (.data, .ncol = 3, .name = "", .col = 'Read.count') {
 #' @description
 #' Plot a histogram of distribution of counts of CDR3 nucleotide sequences. On y-axis are number of counts.
 #' 
-#' @param .data Data frame with columns 'CDR3.nucleotide.sequence' and 'Read.count' or list with such data frames.
+#' @param .data Cloneset data frame or a list of clonesets.
 #' @param .ncol If .data is a list, than number of columns in a grid of histograms for each data frame in \code{.data}. Else not used.
 #' @param .name Title for this plot.
 #' @param .col Name of the column with counts.
@@ -293,39 +293,39 @@ vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D
 #' vis.V.usage(immdata[[1]], .cast.freq = T, .main = 'Immdata V-usage [4]',
 #' .dodge = F, .other = F, .genes = HUMAN_TRAV)
 #' }
-vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3, .coord.flip = F, .dodge = F, .labs = c("Gene", "Frequency"), ...) {
-  if (has.class(.data, 'list')) {    
-    if (.dodge) {
-      if (!is.na(.genes)) {
-        .data <- geneUsage(.data, .genes, ...)
-      }
-      
-      res <- melt(.data)
-      res <- res[1:nrow(res), ]  # something bad with melt
-      colnames(res) <- c('Gene', 'Sample', 'Freq')
-      p <- ggplot() + 
+vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3, .coord.flip = F, .dodge = F, .labs = c("Gene", "Frequency"), ...) {  
+  if (!is.na(.genes[1])) {
+    res <- geneUsage(.data, .genes, ...)
+  } else {
+    res <- .data
+  }
+  
+  if (class(res[[2]]) != "factor") {
+    res <- melt(res)
+    res <- res[1:nrow(res), ] 
+    colnames(res) <- c('Gene', 'Sample', 'Freq')
+  }
+  
+  if (length(unique(res$Sample)) > 1) {    
+    if (.dodge) {      
+      ggplot() + 
         geom_bar(aes(x = Gene, y = Freq, fill = Sample), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
         theme_linedraw() + 
         theme(axis.text.x = element_text(angle=90)) + 
-        .colourblind.discrete(length(.data)) +
-        scale_y_continuous(expand = c(0,0))
-      return(p)
+        .colourblind.discrete(length(unique(res$Sample))) +
+        scale_y_continuous(expand = c(.02,0))
     } else {
-      ps <- lapply(1:length(.data), function (i) {
-        vis.gene.usage(.data[[i]], .genes, names(.data)[i], 0, .coord.flip, .labs = .labs, ...) 
-      })
-      p <- do.call(grid.arrange, c(ps, ncol = .ncol, main = .main) )
-      return(p)
+      res <- split(res, res$Sample)
+      ps <- lapply(1:length(res), function (i) {
+        vis.gene.usage(res[[i]], NA, names(res)[i], 0, .coord.flip, .labs = .labs, ...) 
+      })      
+      do.call(grid.arrange, c(ps, ncol = .ncol, main = .main) )
     }
     
-  }
-  
-  else {
-    if (!is.na(.genes)) {
-      .data <- geneUsage(.data, .genes, ...)
-    }
-    
-    p <- ggplot() + geom_bar(aes(x = Gene, y = Sample, fill = Sample), data = .data, stat = 'identity', colour = 'black')
+  }  
+  else {        
+    p <- ggplot() + 
+      geom_bar(aes(x = Gene, y = Freq, fill = Freq), data = res, stat = 'identity', colour = 'black')
     
     if (.coord.flip) { p <- p + coord_flip() }
     
@@ -361,7 +361,7 @@ vis.pca <- function (.data, .groups = NA) {
                         Group = rep('group0', times = length(.data$x[,2])), stringsAsFactors=F)
   }
   
-  if (is.na(.groups)) { 
+  if (is.na(.groups[1])) { 
     .groups <- lapply(1:nrow(.data), function (i) i)
     names(.groups) <- dnames
   }
