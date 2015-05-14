@@ -21,8 +21,8 @@
 #' is found in the second given data frame.
 #' 
 #' @usage
-#' intersectClonesets(.alpha = NULL, .beta = NULL, .type = "00e", .head = -1, .norm = F,
-#'           .verbose = F, x = NULL, y = NULL)
+#' intersectClonesets(.alpha = NULL, .beta = NULL, .type = "n0e", .head = -1, .norm = F,
+#'           .verbose = F)
 #' 
 #' intersectCount(.alpha, .beta, .method = c('exact', 'hamm', 'lev'), .col = NULL)
 #' 

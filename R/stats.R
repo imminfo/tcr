@@ -398,9 +398,9 @@ find.clonotypes <- function (.data, .targets, .method = c('exact', 'hamm', 'lev'
 #' 
 #' top.cross.vec(.top.cross.res, .i, .j)
 #' 
-#' top.cross.plot(.top.cross.res, .xlab = 'Top clones', 
-#'                .ylab = 'Normalised number of shared clones',
-#'                .nrow = 2, .legend.ncol = 1, .logx = T, .logy = T)
+#' top.cross.plot(.top.cross.res, .xlab = 'Top X clonotypes', 
+#'                .ylab = 'Normalised number of shared clonotypes', .nrow = 2,
+#'                .legend.ncol = 1, .logx = T, .logy = T)
 #' 
 #' @param .data Either list of data.frames or a data.frame.
 #' @param .n Integer vector of parameter appled to the head function; same as .n in the top.fun function. See "Details" for more information.

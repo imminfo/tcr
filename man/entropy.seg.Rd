@@ -5,13 +5,13 @@
 \alias{js.div.seg}
 \title{Repertoires' analysis using information measures applied to V- and J- segment frequencies.}
 \usage{
-entropy.seg(.data, .frame = c('all', 'in', 'out'),
-            .genes = if (.VJ) "beta" else 'TRBV',
-            .meat = F, .other = T, .VJ = F, .laplace = 1)
+entropy.seg(.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out'),
+            .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"),
+            .ambig = F)
 
-js.div.seg(.data, .data2 = NULL, .frame = c('all', 'in', 'out'), .norm.entropy = T,
-           .genes = if (.VJ) "beta" else 'TRBV', .meat = F, .other = T, .VJ = F,
-           .verbose = T, .laplace = 1)
+js.div.seg(.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out'),
+           .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"),
+           .norm.entropy = T, .ambig = F, .verbose = F, .data2 = NULL)
 }
 \arguments{
 \item{.data}{Mitcr data.frame or a list with mitcr data.frames.}

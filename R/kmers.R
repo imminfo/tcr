@@ -309,9 +309,6 @@ kmer.profile <- function (.data, .names = rep('Noname', times=length(.data)), .v
 #' Perform the Gibbs Sampler method for finding frequent motifs in the given vector of strings or data.frame.
 #' Each string splitted to kmers with the given length of motif.
 #' 
-#' @usage
-#' gibbs.sampler(.data, .k = 5, .niter = 500, .meat = T)
-#' 
 #' @param .data Vector of characters or data.frame of characters (1st col) and their numbers (2nd col) if .meat == T.
 #' @param .k Motif's length.
 #' @param .niter Number of iterations.

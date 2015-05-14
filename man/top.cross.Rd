@@ -10,9 +10,9 @@ top.cross(.data, .n = NA, .data2 = NULL, .type = 'ave', .norm = F, .verbose = T)
 
 top.cross.vec(.top.cross.res, .i, .j)
 
-top.cross.plot(.top.cross.res, .xlab = 'Top clones',
-               .ylab = 'Normalised number of shared clones',
-               .nrow = 2, .legend.ncol = 1, .logx = T, .logy = T)
+top.cross.plot(.top.cross.res, .xlab = 'Top X clonotypes',
+               .ylab = 'Normalised number of shared clonotypes', .nrow = 2,
+               .legend.ncol = 1, .logx = T, .logy = T)
 }
 \arguments{
 \item{.data}{Either list of data.frames or a data.frame.}

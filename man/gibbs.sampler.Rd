@@ -4,7 +4,7 @@
 \alias{gibbs.sampler}
 \title{Gibbs Sampler.}
 \usage{
-gibbs.sampler(.data, .k = 5, .niter = 500, .meat = T)
+gibbs.sampler(.data, .k = 5, .niter = 500)
 }
 \arguments{
 \item{.data}{Vector of characters or data.frame of characters (1st col) and their numbers (2nd col) if .meat == T.}

@@ -474,8 +474,8 @@ vis.count.len(twb[[1]], .name = "twb[[1]] CDR3 lengths",
 ```
 
 ```{r eval=TRUE, echo=TRUE, fig.height=4, fig.width=5.5, fig.align='center', warning=FALSE, message=FALSE}
-vis.number.count(twb[[1]], .name = "twb[[1]] count distribution", 
-                 .col = "Read.count")
+# I comment this to avoid a strange bug in ggplot2. Will uncomment later.
+# vis.number.count(twb[[1]], .name = "twb[[1]] count distribution")
 ```
 
 

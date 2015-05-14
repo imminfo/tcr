@@ -66,8 +66,8 @@ repOverlap <- function (.data,
   
   .data <- .fix.listnames(.data)
   
-  seqcol <- "CDR3.nucleotide.sequence"
-  if (.seq[1] == "aa") { seqcol <- "CDR3.amino.acid.sequence" }
+  .seqcol <- "CDR3.nucleotide.sequence"
+  if (.seq[1] == "aa") { .seqcol <- "CDR3.amino.acid.sequence" }
   
   if (.method[1] %in% c("exact", "hamm", "lev")) {
     let1 <- "n"
@@ -90,7 +90,7 @@ repOverlap <- function (.data,
       .fun <- function (x, y) { morisitas.index(x, y, F) }
     }
     
-    new.data <- .merge.with.v(.data, seqcol, .vgene)
+    new.data <- .merge.with.v(.data, .seqcol, .vgene)
     new.reads <- lapply(.data, "[[", quant)
     
     if (.do.unique) {

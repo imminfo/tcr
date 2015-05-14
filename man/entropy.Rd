@@ -8,9 +8,9 @@
 \usage{
 entropy(.data, .norm = F, .do.norm = NA, .laplace = 1e-12)
 
-kl.div(.alpha, .beta, .do.norm = NA, .laplace = 0)
+kl.div(.alpha, .beta, .do.norm = NA, .laplace = 1e-12)
 
-js.div(.alpha, .beta, .do.norm = NA, .laplace = 0, .norm.entropy = F)
+js.div(.alpha, .beta, .do.norm = NA, .laplace = 1e-12, .norm.entropy = F)
 }
 \arguments{
 \item{.data,.alpha,.beta}{Vector of values.}

@@ -133,7 +133,7 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
   
   ggplot() + 
     xlim(min(counts$Count), 300) + 
-    ylab('Number of clonotypes') +
+    ylab('Frequency') +
     geom_histogram(aes(x = Count, fill = ..count..), data = counts, binwidth = 1, colour = 'black') +
     coord_trans(xtrans = 'log10') + scale_y_log10() +
     ggtitle(.name) + 

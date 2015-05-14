@@ -2,7 +2,7 @@
 
 
 if (getRversion() >= "2.15.1") {
-  utils::globalVariables(c('PC1', 'PC2'))
+  utils::globalVariables(c('PC1', 'PC2', "Subject"))
 }
 
 
@@ -85,7 +85,7 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
   
   
   quant <- NA
-  if (!is.na(.quant[1])) { quant <- .column.choice(.quant, .verbose) }
+  if (!is.na(.quant[1])) { quant <- .column.choice(.quant, T) }
   
   if (has.class(.data, 'data.frame')) { .data <- list(Sample = .data) }
   
