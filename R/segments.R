@@ -169,6 +169,7 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
 #' @param .data Either data.frame or a list of data.frame or a result obtained from the \code{geneUsage} function.
 #' @param .cast.freq.seg if T then apply code{geneUsage} to the supplied data.
 #' @param ... Further arguments passed to \code{prcomp} or \code{geneUsage}.
+#' @param .text If T then plot sample names in the resulting plot.
 #' @param .do.plot if T then plot a graphic, else return a pca object.
 #' 
 #' @return If .do.plot is T than ggplot object; else pca object.
@@ -180,27 +181,31 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
 #' # Plot a plot of results of PCA on V-segments usage.
 #' pca.segments(twb, T, scale. = T)
 #' }
-pca.segments <- function(.data, .cast.freq.seg = T, ..., .do.plot = T){
+pca.segments <- function(.data, .cast.freq.seg = T, ..., .text = T, .do.plot = T){
   if (.cast.freq.seg) { .data <- geneUsage(.data, ...)[,-1] }
   pca.res <- prcomp(t(as.matrix(.data)), ...)
   if (.do.plot) {
     pca.res <- data.frame(PC1 = pca.res$x[,1], PC2 = pca.res$x[,2], Subject = names(.data))
-    ggplot() + geom_point(aes(x = PC1, y = PC2, colour = Subject), size = 3, data = pca.res) +
-      geom_text(aes(x = PC1, y = PC2, label = Subject), data = pca.res, hjust=.5, vjust=-.3) +
-      theme_linedraw() + guides(size=F) + ggtitle("VJ-usage: Principal Components Analysis") + .colourblind.discrete(length(pca.res$Subject), T)
+    p <- ggplot() + geom_point(aes(x = PC1, y = PC2, colour = Subject), size = 3, data = pca.res)
+    if (.text) {
+      p <- p + geom_text(aes(x = PC1, y = PC2, label = Subject), data = pca.res, hjust=.5, vjust=-.3)
+    }
+    p + theme_linedraw() + guides(size=F) + ggtitle("VJ-usage: Principal Components Analysis") + .colourblind.discrete(length(pca.res$Subject), T)
   } else {
     pca.res
   }
 }
 
-pca.segments.2D <- function(.data, .cast.freq.seg = T, ..., .do.plot = T){
+pca.segments.2D <- function(.data, .cast.freq.seg = T, ..., .text = T, .do.plot = T){
   if (.cast.freq.seg) { .data <- lapply(geneUsage(.data, ...), function (x) as.vector(x)) }
   pca.res <- prcomp(do.call(rbind, .data), ...)
   if (.do.plot) {
     pca.res <- data.frame(PC1 = pca.res$x[,1], PC2 = pca.res$x[,2], Subject = names(.data))
-    ggplot() + geom_point(aes(x = PC1, y = PC2, colour = Subject), size = 3, data = pca.res) +
-      geom_text(aes(x = PC1, y = PC2, label = Subject), data = pca.res, hjust=.5, vjust=-.3) +
-      theme_linedraw() + guides(size=F) + ggtitle("VJ-usage: Principal Components Analysis") + .colourblind.discrete(length(pca.res$Subject), T)
+    p <- ggplot() + geom_point(aes(x = PC1, y = PC2, colour = Subject), size = 3, data = pca.res)
+    if (.text) {
+      p <- geom_text(aes(x = PC1, y = PC2, label = Subject), data = pca.res, hjust=.5, vjust=-.3)
+    }
+    p <- p + theme_linedraw() + guides(size=F) + ggtitle("VJ-usage: Principal Components Analysis") + .colourblind.discrete(length(pca.res$Subject), T)
   } else {
     pca.res
   }
