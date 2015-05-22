@@ -77,6 +77,10 @@ AA_TABLE_REVERSED <- AA_TABLE_REVERSED[order(names(AA_TABLE_REVERSED))]
 #' 
 #' HUMAN_TRDJ
 #' 
+#' MOUSE_TRBV
+#' 
+#' MOUSE_TRBJ
+#' 
 #' @description
 #' Character vector with names for segments. With \code{tcR} we provided alphabets for all alpha, beta,
 #' gamma and delta chains gene segments.
@@ -128,6 +132,13 @@ HUMAN_TRGJ <- c()
 HUMAN_TRDV <- c()
 HUMAN_TRDD <- c()
 HUMAN_TRDJ <- c()
+
+MOUSE_TRBV <- c('TRBV1', 'TRBV12-1', 'TRBV12-2', 'TRBV13-1', 'TRBV13-2', 'TRBV13-3', 
+                'TRBV14', 'TRBV15', 'TRBV16', 'TRBV17', 'TRBV19', 'TRBV2', 'TRBV20',
+                'TRBV23', 'TRBV24', 'TRBV26', 'TRBV29', 'TRBV3', 'TRBV30', 'TRBV31', 
+                'TRBV4', 'TRBV5')
+MOUSE_TRBJ <- c('TRBJ1-1', 'TRBJ1-2', 'TRBJ1-3', 'TRBJ1-4', 'TRBJ1-5', 'TRBJ2-1', 'TRBJ2-2',
+                'TRBJ2-3', 'TRBJ2-4', 'TRBJ2-5', 'TRBJ2-7')
 
 
 #' Segment data.
