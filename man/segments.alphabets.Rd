@@ -41,6 +41,10 @@ HUMAN_TRDV
 HUMAN_TRDD
 
 HUMAN_TRDJ
+
+MOUSE_TRBV
+
+MOUSE_TRBJ
 }
 \description{
 Character vector with names for segments. With \code{tcR} we provided alphabets for all alpha, beta,
