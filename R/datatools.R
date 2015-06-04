@@ -1,6 +1,18 @@
 ########## Support functions for managing the data ##########
 
 
+fix.alleles <- function (.data) {
+  if (has.class(.data, "list")) {
+    lapply(.data, fix.alleles)
+  }
+  
+  .data$V.gene <- gsub("[*][[:digit:]]*", "", .data$V.gene)
+  .data$D.gene <- gsub("[*][[:digit:]]*", "", .data$D.gene)
+  .data$J.gene <- gsub("[*][[:digit:]]*", "", .data$J.gene)
+  .data
+}
+
+
 #' Print the given message if second parameter is a TRUE.
 #' 
 #' @param .message Character vector standing for a message.
