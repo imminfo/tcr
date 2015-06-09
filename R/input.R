@@ -78,7 +78,7 @@ parse.cloneset <- function (.filename,
   .read.prop <- 'Read.proportion'
   
   if(is.na(.barcodes)) {
-    .barcodes <- "Barcode count"
+    .barcodes <- "Umi.count"
     df$Umi.count <- NA
     df$Umi.proportion <- NA
   } else {
@@ -108,6 +108,7 @@ parse.cloneset <- function (.filename,
                           .vgenes, .jgenes, .dgenes,
                           .vend, .jstart, .dalignments,
                           .vd.insertions, .dj.insertions, .total.insertions))]
+  
   
   colnames(df) <- c('Umi.count', 'Umi.proportion', 'Read.count', 'Read.proportion',
                     'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
