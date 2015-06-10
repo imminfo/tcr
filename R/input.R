@@ -128,16 +128,12 @@ parse.cloneset <- function (.filename,
   
   if (!(.total.insertions %in% table.colnames)) {
     .total.insertions <- "Total.insertions"
-    if (.vd.insertions %in% table.colnames && .dj.insertions %in% table.colnames) {
-      if (recomb_type == "VJ") {
-        df$Total.insertions <- df[[.jstart]] - df[[.vend]] - 1
-        df$Total.insertions[df[[.vend]] == -1] <- -1
-        df$Total.insertions[df[[.jstart]] == -1] <- -1
-      } else if (recomb_type == "VDJ" ) {
-        df$Total.insertions <- df$VD.insertions + df$DJ.insertions
-      } else {
-        df$Total.insertions <- -1
-      }
+    if (recomb_type == "VJ") {
+      df$Total.insertions <- df[[.jstart]] - df[[.vend]] - 1
+      df$Total.insertions[df[[.vend]] == -1] <- -1
+      df$Total.insertions[df[[.jstart]] == -1] <- -1
+    } else if (recomb_type == "VDJ" ) {
+      df$Total.insertions <- df$VD.insertions + df$DJ.insertions
     } else {
       df$Total.insertions <- -1
     }
