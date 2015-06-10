@@ -72,7 +72,7 @@ parse.cloneset <- function (.filename,
     do.call(switch, c(x, swlist))
   }, USE.NAMES = F))
   
-  suppressWarnings(df <- read.table(file = .filename, header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T))
+  suppressWarnings(df <- read.table(file = .filename, header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T, comment.char = ""))
   
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
   .read.prop <- 'Read.proportion'
@@ -91,17 +91,57 @@ parse.cloneset <- function (.filename,
     .aa.seq <- 'CDR3 amino acid sequence'
   }
   
+  # check for VJ or VDJ recombination
+  # VJ / VDJ / Undeterm
+  recomb_type = "Undeterm"
+  if (substr(df[1, .vgenes], 1, 4) %in% c("TRAV", "TRGV", "IGKV", "IGLV")) {
+    recomb_type = "VJ"
+  } else if (substr(df[1, .vgenes], 1, 4) %in% c("TRBV", "TRDV", "IGHV")) {
+    recomb_type = "VDJ"
+  }
+  
+  if (!(.vd.insertions %in% table.colnames)) { 
+    .vd.insertions <- "VD.insertions"
+    if (recomb_type == "VJ") {
+      df$VD.insertions <- -1
+    } else if (recomb_type == "VDJ") {
+      df$VD.insertions <- df[[.dalignments1]] - df[[.vend]] - 1
+      df$VD.insertions[df[[.dalignments1]] == -1] <- -1
+      df$VD.insertions[df[[.vend]] == -1] <- -1
+    } else {
+      df$VD.insertions <- -1
+    }
+  }
+  
+  if (!(.dj.insertions %in% table.colnames)) { 
+    .dj.insertions <- "DJ.insertions"
+    if (recomb_type == "VJ") {
+      df$DJ.insertions <- -1
+    } else if (recomb_type == "VDJ") {
+      df$DJ.insertions <- df[[.jstart]] - df[[.dalignments2]] - 1
+      df$DJ.insertions[df[[.dalignments2]] == -1] <- -1
+      df$DJ.insertions[df[[.jstart]] == -1] <- -1
+    } else {
+      df$DJ.insertions <- -1
+    }
+  }
+  
   if (!(.total.insertions %in% table.colnames)) {
+    .total.insertions <- "Total.insertions"
     if (.vd.insertions %in% table.colnames && .dj.insertions %in% table.colnames) {
-      df$Total.insertions <- df$VD.insertions + df$DJ.insertions
+      if (recomb_type == "VJ") {
+        df$Total.insertions <- df[[.jstart]] - df[[.vend]] - 1
+        df$Total.insertions[df[[.vend]] == -1] <- -1
+        df$Total.insertions[df[[.jstart]] == -1] <- -1
+      } else if (recomb_type == "VDJ" ) {
+        df$Total.insertions <- df$VD.insertions + df$DJ.insertions
+      } else {
+        df$Total.insertions <- -1
+      }
     } else {
       df$Total.insertions <- -1
     }
   }
-  
-  if (!(.vd.insertions %in% table.colnames)) { df$VD.insertions <- -1 }
-  
-  if (!(.dj.insertions %in% table.colnames)) { df$DJ.insertions <- -1 }
   
   df <- df[, make.names(c(.barcodes, .umi.prop, .reads, .read.prop, 
                           .nuc.seq, .aa.seq,
@@ -125,8 +165,9 @@ parse.cloneset <- function (.filename,
 #' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec
 #'
 #' @description
-#' Load the MITCR TCR data from the file with the given filename
-#' to a data frame. For general parser see \code{\link{parse.cloneset}}.
+#' Load the TCR data from the file with the given filename
+#' to a data frame. For a general parser see \code{\link{parse.cloneset}}. Parsers are available for:
+#' MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), ImmunoSEQ ("immunoseq").
 #' 
 #' @usage
 #' parse.file(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
@@ -140,11 +181,15 @@ parse.cloneset <- function (.filename,
 #' parse.mitcrbc(.filename)
 #' 
 #' parse.migec(.filename)
+#' 
+#' parse.vdjtools(.filename)
+#' 
+#' parse.immunoseq(.filename)
 #'
 #' @param .filename Path to the input file with cloneset data.
 #' @param .filenames Vector or list with paths to files with cloneset data.
 #' @param .folderpath Path to the folder with text cloneset files.
-#' @param .format String specifing input format of files. Parsers for MiTCR output and MiGEC output are available.
+#' @param .format String specifing input format of files.
 #' @param .namelist Either NA or character vector of length \code{.filenames} with names for output data frames.
 #' @param ... Parameters passed to \code{parse.cloneset}.
 #' 
@@ -222,6 +267,7 @@ parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
                       mitcr = parse.mitcr,
                       mitcrbc = parse.mitcrbc,
                       migec = parse.migec,
+                      vdjtools = parse.vdjtools,
                       parse.cloneset)
   
   parse.fun(.filename, ...)
@@ -314,6 +360,42 @@ parse.migec <- function (.filename) {
   vd.insertions <- 'VD insertions'
   dj.insertions <- 'DJ insertions'
   total.insertions <- 'Total insertions'
+  .skip = 0
+  .sep = '\t'
+  
+  parse.cloneset(.filename = filename, 
+                 .nuc.seq = nuc.seq,
+                 .aa.seq = aa.seq,
+                 .reads = reads,
+                 .barcodes = barcodes,
+                 .vgenes = vgenes,
+                 .jgenes = jgenes,
+                 .dgenes = dgenes,
+                 .vend = vend,
+                 .jstart = jstart,
+                 .dalignments = dalignments,
+                 .vd.insertions = vd.insertions,
+                 .dj.insertions = dj.insertions,
+                 .total.insertions = total.insertions,
+                 .skip = .skip,
+                 .sep = .sep)
+}
+
+parse.vdjtools <- function (.filename) {
+  filename <- .filename
+  nuc.seq <- 'cdr3nt'
+  aa.seq <- 'cdr3aa'
+  reads <- '#count'
+  barcodes <- '#count'
+  vgenes <- 'v'
+  jgenes <- 'j'
+  dgenes <- 'd'
+  vend <- 'VEnd'
+  jstart <- 'JStart'
+  dalignments <- c('DStart', 'DEnd')
+  vd.insertions <- "NO SUCH COLUMN AT ALL 1"
+  dj.insertions <- "NO SUCH COLUMN AT ALL 2"
+  total.insertions <- "NO SUCH COLUMN AT ALL 3"
   .skip = 0
   .sep = '\t'
   
