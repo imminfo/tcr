@@ -51,10 +51,28 @@ parse.cloneset <- function (.filename,
                             .skip = 0,
                             .sep = '\t') {
   
-  .dalignments1 <- .dalignments[1]
-  .dalignments2 <- .dalignments[2]
+  .make.names <- function (.char) {
+    if (is.na(.char[1])) { NA }
+    else { make.names(.char) }
+  }
   
-  table.colnames <- read.table(.filename, sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T)[1,]
+  .nuc.seq <- .make.names(.nuc.seq)
+  .aa.seq <- .make.names(.aa.seq)
+  .reads <- .make.names(.reads)
+  .barcodes <- .make.names(.barcodes)
+  .vgenes <- .make.names(.vgenes)
+  .jgenes <- .make.names(.jgenes)
+  .dgenes <- .make.names(.dgenes)
+  .vend <- .make.names(.vend)
+  .jstart <- .make.names(.jstart)
+  .vd.insertions <- .make.names(.vd.insertions)
+  .dj.insertions <- .make.names(.dj.insertions)
+  .total.insertions <- .make.names(.total.insertions)
+  .dalignments1 <- .make.names(.dalignments[1])
+  .dalignments2 <- .make.names(.dalignments[2])
+  .dalignments <- .make.names(.dalignments)
+  
+  table.colnames <- make.names(read.table(gzfile(.filename), sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "")[1,])
   
   swlist <- list('character', 'character',
                  'integer', 'integer',
@@ -72,7 +90,7 @@ parse.cloneset <- function (.filename,
     do.call(switch, c(x, swlist))
   }, USE.NAMES = F))
   
-  suppressWarnings(df <- read.table(file = .filename, header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T, comment.char = ""))
+  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T, comment.char = ""))
   
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
   .read.prop <- 'Read.proportion'
@@ -164,6 +182,7 @@ parse.cloneset <- function (.filename,
 #' Load the TCR data from the file with the given filename
 #' to a data frame. For a general parser see \code{\link{parse.cloneset}}. Parsers are available for:
 #' MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), ImmunoSEQ ("immunoseq").
+#' Input files could also be archived with gzip ("filename.txt.gz") or bzip2 ("filename.txt.bz2").
 #' 
 #' @usage
 #' parse.file(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
@@ -230,6 +249,8 @@ parse.cloneset <- function (.filename,
 #' \dontrun{
 #' # Parse file in "~/mitcr/immdata1.txt" as a MiTCR file.
 #' immdata1 <- parse.file("~/mitcr/immdata1.txt", 'mitcr')
+#' # Parse VDJtools file archive as .gz file.
+#' immdata1 <- parse.file("~/mitcr/immdata3.txt.gz", 'vdjtools')
 #' # Parse files "~/data/immdata1.txt" and "~/data/immdat2.txt" as MiGEC files.
 #' immdata12 <- parse.file.list(c("~/data/immdata1.txt",
 #'                              "~/data/immdata2.txt"), 'migec')
