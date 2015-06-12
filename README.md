@@ -5,7 +5,9 @@
 tcR
 ===
 
-tcR is a platform designed for TCR repertoire data analysis in R after preprocessing data with tools for CDR3 extraction and gene segments aligning (MiTCR, MiGEC, IgBLAST, Decombinator, etc.). With the power and flexibility of R language and procedures supported by tcR users can perform advanced statistical analysis of TCR repertoires.
+tcR is a platform designed for TCR repertoire data analysis in R after preprocessing data with tools for CDR3 extraction and gene segments aligning (MiTCR, MiGEC, ImmunoSEQ, IMSEQ, etc.). With the power and flexibility of R language and procedures supported by tcR users can perform advanced statistical analysis of TCR repertoires. The package was published in BMC Bioinformatics:
+
+[Nazarov et al., tcR: an R package for T cell receptor repertoire advanced data analysis](http://www.biomedcentral.com/1471-2105/16/175)
 
 See tcR website for more information, manual and examples: [http://imminfo.github.io/tcr/](http://imminfo.github.io/tcr/)
 
