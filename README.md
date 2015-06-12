@@ -5,6 +5,8 @@
 tcR
 ===
 
+[![Join the chat at https://gitter.im/imminfo/tcr](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imminfo/tcr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 tcR is a platform designed for TCR repertoire data analysis in R after preprocessing data with tools for CDR3 extraction and gene segments aligning (MiTCR, MiGEC, ImmunoSEQ, IMSEQ, etc.). With the power and flexibility of R language and procedures supported by tcR users can perform advanced statistical analysis of TCR repertoires. The package was published in BMC Bioinformatics:
 
 [Nazarov et al., tcR: an R package for T cell receptor repertoire advanced data analysis](http://www.biomedcentral.com/1471-2105/16/175)
