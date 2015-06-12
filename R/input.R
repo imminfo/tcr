@@ -106,15 +106,15 @@ parse.cloneset <- function (.filename,
   
   if (is.na(.aa.seq)) {
     df$CDR3.amino.acid.sequence <- bunch.translate(df$CDR3.nucleotide.sequence)
-    .aa.seq <- 'CDR3 amino acid sequence'
+    .aa.seq <- 'CDR3.amino.acid.sequence'
   }
   
   # check for VJ or VDJ recombination
   # VJ / VDJ / Undeterm
   recomb_type = "Undeterm"
-  if (substr(df[1, .vgenes], 1, 4) %in% c("TRAV", "TRGV", "IGKV", "IGLV")) {
+  if (sum(substr(head(df)[[.vgenes]], 1, 4) %in% c("TCRA", "TRAV", "TRGV", "IGKV", "IGLV"))) {
     recomb_type = "VJ"
-  } else if (substr(df[1, .vgenes], 1, 4) %in% c("TRBV", "TRDV", "IGHV")) {
+  } else if (sum(substr(head(df)[[.vgenes]], 1, 4) %in% c("TCRB", "TRBV", "TRDV", "IGHV"))) {
     recomb_type = "VDJ"
   }
   
@@ -151,7 +151,7 @@ parse.cloneset <- function (.filename,
       df$Total.insertions[df[[.vend]] == -1] <- -1
       df$Total.insertions[df[[.jstart]] == -1] <- -1
     } else if (recomb_type == "VDJ" ) {
-      df$Total.insertions <- df$VD.insertions + df$DJ.insertions
+      df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
     } else {
       df$Total.insertions <- -1
     }
@@ -176,7 +176,7 @@ parse.cloneset <- function (.filename,
 
 #' Parse input table files with immune receptor repertoire data.
 #'
-#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec
+#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq
 #'
 #' @description
 #' Load the TCR data from the file with the given filename
@@ -185,11 +185,14 @@ parse.cloneset <- function (.filename,
 #' Input files could also be archived with gzip ("filename.txt.gz") or bzip2 ("filename.txt.bz2").
 #' 
 #' @usage
-#' parse.file(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+#' parse.file(.filename, 
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...)
 #' 
-#' parse.file.list(.filenames, .format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA)
+#' parse.file.list(.filenames, 
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), .namelist = NA)
 #' 
-#' parse.folder(.folderpath, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+#' parse.folder(.folderpath, 
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...)
 #' 
 #' parse.mitcr(.filename)
 #' 
@@ -257,11 +260,11 @@ parse.cloneset <- function (.filename,
 #' # Parse all files in "~/data/" as MiGEC files.
 #' immdata <- parse.folder("~/data/", 'migec')
 #' }
-parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec'), ...) {
+parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...) {
   parse.file.list(list.files(.folderpath, full.names = T), .format)
 }
 
-parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA) {
+parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), .namelist = NA) {
   # Remove full paths and extension from the given string.
   .remove.ext <- function (.str) {
     gsub(pattern = '.*/|[.].*$', replacement = '', x = .str)
@@ -278,7 +281,7 @@ parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'
   datalist
 }
 
-parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...) {
+parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...) {
   
   parse.fun <- switch(.format[1], 
                       mitcr = parse.mitcr,
@@ -432,4 +435,80 @@ parse.vdjtools <- function (.filename) {
                  .total.insertions = total.insertions,
                  .skip = .skip,
                  .sep = .sep)
+}
+
+parse.immunoseq <- function (.filename) {
+  filename <- .filename
+  nuc.seq <- 'nucleotide'
+  aa.seq <- 'aminoAcid'
+  reads <- 'count'
+  barcodes <- 'vIndex'
+  vgenes <- 'vGeneName'
+  jgenes <- 'jGeneName'
+  dgenes <- 'dFamilyName'
+  vend <- 'n1Index'
+  jstart <- 'jIndex'
+  dalignments <- c('dIndex', 'n2Index')
+  vd.insertions <- "n1Insertion"
+  dj.insertions <- "n2Insertion"
+  total.insertions <- "NO SUCH COLUMN AT ALL 3"
+  .skip = 0
+  .sep = '\t'
+  
+  df <- parse.cloneset(.filename = filename, 
+                       .nuc.seq = nuc.seq,
+                       .aa.seq = aa.seq,
+                       .reads = reads,
+                       .barcodes = barcodes,
+                       .vgenes = vgenes,
+                       .jgenes = jgenes,
+                       .dgenes = dgenes,
+                       .vend = vend,
+                       .jstart = jstart,
+                       .dalignments = dalignments,
+                       .vd.insertions = vd.insertions,
+                       .dj.insertions = dj.insertions,
+                       .total.insertions = total.insertions,
+                       .skip = .skip,
+                       .sep = .sep)
+  
+  # fix nucleotide sequences
+  df$CDR3.nucleotide.sequence <- substr(df$CDR3.nucleotide.sequence, df$Umi.count + 1, nchar(df$CDR3.nucleotide.sequence) - 6)
+  
+  # add out-of-frame amino acid sequences
+  df$CDR3.amino.acid.sequence <- bunch.translate(df$CDR3.nucleotide.sequence)
+  
+  # df <- fix.alleles(df)
+  
+  # fix genes names and ","
+  .fix.genes <- function (.col) {
+    # fix ","
+    .col <- gsub(",", ", ", .col, fixed = T, useBytes = T)
+    # fix forward zeros
+    .col <- gsub("([0])([0-9])", "\\2", .col, useBytes = T)
+    # fix gene names
+    .col <- gsub("TCR", "TR", .col, fixed = T, useBytes = T)
+    .col
+  }
+  
+  df$V.gene <- .fix.genes(df$V.gene)
+  df$D.gene <- .fix.genes(df$D.gene)
+  df$J.gene <- .fix.genes(df$J.gene)
+  
+  # update V, D and J positions
+  .fix.poses <- function (.col) {
+    df[df[[.col]] != -1, .col] <- df[df[[.col]] != -1, .col] - df$Umi.count[df[[.col]] != -1]
+    df
+  }
+  
+  df <- .fix.poses("V.end")
+  df <- .fix.poses("D3.end")
+  df <- .fix.poses("D5.end")
+  df <- .fix.poses("J.start")
+  
+  # nullify barcodes
+  df$Umi.count <- NA
+  df$Umi.proportion <- NA
+  
+  df
 }
