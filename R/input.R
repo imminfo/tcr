@@ -51,10 +51,28 @@ parse.cloneset <- function (.filename,
                             .skip = 0,
                             .sep = '\t') {
   
-  .dalignments1 <- .dalignments[1]
-  .dalignments2 <- .dalignments[2]
+  .make.names <- function (.char) {
+    if (is.na(.char[1])) { NA }
+    else { make.names(.char) }
+  }
   
-  table.colnames <- read.table(.filename, sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T)[1,]
+  .nuc.seq <- .make.names(.nuc.seq)
+  .aa.seq <- .make.names(.aa.seq)
+  .reads <- .make.names(.reads)
+  .barcodes <- .make.names(.barcodes)
+  .vgenes <- .make.names(.vgenes)
+  .jgenes <- .make.names(.jgenes)
+  .dgenes <- .make.names(.dgenes)
+  .vend <- .make.names(.vend)
+  .jstart <- .make.names(.jstart)
+  .vd.insertions <- .make.names(.vd.insertions)
+  .dj.insertions <- .make.names(.dj.insertions)
+  .total.insertions <- .make.names(.total.insertions)
+  .dalignments1 <- .make.names(.dalignments[1])
+  .dalignments2 <- .make.names(.dalignments[2])
+  .dalignments <- .make.names(.dalignments)
+  
+  table.colnames <- make.names(read.table(gzfile(.filename), sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "")[1,])
   
   swlist <- list('character', 'character',
                  'integer', 'integer',
@@ -72,13 +90,13 @@ parse.cloneset <- function (.filename,
     do.call(switch, c(x, swlist))
   }, USE.NAMES = F))
   
-  suppressWarnings(df <- read.table(file = .filename, header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T))
+  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T, comment.char = ""))
   
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
   .read.prop <- 'Read.proportion'
   
   if(is.na(.barcodes)) {
-    .barcodes <- "Barcode count"
+    .barcodes <- "Umi.count"
     df$Umi.count <- NA
     df$Umi.proportion <- NA
   } else {
@@ -88,26 +106,63 @@ parse.cloneset <- function (.filename,
   
   if (is.na(.aa.seq)) {
     df$CDR3.amino.acid.sequence <- bunch.translate(df$CDR3.nucleotide.sequence)
-    .aa.seq <- 'CDR3 amino acid sequence'
+    .aa.seq <- 'CDR3.amino.acid.sequence'
+  }
+  
+  # check for VJ or VDJ recombination
+  # VJ / VDJ / Undeterm
+  recomb_type = "Undeterm"
+  if (sum(substr(head(df)[[.vgenes]], 1, 4) %in% c("TCRA", "TRAV", "TRGV", "IGKV", "IGLV"))) {
+    recomb_type = "VJ"
+  } else if (sum(substr(head(df)[[.vgenes]], 1, 4) %in% c("TCRB", "TRBV", "TRDV", "IGHV"))) {
+    recomb_type = "VDJ"
+  }
+  
+  if (!(.vd.insertions %in% table.colnames)) { 
+    .vd.insertions <- "VD.insertions"
+    if (recomb_type == "VJ") {
+      df$VD.insertions <- -1
+    } else if (recomb_type == "VDJ") {
+      df$VD.insertions <- df[[.dalignments1]] - df[[.vend]] - 1
+      df$VD.insertions[df[[.dalignments1]] == -1] <- -1
+      df$VD.insertions[df[[.vend]] == -1] <- -1
+    } else {
+      df$VD.insertions <- -1
+    }
+  }
+  
+  if (!(.dj.insertions %in% table.colnames)) { 
+    .dj.insertions <- "DJ.insertions"
+    if (recomb_type == "VJ") {
+      df$DJ.insertions <- -1
+    } else if (recomb_type == "VDJ") {
+      df$DJ.insertions <- df[[.jstart]] - df[[.dalignments2]] - 1
+      df$DJ.insertions[df[[.dalignments2]] == -1] <- -1
+      df$DJ.insertions[df[[.jstart]] == -1] <- -1
+    } else {
+      df$DJ.insertions <- -1
+    }
   }
   
   if (!(.total.insertions %in% table.colnames)) {
-    if (.vd.insertions %in% table.colnames && .dj.insertions %in% table.colnames) {
-      df$Total.insertions <- df$VD.insertions + df$DJ.insertions
+    .total.insertions <- "Total.insertions"
+    if (recomb_type == "VJ") {
+      df$Total.insertions <- df[[.jstart]] - df[[.vend]] - 1
+      df$Total.insertions[df[[.vend]] == -1] <- -1
+      df$Total.insertions[df[[.jstart]] == -1] <- -1
+    } else if (recomb_type == "VDJ" ) {
+      df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
     } else {
       df$Total.insertions <- -1
     }
   }
-  
-  if (!(.vd.insertions %in% table.colnames)) { df$VD.insertions <- -1 }
-  
-  if (!(.dj.insertions %in% table.colnames)) { df$DJ.insertions <- -1 }
   
   df <- df[, make.names(c(.barcodes, .umi.prop, .reads, .read.prop, 
                           .nuc.seq, .aa.seq,
                           .vgenes, .jgenes, .dgenes,
                           .vend, .jstart, .dalignments,
                           .vd.insertions, .dj.insertions, .total.insertions))]
+  
   
   colnames(df) <- c('Umi.count', 'Umi.proportion', 'Read.count', 'Read.proportion',
                     'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
@@ -121,29 +176,38 @@ parse.cloneset <- function (.filename,
 
 #' Parse input table files with immune receptor repertoire data.
 #'
-#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec
+#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq
 #'
 #' @description
-#' Load the MITCR TCR data from the file with the given filename
-#' to a data frame. For general parser see \code{\link{parse.cloneset}}.
+#' Load the TCR data from the file with the given filename
+#' to a data frame. For a general parser see \code{\link{parse.cloneset}}. Parsers are available for:
+#' MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), ImmunoSEQ ("immunoseq").
+#' Input files could also be archived with gzip ("filename.txt.gz") or bzip2 ("filename.txt.bz2").
 #' 
 #' @usage
-#' parse.file(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+#' parse.file(.filename, 
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...)
 #' 
-#' parse.file.list(.filenames, .format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA)
+#' parse.file.list(.filenames, 
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), .namelist = NA)
 #' 
-#' parse.folder(.folderpath, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+#' parse.folder(.folderpath, 
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...)
 #' 
 #' parse.mitcr(.filename)
 #' 
 #' parse.mitcrbc(.filename)
 #' 
 #' parse.migec(.filename)
+#' 
+#' parse.vdjtools(.filename)
+#' 
+#' parse.immunoseq(.filename)
 #'
 #' @param .filename Path to the input file with cloneset data.
 #' @param .filenames Vector or list with paths to files with cloneset data.
 #' @param .folderpath Path to the folder with text cloneset files.
-#' @param .format String specifing input format of files. Parsers for MiTCR output and MiGEC output are available.
+#' @param .format String specifing input format of files.
 #' @param .namelist Either NA or character vector of length \code{.filenames} with names for output data frames.
 #' @param ... Parameters passed to \code{parse.cloneset}.
 #' 
@@ -188,17 +252,19 @@ parse.cloneset <- function (.filename,
 #' \dontrun{
 #' # Parse file in "~/mitcr/immdata1.txt" as a MiTCR file.
 #' immdata1 <- parse.file("~/mitcr/immdata1.txt", 'mitcr')
+#' # Parse VDJtools file archive as .gz file.
+#' immdata1 <- parse.file("~/mitcr/immdata3.txt.gz", 'vdjtools')
 #' # Parse files "~/data/immdata1.txt" and "~/data/immdat2.txt" as MiGEC files.
 #' immdata12 <- parse.file.list(c("~/data/immdata1.txt",
 #'                              "~/data/immdata2.txt"), 'migec')
 #' # Parse all files in "~/data/" as MiGEC files.
 #' immdata <- parse.folder("~/data/", 'migec')
 #' }
-parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec'), ...) {
+parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...) {
   parse.file.list(list.files(.folderpath, full.names = T), .format)
 }
 
-parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA) {
+parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), .namelist = NA) {
   # Remove full paths and extension from the given string.
   .remove.ext <- function (.str) {
     gsub(pattern = '.*/|[.].*$', replacement = '', x = .str)
@@ -215,12 +281,13 @@ parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'
   datalist
 }
 
-parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...) {
+parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...) {
   
   parse.fun <- switch(.format[1], 
                       mitcr = parse.mitcr,
                       mitcrbc = parse.mitcrbc,
                       migec = parse.migec,
+                      vdjtools = parse.vdjtools,
                       parse.cloneset)
   
   parse.fun(.filename, ...)
@@ -332,4 +399,116 @@ parse.migec <- function (.filename) {
                  .total.insertions = total.insertions,
                  .skip = .skip,
                  .sep = .sep)
+}
+
+parse.vdjtools <- function (.filename) {
+  filename <- .filename
+  nuc.seq <- 'cdr3nt'
+  aa.seq <- 'cdr3aa'
+  reads <- '#count'
+  barcodes <- '#count'
+  vgenes <- 'v'
+  jgenes <- 'j'
+  dgenes <- 'd'
+  vend <- 'VEnd'
+  jstart <- 'JStart'
+  dalignments <- c('DStart', 'DEnd')
+  vd.insertions <- "NO SUCH COLUMN AT ALL 1"
+  dj.insertions <- "NO SUCH COLUMN AT ALL 2"
+  total.insertions <- "NO SUCH COLUMN AT ALL 3"
+  .skip = 0
+  .sep = '\t'
+  
+  parse.cloneset(.filename = filename, 
+                 .nuc.seq = nuc.seq,
+                 .aa.seq = aa.seq,
+                 .reads = reads,
+                 .barcodes = barcodes,
+                 .vgenes = vgenes,
+                 .jgenes = jgenes,
+                 .dgenes = dgenes,
+                 .vend = vend,
+                 .jstart = jstart,
+                 .dalignments = dalignments,
+                 .vd.insertions = vd.insertions,
+                 .dj.insertions = dj.insertions,
+                 .total.insertions = total.insertions,
+                 .skip = .skip,
+                 .sep = .sep)
+}
+
+parse.immunoseq <- function (.filename) {
+  filename <- .filename
+  nuc.seq <- 'nucleotide'
+  aa.seq <- 'aminoAcid'
+  reads <- 'count'
+  barcodes <- 'vIndex'
+  vgenes <- 'vGeneName'
+  jgenes <- 'jGeneName'
+  dgenes <- 'dFamilyName'
+  vend <- 'n1Index'
+  jstart <- 'jIndex'
+  dalignments <- c('dIndex', 'n2Index')
+  vd.insertions <- "n1Insertion"
+  dj.insertions <- "n2Insertion"
+  total.insertions <- "NO SUCH COLUMN AT ALL 3"
+  .skip = 0
+  .sep = '\t'
+  
+  df <- parse.cloneset(.filename = filename, 
+                       .nuc.seq = nuc.seq,
+                       .aa.seq = aa.seq,
+                       .reads = reads,
+                       .barcodes = barcodes,
+                       .vgenes = vgenes,
+                       .jgenes = jgenes,
+                       .dgenes = dgenes,
+                       .vend = vend,
+                       .jstart = jstart,
+                       .dalignments = dalignments,
+                       .vd.insertions = vd.insertions,
+                       .dj.insertions = dj.insertions,
+                       .total.insertions = total.insertions,
+                       .skip = .skip,
+                       .sep = .sep)
+  
+  # fix nucleotide sequences
+  df$CDR3.nucleotide.sequence <- substr(df$CDR3.nucleotide.sequence, df$Umi.count + 1, nchar(df$CDR3.nucleotide.sequence) - 6)
+  
+  # add out-of-frame amino acid sequences
+  df$CDR3.amino.acid.sequence <- bunch.translate(df$CDR3.nucleotide.sequence)
+  
+  # df <- fix.alleles(df)
+  
+  # fix genes names and ","
+  .fix.genes <- function (.col) {
+    # fix ","
+    .col <- gsub(",", ", ", .col, fixed = T, useBytes = T)
+    # fix forward zeros
+    .col <- gsub("([0])([0-9])", "\\2", .col, useBytes = T)
+    # fix gene names
+    .col <- gsub("TCR", "TR", .col, fixed = T, useBytes = T)
+    .col
+  }
+  
+  df$V.gene <- .fix.genes(df$V.gene)
+  df$D.gene <- .fix.genes(df$D.gene)
+  df$J.gene <- .fix.genes(df$J.gene)
+  
+  # update V, D and J positions
+  .fix.poses <- function (.col) {
+    df[df[[.col]] != -1, .col] <- df[df[[.col]] != -1, .col] - df$Umi.count[df[[.col]] != -1]
+    df
+  }
+  
+  df <- .fix.poses("V.end")
+  df <- .fix.poses("D3.end")
+  df <- .fix.poses("D5.end")
+  df <- .fix.poses("J.start")
+  
+  # nullify barcodes
+  df$Umi.count <- NA
+  df$Umi.proportion <- NA
+  
+  df
 }

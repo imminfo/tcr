@@ -4,27 +4,36 @@
 \alias{parse.file}
 \alias{parse.file.list}
 \alias{parse.folder}
+\alias{parse.immunoseq}
 \alias{parse.migec}
 \alias{parse.mitcr}
 \alias{parse.mitcrbc}
+\alias{parse.vdjtools}
 \title{Parse input table files with immune receptor repertoire data.}
 \usage{
-parse.file(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+parse.file(.filename,
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...)
 
-parse.file.list(.filenames, .format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA)
+parse.file.list(.filenames,
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), .namelist = NA)
 
-parse.folder(.folderpath, .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+parse.folder(.folderpath,
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...)
 
 parse.mitcr(.filename)
 
 parse.mitcrbc(.filename)
 
 parse.migec(.filename)
+
+parse.vdjtools(.filename)
+
+parse.immunoseq(.filename)
 }
 \arguments{
 \item{.folderpath}{Path to the folder with text cloneset files.}
 
-\item{.format}{String specifing input format of files. Parsers for MiTCR output and MiGEC output are available.}
+\item{.format}{String specifing input format of files.}
 
 \item{...}{Parameters passed to \code{parse.cloneset}.}
 
@@ -71,13 +80,17 @@ The data frame has following columns:
 - "Total.insertions" - total number of inserted nucleotides (number of N-nucleotides at V-J junction for receptors with VJ recombination).
 }
 \description{
-Load the MITCR TCR data from the file with the given filename
-to a data frame. For general parser see \code{\link{parse.cloneset}}.
+Load the TCR data from the file with the given filename
+to a data frame. For a general parser see \code{\link{parse.cloneset}}. Parsers are available for:
+MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), ImmunoSEQ ("immunoseq").
+Input files could also be archived with gzip ("filename.txt.gz") or bzip2 ("filename.txt.bz2").
 }
 \examples{
 \dontrun{
 # Parse file in "~/mitcr/immdata1.txt" as a MiTCR file.
 immdata1 <- parse.file("~/mitcr/immdata1.txt", 'mitcr')
+# Parse VDJtools file archive as .gz file.
+immdata1 <- parse.file("~/mitcr/immdata3.txt.gz", 'vdjtools')
 # Parse files "~/data/immdata1.txt" and "~/data/immdat2.txt" as MiGEC files.
 immdata12 <- parse.file.list(c("~/data/immdata1.txt",
                              "~/data/immdata2.txt"), 'migec')

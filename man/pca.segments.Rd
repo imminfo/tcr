@@ -16,6 +16,8 @@ pca.segments.2D(.data, .cast.freq.seg = T, ..., .do.plot = T)
 
 \item{...}{Further arguments passed to \code{prcomp} or \code{geneUsage}.}
 
+\item{.text}{If T then plot sample names in the resulting plot.}
+
 \item{.do.plot}{if T then plot a graphic, else return a pca object.}
 }
 \value{
