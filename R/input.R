@@ -288,6 +288,7 @@ parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjt
                       mitcrbc = parse.mitcrbc,
                       migec = parse.migec,
                       vdjtools = parse.vdjtools,
+                      immunoseq = parse.immunoseq,
                       parse.cloneset)
   
   parse.fun(.filename, ...)
