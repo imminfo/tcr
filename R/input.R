@@ -72,6 +72,11 @@ parse.cloneset <- function (.filename,
   .dalignments2 <- .make.names(.dalignments[2])
   .dalignments <- .make.names(.dalignments)
   
+  # Check for different levels of the MiTCR output
+  f <- file(.filename, "r")
+  if (substr(readLines(f, 1), 1, 16) == " MiTCRFullExport") { .skip <- 1 }
+  close(f)
+  
   table.colnames <- make.names(read.table(gzfile(.filename), sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "")[1,])
   
   swlist <- list('character', 'character',
@@ -309,7 +314,7 @@ parse.mitcr <- function (.filename) {
   vd.insertions <- 'VD insertions'
   dj.insertions <- 'DJ insertions'
   total.insertions <- 'Total insertions'
-  .skip = 1
+  .skip = 0
   .sep = '\t'
     
   parse.cloneset(.filename = filename, 
