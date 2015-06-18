@@ -21,7 +21,7 @@
 
         <p>T cell receptor, TCR repertoire, TCR analysis, immunoinformatics, computational immunology</p>
 
-        <p><a href="http://imminfo.github.io/tcr/">Paper in <i>Journal of Something</i> (stay tuned...) </a></p>
+        <p><a href="http://www.biomedcentral.com/1471-2105/16/175">Paper in <i>BMC Bioinformatics</i> </a></p>
 
         <ul>
           <li><a href="tcrvignette.html">View HTML <strong>Vignette</strong></a></li>
@@ -40,12 +40,12 @@
 <h3>
 <a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h3>
 
-<p><strong>tcR</strong> is a platform designed for TCR repertoire data analysis in R after preprocessing data with <a href="http://www.nature.com/nmeth/journal/v10/n9/full/nmeth.2555.html">MiTCR</a> or other CDR3 extraction and gene alignment software tools. With the power and flexibility of R language and
+<p><strong>tcR</strong> is a platform designed for TCR repertoire data analysis in R after preprocessing data with CDR3 extraction and gene alignment software tools such as MiTCR, ImmunoSEQ and MiGEC. With the power and flexibility of R language and
 procedures supported by <strong>tcR</strong> users can perform advanced statistical analysis of TCR repertoires. Features of the package:</p>
 
 <ul>
   <li>Parsers for outputs of various tools for CDR3 extraction and gene segments alignment</li>
-  <i>(currently implemented MiTCR and MiGEC parsers)</i>
+  <i>(currently implemented parsers for MiTCR, MiGEC, VDJtools, ImmunoSEQ; parsers for IMSEQ and MiXCR are coming soon)</i>
   <li>Data manipulation</li>
   <i>(in-frame / out-of-frame sequences subsetting, clonotype motif search)</i>
   <li>Descriptive statistics</li>
@@ -71,13 +71,21 @@ procedures supported by <strong>tcR</strong> users can perform advanced statisti
 <a name="binaries" class="anchor" href="#binaries"><span class="octicon octicon-link"></span></a>Installation</h3>
 <p>The package is available through CRAN and through <i>devtools::install_github</i>.
 <p>CRAN version: <strong>2.0</strong></p>
-<p>Dev version: <strong>2.0</strong></p>
+<p>Stable development version: <strong>2.1</strong></p>
+<p>Unstable development version: <strong>2.1</strong></p>
+
 <p>Install the latest release version from CRAN with:</p>
 <pre><code>install.packages("tcR")
 </code></pre>
-<p>Install the latest development version <strong>(strongly recommended)</strong> with:</p>
+
+<p>Install the latest stable development version <strong>(strongly recommended)</strong> with:</p>
 <pre><code># install.packages("devtools")
 devtools::install_github("imminfo/tcR", build_vignettes = FALSE)
+</code></pre>
+
+<p>Install the latest unstable development version <strong>(only for contributors and advanced users)</strong> with:</p>
+<pre><code># install.packages("devtools")
+devtools::install_github("imminfo/tcR", build_vignettes = FALSE, ref = "develop")
 </code></pre>
 
 <h3>
