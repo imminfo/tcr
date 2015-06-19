@@ -303,7 +303,7 @@ parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'
   
   datalist <- list()
   for (i in 1:length(.filenames)) {
-    cat('Parsing "', .filenames[[i]], '"\n\t', sep = "")
+    cat(i, "/", length(.filenames), '  Parsing "', .filenames[[i]], '"\n\t', sep = "")
     datalist[[i]] <- parse.file(.filenames[[i]], .format)
     cat("Done. Cloneset with", nrow(datalist[[i]]), "clonotypes.\n")
     flush.console()
