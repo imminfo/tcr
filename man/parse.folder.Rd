@@ -93,10 +93,10 @@ Parsers are available for:
 MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), ImmunoSEQ ("immunoseq"),
 MiXCR ("mixcr") and IMSEQ ("imseq").
 
-Output of MiXCR should contain all hits or best hits for each gene segment.
+Output of MiXCR should contain either all hits or best hits for each gene segment.
 
 Output of IMSEQ should be generated with parameter "-on". In this case there will be no positions of aligned gene segments in the output data frame
-due to the restrictions of IMSEQ output.
+due to restrictions of IMSEQ output.
 }
 \examples{
 \dontrun{
