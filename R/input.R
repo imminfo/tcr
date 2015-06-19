@@ -301,7 +301,13 @@ parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'
   
   .filenames <- as.list(.filenames)
   
-  datalist <- lapply(X = 1:length(.filenames), FUN = function (i) parse.file(.filenames[[i]], .format) )
+  datalist <- list()
+  for (i in 1:length(.filenames)) {
+    cat("Parsing", .filenames[[i]], "...\n")
+    datalist[[i]] <- parse.file(.filenames[[i]], .format)
+    cat("\tDone. Cloneset with", nrow(datalist[[i]]), "clonotypes.\n")
+  }
+  
   if (is.na(.namelist)) {
     namelist <- lapply(X = .filenames, FUN = .remove.ext)
     names(datalist) <- unlist(namelist)
