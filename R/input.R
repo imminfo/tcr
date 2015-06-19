@@ -72,9 +72,19 @@ parse.cloneset <- function (.filename,
   .dalignments2 <- .make.names(.dalignments[2])
   .dalignments <- .make.names(.dalignments)
   
-  # Check for different levels of the MiTCR output
   f <- file(.filename, "r")
-  if (substr(readLines(f, 1), 1, 16) == " MiTCRFullExport") { .skip <- 1 }
+  l <- readLines(f, 1)
+  # Check for different levels of the MiTCR output
+  if (substr(l, 1, 16) == " MiTCRFullExport") { .skip <- 1 }
+  
+  # Check for different VDJtools outputs
+  if (length(strsplit(l, "-", T)[[1]]) == 3) {
+    if (strsplit(l, "-", T)[[1]][2] == "header") {
+      .reads <- "count"
+      .barcodes <- "count"
+      .skip <- 1
+    }
+  }
   close(f)
   
   table.colnames <- make.names(read.table(gzfile(.filename), sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "")[1,])
