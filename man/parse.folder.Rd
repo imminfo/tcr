@@ -12,13 +12,13 @@
 \title{Parse input table files with immune receptor repertoire data.}
 \usage{
 parse.file(.filename,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...)
 
 parse.file.list(.filenames,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), .namelist = NA)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), .namelist = NA)
 
 parse.folder(.folderpath,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq'), ...)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...)
 
 parse.mitcr(.filename)
 
@@ -29,6 +29,10 @@ parse.migec(.filename)
 parse.vdjtools(.filename)
 
 parse.immunoseq(.filename)
+
+parse.mixcr(.filename)
+
+parse.imseq(.filename)
 }
 \arguments{
 \item{.folderpath}{Path to the folder with text cloneset files.}
@@ -80,10 +84,19 @@ The data frame has following columns:
 - "Total.insertions" - total number of inserted nucleotides (number of N-nucleotides at V-J junction for receptors with VJ recombination).
 }
 \description{
-Load the TCR data from the file with the given filename
-to a data frame. For a general parser see \code{\link{parse.cloneset}}. Parsers are available for:
-MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), ImmunoSEQ ("immunoseq").
-Input files could also be archived with gzip ("filename.txt.gz") or bzip2 ("filename.txt.bz2").
+Load the TCR data from the file with the given filename to a data frame or load all
+files from the given folder to a list of data frames. The folder must contain onky files with the specified format.
+Input files could be either text files or archived with gzip ("filename.txt.gz") or bzip2 ("filename.txt.bz2").
+For a general parser see \code{\link{parse.cloneset}}.
+
+Parsers are available for:
+MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), ImmunoSEQ ("immunoseq"),
+MiXCR ("mixcr") and IMSEQ ("imseq").
+
+Output of MiXCR should contain either all hits or best hits for each gene segment.
+
+Output of IMSEQ should be generated with parameter "-on". In this case there will be no positions of aligned gene segments in the output data frame
+due to restrictions of IMSEQ output.
 }
 \examples{
 \dontrun{

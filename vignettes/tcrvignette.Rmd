@@ -44,7 +44,7 @@ data(twb)
 
 
 ### Package features
-  - Parsers for outputs of various tools for CDR3 extraction and genes alignment *(currently implemented MiTCR and MiGEC parsers)*
+  - Parsers for outputs of various tools for CDR3 extraction and genes alignment *(currently implemented parsers for MiTCR, MiGEC, VDJtools, ImmunoSEQ, IMSEQ and MiXCR)*
   - Data manipulation *(in-frame / out-of-frame sequences subsetting, clonotype motif search)*
   - Descriptive statistics *(number of reads, number of clonotypes, gene segment usage)*
   - Shared clonotypes statistics *(number of shared clonotypes, using V genes or not; sequential intersection among the most abundant clonotype ("top-cross"))*
@@ -109,7 +109,23 @@ You need the *knitr* package installed in order to generate reports from default
 
 
 ### Input parsing
-Parsers for MiTCR and MiGEC software tools outputs are currently implemented, and a general parser for text table files is implemented. General parser is `parse.cloneset`, MiTCR parser is `parse.mitcr` and MiGEC parser if `parse.migec`. General wrapper for parsers is `parse.file`. User can also parse a list of files or the entire folder.
+Currently in *tcR* there are implemented parser for the next software:
+
+ - MiTCR - `parse.mitcr`;
+ 
+ - MiTCR w/ UMIs - `parse.mitcrbc`;
+ 
+ - MiGEC - `parse.migec`;
+ 
+ - VDJtools - `parse.vdjtools`;
+ 
+ - ImmunoSEQ - `parse.immunoseq`;
+ 
+ - MiXCR - `parse.mixcr`;
+ 
+ - IMSEQ - `parse.imseq`.
+
+Also a general parser `parse.cloneset` for a text table files is implemented. General wrapper for parsers is `parse.file`. User can also parse a list of files or the entire folder. Run `?parse.folder` to see a help on parsing input files and a list of functions for parsing a specific input format.
 
 ```{r eval=FALSE,echo=TRUE}
 # Parse file in "~/mitcr/immdata1.txt" as a MiTCR file.
