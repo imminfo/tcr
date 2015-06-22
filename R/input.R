@@ -75,7 +75,7 @@ parse.cloneset <- function (.filename,
   f <- file(.filename, "r")
   l <- readLines(f, 1)
   # Check for different levels of the MiTCR output
-  if (substr(l, 1, 16) == " MiTCRFullExport") { .skip <- 1 }
+  if (length(grep("MiTCRFullExportV1.1", l, fixed = T))) { .skip <- 1 }
   
   # Check for different VDJtools outputs
   if (length(strsplit(l, "-", T)[[1]]) == 3) {
@@ -317,7 +317,6 @@ parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'
 }
 
 parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...) {
-  
   parse.fun <- switch(.format[1], 
                       mitcr = parse.mitcr,
                       mitcrbc = parse.mitcrbc,
