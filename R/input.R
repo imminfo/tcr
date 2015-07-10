@@ -551,17 +551,44 @@ parse.immunoseq <- function (.filename) {
 }
 
 parse.mixcr <- function (.filename) {
-  filename <- .filename
-  nuc.seq <- 'n..seq..cdr3'
-  aa.seq <- 'aa..seq..cdr3'
-  reads <- 'clone.count'
-  barcodes <- 'clone.count'
-#   vgenes <- 'All.V.hits', 'V.hits'
-#   jgenes <- 'All.J.hits', 'J.hits'
-#   dgenes <- 'All.D.hits', 'D.hits'
+  .filename <- .filename
+  .nuc.seq <- 'n..seq..cdr3'
+  .aa.seq <- 'aa..seq..cdr3'
+  .reads <- 'clone.count'
+  .barcodes <- 'clone.count'
   .sep = '\t'
+  .vend <- "V.end"
+  .jstart <- "J.start"
+  .dalignments <- c("D5.end", "D3.end")
+  .vd.insertions <- "VD.insertions"
+  .dj.insertions <- "DJ.insertions"
+  .total.insertions <- "Total.insertions"
   
   table.colnames <- tolower(make.names(read.table(gzfile(.filename), sep = .sep, skip = 0, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "")[1,]))
+  
+  if ('all.v.hits' %in% table.colnames) {
+    .vgenes <- 'all.v.hits'
+  } else if ('v.hits' %in% table.colnames) {
+    .vgenes <- 'v.hits'
+  } else {
+    cat("Error: can't find a column with V genes")
+  }
+  
+  if ('all.j.hits' %in% table.colnames) {
+    .jgenes <- 'all.j.hits'
+  } else if ('j.hits' %in% table.colnames) {
+    .jgenes <- 'j.hits'
+  } else {
+    cat("Error: can't find a column with J genes")
+  }
+  
+  if ('all.d.hits' %in% table.colnames) {
+    .dgenes <- 'all.d.hits'
+  } else if ('d.hits' %in% table.colnames) {
+    .dgenes <- 'd.hits'
+  } else {
+    cat("Error: can't find a column with D genes")
+  }
   
   swlist <- list('character', 'character',
                  'integer', 'integer',
@@ -570,7 +597,7 @@ parse.mixcr <- function (.filename) {
   names(swlist) <- c(.nuc.seq, .aa.seq,
                      .reads, .barcodes,
                      .vgenes, .jgenes, .dgenes,
-                     .vend, .jstart, .dalignments,
+                     #.vend, .jstart, .dalignments,
                      .vd.insertions, .dj.insertions, .total.insertions)
   swlist <- c(swlist, 'NULL')
   
@@ -578,7 +605,7 @@ parse.mixcr <- function (.filename) {
     do.call(switch, c(x, swlist))
   }, USE.NAMES = F))
   
-  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = 0, strip.white = T, comment.char = ""))
+  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = 0, strip.white = T, comment.char = "", fill = T))
   names(df) <- tolower(names(df))
   
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
@@ -588,7 +615,7 @@ parse.mixcr <- function (.filename) {
   df$Umi.proportion <- df$Umi.count / sum(df$Umi.count)
   .umi.prop <- 'Umi.proportion'
   
-  df$CDR3.amino.acid.sequence <- bunch.translate(df$CDR3.nucleotide.sequence)
+  df$CDR3.amino.acid.sequence <- bunch.translate(df[[.nuc.seq]])
   .aa.seq <- 'CDR3.amino.acid.sequence'
   
   # check for VJ or VDJ recombination
@@ -600,44 +627,51 @@ parse.mixcr <- function (.filename) {
     recomb_type = "VDJ"
   }
   
-  if (!(.vd.insertions %in% table.colnames)) { 
-    .vd.insertions <- "VD.insertions"
-    if (recomb_type == "VJ") {
-      df$VD.insertions <- -1
-    } else if (recomb_type == "VDJ") {
-      df$VD.insertions <- df[[.dalignments1]] - df[[.vend]] - 1
-      df$VD.insertions[df[[.dalignments1]] == -1] <- -1
-      df$VD.insertions[df[[.vend]] == -1] <- -1
-    } else {
-      df$VD.insertions <- -1
-    }
-  }
-  
-  if (!(.dj.insertions %in% table.colnames)) { 
-    .dj.insertions <- "DJ.insertions"
-    if (recomb_type == "VJ") {
-      df$DJ.insertions <- -1
-    } else if (recomb_type == "VDJ") {
-      df$DJ.insertions <- df[[.jstart]] - df[[.dalignments2]] - 1
-      df$DJ.insertions[df[[.dalignments2]] == -1] <- -1
-      df$DJ.insertions[df[[.jstart]] == -1] <- -1
-    } else {
-      df$DJ.insertions <- -1
-    }
-  }
-  
-  if (!(.total.insertions %in% table.colnames)) {
-    .total.insertions <- "Total.insertions"
-    if (recomb_type == "VJ") {
-      df$Total.insertions <- df[[.jstart]] - df[[.vend]] - 1
-      df$Total.insertions[df[[.vend]] == -1] <- -1
-      df$Total.insertions[df[[.jstart]] == -1] <- -1
-    } else if (recomb_type == "VDJ" ) {
-      df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
-    } else {
-      df$Total.insertions <- -1
-    }
-  }
+  df$V.end <- -1
+  df$J.start <- -1
+  df$D5.end <- -1
+  df$D3.end <- -1
+  df$VD.insertions <- -1
+  df$DJ.insertions <- -1
+  df$Total.insertions <- -1
+#   if (!(.vd.insertions %in% table.colnames)) { 
+#     .vd.insertions <- "VD.insertions"
+#     if (recomb_type == "VJ") {
+#       df$VD.insertions <- -1
+#     } else if (recomb_type == "VDJ") {
+#       df$VD.insertions <- df[[.dalignments1]] - df[[.vend]] - 1
+#       df$VD.insertions[df[[.dalignments1]] == -1] <- -1
+#       df$VD.insertions[df[[.vend]] == -1] <- -1
+#     } else {
+#       df$VD.insertions <- -1
+#     }
+#   }
+#   
+#   if (!(.dj.insertions %in% table.colnames)) { 
+#     .dj.insertions <- "DJ.insertions"
+#     if (recomb_type == "VJ") {
+#       df$DJ.insertions <- -1
+#     } else if (recomb_type == "VDJ") {
+#       df$DJ.insertions <- df[[.jstart]] - df[[.dalignments2]] - 1
+#       df$DJ.insertions[df[[.dalignments2]] == -1] <- -1
+#       df$DJ.insertions[df[[.jstart]] == -1] <- -1
+#     } else {
+#       df$DJ.insertions <- -1
+#     }
+#   }
+#   
+#   if (!(.total.insertions %in% table.colnames)) {
+#     .total.insertions <- "Total.insertions"
+#     if (recomb_type == "VJ") {
+#       df$Total.insertions <- df[[.jstart]] - df[[.vend]] - 1
+#       df$Total.insertions[df[[.vend]] == -1] <- -1
+#       df$Total.insertions[df[[.jstart]] == -1] <- -1
+#     } else if (recomb_type == "VDJ" ) {
+#       df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
+#     } else {
+#       df$Total.insertions <- -1
+#     }
+#   }
   
   df <- df[, make.names(c(.barcodes, .umi.prop, .reads, .read.prop, 
                           .nuc.seq, .aa.seq,
@@ -652,6 +686,12 @@ parse.mixcr <- function (.filename) {
                     'V.end', 'J.start', 'D5.end', 'D3.end',
                     'VD.insertions', 'DJ.insertions', 'Total.insertions')
   
+  df$V.gene <- gsub("([*][[:digit:]]*)([(][[:digit:]]*[)])", "", df$V.gene)
+  df$V.gene <- gsub(",", ", ", df$V.gene)
+  df$D.gene <- gsub("([*][[:digit:]]*)([(][[:digit:]]*[)])", "", df$D.gene)
+  df$D.gene <- gsub(",", ", ", df$D.gene)
+  df$J.gene <- gsub("([*][[:digit:]]*)([(][[:digit:]]*[)])", "", df$J.gene)
+  df$J.gene <- gsub(",", ", ", df$J.gene)
   df
 }
 
