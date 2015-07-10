@@ -686,11 +686,11 @@ parse.mixcr <- function (.filename) {
                     'V.end', 'J.start', 'D5.end', 'D3.end',
                     'VD.insertions', 'DJ.insertions', 'Total.insertions')
   
-  df$V.gene <- gsub("([*][[:digit:]]*)([(][[:digit:]]*[)])", "", df$V.gene)
+  df$V.gene <- gsub("([*][[:digit:]]*)([(][[:digit:]]*[.]*[[:digit:]]*[)])", "", df$V.gene)
   df$V.gene <- gsub(",", ", ", df$V.gene)
-  df$D.gene <- gsub("([*][[:digit:]]*)([(][[:digit:]]*[)])", "", df$D.gene)
+  df$D.gene <- gsub("([*][[:digit:]]*)([(][[:digit:]]*[.]*[[:digit:]]*[)])", "", df$D.gene)
   df$D.gene <- gsub(",", ", ", df$D.gene)
-  df$J.gene <- gsub("([*][[:digit:]]*)([(][[:digit:]]*[)])", "", df$J.gene)
+  df$J.gene <- gsub("([*][[:digit:]]*)([(][[:digit:]]*[.]*[[:digit:]]*[)])", "", df$J.gene)
   df$J.gene <- gsub(",", ", ", df$J.gene)
   df
 }
