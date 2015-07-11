@@ -415,5 +415,5 @@ slice.fun <- function(.data, .size, .n, .fun, ..., .simplify = T) {
 #' with similar legends.
 .add.legend <- function (.vis.list, .vis.nrow = 2, .legend.ncol = 1) {
   leg <- gtable_filter(ggplot_gtable(ggplot_build(.vis.list[[1]] + guides(fill=guide_legend(ncol=.legend.ncol)))), "guide-box")
-  grid.arrange(do.call(arrangeGrob, c(.vis.list, nrow = .vis.nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, main ='Top crosses')
+  grid.arrange(do.call(arrangeGrob, c(.vis.list, nrow = .vis.nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, top ='Top crosses')
 }

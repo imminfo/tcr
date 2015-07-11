@@ -314,7 +314,7 @@ vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3,
       ps <- lapply(1:length(res), function (i) {
         vis.gene.usage(res[[i]], NA, names(res)[i], 0, .coord.flip, .labs = .labs, ...) 
       })      
-      do.call(grid.arrange, c(ps, ncol = .ncol, main = .main) )
+      do.call(grid.arrange, c(ps, ncol = .ncol, top = .main) )
     }
     
   }  
