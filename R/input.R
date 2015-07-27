@@ -658,7 +658,7 @@ parse.mixcr <- function (.filename) {
   if (recomb_type == "VJ") {
     df$Total.insertions <- 
       sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4) - sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5) - 1
-  } else if (recomb_type == "VDJ" ) {
+  } else if (recomb_type == "VDJ") {
     df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
   } else {
     df$Total.insertions <- -1
