@@ -13,3 +13,7 @@ import(grid)
 import(roxygen2)
 import(utils)
 import(igraph)
+importFrom("grDevices", "colorRampPalette", "rainbow")
+importFrom("graphics", "segments")
+importFrom("stats", "aggregate", "as.formula", "na.exclude", "prcomp",
+          "qnorm", "quantile", "rmultinom", "runif")
