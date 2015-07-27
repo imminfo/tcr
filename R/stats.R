@@ -494,8 +494,8 @@ top.cross.plot <- function (.top.cross.res, .xlab = 'Top X clonotypes', .ylab = 
   sample.plot <- p + .colourblind.discrete(len, T)
   
   leg <- gtable_filter(ggplot_gtable(ggplot_build(sample.plot + guides(colour=guide_legend(title = 'Subject', ncol=.legend.ncol)))), "guide-box")
-  grid.arrange(do.call(arrangeGrob, c(lapply(ps, function (x) x + theme(legend.position="none")), nrow = .nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, main ='Top crosses')
-#   arrangeGrob(do.call(arrangeGrob, c(ps[1:2], nrow = .nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, main ='Top cross')
+  grid.arrange(do.call(arrangeGrob, c(lapply(ps, function (x) x + theme(legend.position="none")), nrow = .nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, top ='Top crosses')
+#   arrangeGrob(do.call(arrangeGrob, c(ps[1:2], nrow = .nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, top ='Top cross')
 }
 
 

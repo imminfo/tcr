@@ -120,9 +120,9 @@ spectratyping <- function (.data, .column = 'VD.insertions', .by.alphabet = 'Vb'
                                                       ggtitle(names(tmp.data)[1]) + geom_histogram(stat = 'identity') +
                                                       guides(fill=guide_legend(ncol=.legend.ncol)) + scale_fill_manual(values=colorsr))),
                          "guide-box")
-    grid.arrange(do.call(arrangeGrob, c(ps, nrow = .nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, main = paste0(.column, ', ', .by.col))
+    grid.arrange(do.call(arrangeGrob, c(ps, nrow = .nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, top = paste0(.column, ', ', .by.col))
   } else if (!.draw.only.legend) {
-    grid.arrange(do.call(arrangeGrob, c(ps, nrow = .nrow)), main = paste0(.column, ', ', .by.col))
+    grid.arrange(do.call(arrangeGrob, c(ps, nrow = .nrow)), top = paste0(.column, ', ', .by.col))
   } else {
     grid.arrange(leg)
   }
