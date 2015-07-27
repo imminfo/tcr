@@ -13,6 +13,8 @@
 \alias{HUMAN_TRDV}
 \alias{HUMAN_TRGJ}
 \alias{HUMAN_TRGV}
+\alias{MOUSE_TRBJ}
+\alias{MOUSE_TRBV}
 \alias{genealphabets}
 \alias{segments.alphabets}
 \title{Alphabets of TCR and Ig gene segments.}

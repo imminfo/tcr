@@ -52,7 +52,7 @@ AA_TABLE_REVERSED <- AA_TABLE_REVERSED[order(names(AA_TABLE_REVERSED))]
 #' 
 #' @name segments.alphabets
 #' 
-#' @aliases genealphabets HUMAN_TRAV HUMAN_TRAJ HUMAN_TRBV HUMAN_TRBD HUMAN_TRBJ HUMAN_TRBV_MITCR HUMAN_TRGV HUMAN_TRGJ HUMAN_TRDV HUMAN_TRDD HUMAN_TRDJ
+#' @aliases genealphabets HUMAN_TRAV HUMAN_TRAJ HUMAN_TRBV HUMAN_TRBD HUMAN_TRBJ HUMAN_TRBV_MITCR HUMAN_TRGV HUMAN_TRGJ HUMAN_TRDV HUMAN_TRDD HUMAN_TRDJ MOUSE_TRBV MOUSE_TRBJ
 #' 
 #' @usage
 #' HUMAN_TRAV
@@ -126,13 +126,13 @@ HUMAN_TRBV_MITCR <- c('TRBV10-1', 'TRBV10-2', 'TRBV10-3', 'TRBV11-1', 'TRBV11-2'
                       'TRBV5-6', 'TRBV5-8', 'TRBV6-1', 'TRBV6-3, TRBV6-2', 'TRBV6-4', 'TRBV6-5', 'TRBV6-6', 'TRBV6-7',
                       'TRBV7-1', 'TRBV7-2', 'TRBV7-3', 'TRBV7-4', 'TRBV7-6', 'TRBV7-7', 'TRBV7-8', 'TRBV7-9', 'TRBV9')
 
-HUMAN_TRBV_ALS <- c('TRBV10-1', 'TRBV10-2', 'TRBV10-3', 'TRBV11-1', 'TRBV11-2', 'TRBV11-3', 'TRBV12-4', 'TRBV12-3',
-                    'TRBV12-5', 'TRBV13', 'TRBV14', 'TRBV15', 'TRBV16', 'TRBV18', 'TRBV19', 'TRBV2*01',
-                    'TRBV20-1', 'TRBV21-1', 'TRBV23-1', 'TRBV24-1', 'TRBV25-1', 'TRBV27', 'TRBV28', 'TRBV29-1',
-                    'TRBV3-1*01', 'TRBV30', 'TRBV4-1', 'TRBV4-2', 'TRBV4-3', 'TRBV5-1', 'TRBV5-4', 'TRBV5-5',
-                    'TRBV5-6', 'TRBV5-8', 'TRBV6-1', 'TRBV6-3', 'TRBV6-2', 'TRBV6-4', 'TRBV6-5', 'TRBV6-6',
-                    'TRBV6-7', 'TRBV7-1', 'TRBV7-2', 'TRBV7-3', 'TRBV7-4', 'TRBV7-6', 'TRBV7-7', 'TRBV7-8',
-                    'TRBV7-9', 'TRBV9')
+# HUMAN_TRBV_ALS <- c('TRBV10-1', 'TRBV10-2', 'TRBV10-3', 'TRBV11-1', 'TRBV11-2', 'TRBV11-3', 'TRBV12-4', 'TRBV12-3',
+#                     'TRBV12-5', 'TRBV13', 'TRBV14', 'TRBV15', 'TRBV16', 'TRBV18', 'TRBV19', 'TRBV2*01',
+#                     'TRBV20-1', 'TRBV21-1', 'TRBV23-1', 'TRBV24-1', 'TRBV25-1', 'TRBV27', 'TRBV28', 'TRBV29-1',
+#                     'TRBV3-1*01', 'TRBV30', 'TRBV4-1', 'TRBV4-2', 'TRBV4-3', 'TRBV5-1', 'TRBV5-4', 'TRBV5-5',
+#                     'TRBV5-6', 'TRBV5-8', 'TRBV6-1', 'TRBV6-3', 'TRBV6-2', 'TRBV6-4', 'TRBV6-5', 'TRBV6-6',
+#                     'TRBV6-7', 'TRBV7-1', 'TRBV7-2', 'TRBV7-3', 'TRBV7-4', 'TRBV7-6', 'TRBV7-7', 'TRBV7-8',
+#                     'TRBV7-9', 'TRBV9')
 
 
 HUMAN_TRGV <- c()

@@ -5,9 +5,9 @@
 \alias{pca.segments.2D}
 \title{Perform PCA on segments frequency data.}
 \usage{
-pca.segments(.data, .cast.freq.seg = T, ..., .do.plot = T)
+pca.segments(.data, .cast.freq.seg = T, ..., .text = T, .do.plot = T)
 
-pca.segments.2D(.data, .cast.freq.seg = T, ..., .do.plot = T)
+pca.segments.2D(.data, .cast.freq.seg = T, ..., .text = T, .do.plot = T)
 }
 \arguments{
 \item{.data}{Either data.frame or a list of data.frame or a result obtained from the \code{geneUsage} function.}

@@ -1,6 +1,9 @@
 ########## Support functions for managing the data ##########
 
 
+#' Fix alleles - remove allele informatio from columns with genes.
+#' 
+#' @param .data Either tcR data frame or a list with tcR data frames.
 fix.alleles <- function (.data) {
   if (has.class(.data, "list")) {
     lapply(.data, fix.alleles)
