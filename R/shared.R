@@ -79,12 +79,16 @@ shared.repertoire <- function (.datalist, .type = 'avrc', .min.ppl = 1, .head = 
     if (is.null(.data[[.sc]])) {
       if (.sc == 'Read.rank') {
         .data <- set.rank(.data, 'Read.count')
+        .sc <- "Rank"
       } else if (.sc == 'Umi.rank') {
         .data <- set.rank(.data, 'Umi.count')
+        .sc <- "Rank"
       } else if (.sc == 'Read.rank') {
         .data <- set.index(.data, 'Read.count')
+        .sc <- "Index"
       } else {
         .data <- set.index(.data, 'Umi.count')
+        .sc <- "Index"
       }
     }
     

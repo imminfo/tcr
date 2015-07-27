@@ -570,8 +570,9 @@ get.n.barcodes <- function (.data, .n = -1, .col = 'Umi.count') {
   .data[, .col] <- new.bc
   non.zeros <- new.bc != 0
   .data <- .data[non.zeros, ]
-  .data$Percentage <- new.bc[non.zeros] / sum(new.bc)
-  .data[order(.data$Percentage, decreasing = T),]
+  perc.col <- paste0(strsplit(.col, ".", T)[[1]][1], ".proportion")
+  .data[[perc.col]] <- new.bc[non.zeros] / sum(new.bc)
+  .data[order(.data[[perc.col]], decreasing = T),]
 }
 
 

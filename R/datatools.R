@@ -333,6 +333,9 @@ check.distribution <- function (.data, .do.norm = NA, .laplace = 1, .na.val = 0,
   
   if (.warn.sum && sum(.data) != 1) {
     cat("Warning! Sum of the input vector is NOT equal to 1. Function may produce incorrect results.\nTo fix this try to set .do.norm = TRUE in the function's parameters.\n")
+    if (abs(sum(.data) - 1) < 1e-14) {
+      cat("Note: difference between the sum of the input vector and 1 is ", (sum(.data) - 1), ", which may be caused by internal R subroutines and may not affect the result at all.\n")
+    }
   }
   
   .data
