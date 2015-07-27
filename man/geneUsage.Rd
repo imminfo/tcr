@@ -49,6 +49,8 @@ vis.gene.usage(twb, HUMAN_TRBV)
 vis.gene.usage(seg, NA)
 # Compute V-J joint usage.
 geneUsage(twb, list(HUMAN_TRBV, HUMAN_TRBJ))
+# for future:
+# geneUsage(twb, "human", "trbv")
 }
 }
 \seealso{

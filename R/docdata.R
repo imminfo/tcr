@@ -1,3 +1,9 @@
+.set.attr <- function (.data, .attr, .value) {
+  attr(.data, .attr) <- .value
+  .data
+}
+
+
 #' Tables with genetic code.
 #' 
 #' @docType data
@@ -115,6 +121,7 @@ HUMAN_TRBV <- c('TRBV10-1', 'TRBV10-2', 'TRBV10-3', 'TRBV11-1', 'TRBV11-2', 'TRB
                 'TRBV5-6', 'TRBV5-8', 'TRBV6-1', 'TRBV6-3', 'TRBV6-2', 'TRBV6-4', 'TRBV6-5', 'TRBV6-6',
                 'TRBV6-7', 'TRBV7-1', 'TRBV7-2', 'TRBV7-3', 'TRBV7-4', 'TRBV7-6', 'TRBV7-7', 'TRBV7-8',
                 'TRBV7-9', 'TRBV9')
+HUMAN_TRBV <- .set.attr(HUMAN_TRBV, "column", "V.gene")
 HUMAN_TRBD <- c('TRBD1', 'TRBD2')
 HUMAN_TRBJ <- c('TRBJ1-1', 'TRBJ1-2', 'TRBJ1-3', 'TRBJ1-4', 'TRBJ1-5', 'TRBJ1-6', 'TRBJ2-1', 'TRBJ2-2',
                          'TRBJ2-3', 'TRBJ2-4', 'TRBJ2-5', 'TRBJ2-6', 'TRBJ2-7')
@@ -133,6 +140,7 @@ HUMAN_TRBV_ALS <- c('TRBV10-1', 'TRBV10-2', 'TRBV10-3', 'TRBV11-1', 'TRBV11-2', 
                     'TRBV5-6', 'TRBV5-8', 'TRBV6-1', 'TRBV6-3', 'TRBV6-2', 'TRBV6-4', 'TRBV6-5', 'TRBV6-6',
                     'TRBV6-7', 'TRBV7-1', 'TRBV7-2', 'TRBV7-3', 'TRBV7-4', 'TRBV7-6', 'TRBV7-7', 'TRBV7-8',
                     'TRBV7-9', 'TRBV9')
+HUMAN_TRBV_ALS <- .set.attr(HUMAN_TRBV_ALS, "column", "V.allele")
 
 
 HUMAN_TRGV <- c()

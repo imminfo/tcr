@@ -49,8 +49,12 @@ if (getRversion() >= "2.15.1") {
 #' vis.gene.usage(seg, NA)
 #' # Compute V-J joint usage.
 #' geneUsage(twb, list(HUMAN_TRBV, HUMAN_TRBJ))
+#' # for future:
+#' # geneUsage(twb, "human", "trbv")
 #' }
-geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"), .norm = F, .ambig = F) {
+geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"), 
+                       .norm = F, .ambig = F #, .species = c("human", "mouse"), .genes = c("trbv", "trbd", "trbj")
+                       ) {
   
   .process.df <- function (.df, .quant, .cols) {
     cast.fun <- dcast
