@@ -557,9 +557,9 @@ parse.mixcr <- function (.filename) {
   .reads <- 'clone.count'
   .barcodes <- 'clone.count'
   .sep = '\t'
-  .vend <- "V.end"
-  .jstart <- "J.start"
-  .dalignments <- c("D5.end", "D3.end")
+  .vend <- "all.v.alignment"
+  .jstart <- "all.j.alignment"
+  .dalignments <- "all.d.alignment"
   .vd.insertions <- "VD.insertions"
   .dj.insertions <- "DJ.insertions"
   .total.insertions <- "Total.insertions"
@@ -593,11 +593,12 @@ parse.mixcr <- function (.filename) {
   swlist <- list('character', 'character',
                  'integer', 'integer',
                  'character', 'character', 'character',
+                 'character', 'character', 'character',
                  'character', 'character', 'character')
   names(swlist) <- c(.nuc.seq, .aa.seq,
                      .reads, .barcodes,
                      .vgenes, .jgenes, .dgenes,
-                     #.vend, .jstart, .dalignments,
+                     .vend, .jstart, .dalignments,
                      .vd.insertions, .dj.insertions, .total.insertions)
   swlist <- c(swlist, 'NULL')
   
@@ -627,58 +628,60 @@ parse.mixcr <- function (.filename) {
     recomb_type = "VDJ"
   }
   
-  df$V.end <- -1
-  df$J.start <- -1
+  .vd.insertions <- "VD.insertions"
+  df$VD.insertions <- -1
+  if (recomb_type == "VJ") {
+    df$VD.insertions <- -1
+  } else if (recomb_type == "VDJ") {
+    logic <- nchar(df[[.vend]]) != 0 & nchar(df[[.dalignments]]) != 0
+    df$VD.insertions[logic] <- 
+      as.numeric(sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 4)) -
+      as.numeric(sapply(strsplit(df[[.vend]][logic], "|", T, F, T), "[[", 5)) - 1
+  } else {
+    df$VD.insertions <- -1
+  }
+  
+  .dj.insertions <- "DJ.insertions"
+  df$DJ.insertions <- -1
+  if (recomb_type == "VJ") {
+    df$DJ.insertions <- -1
+  } else if (recomb_type == "VDJ") {
+    logic <- nchar(df[[.jstart]]) != 0 & nchar(df[[.dalignments]]) != 0
+    df$DJ.insertions[logic] <- 
+      as.numeric(sapply(strsplit(df[[.jstart]][logic], "|", T, F, T), "[[", 4)) -
+      as.numeric(sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 5)) - 1
+  } else {
+    df$DJ.insertions <- -1
+  }
+  
+  .total.insertions <- "Total.insertions"
+  if (recomb_type == "VJ") {
+    df$Total.insertions <- 
+      sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4) - sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5) - 1
+  } else if (recomb_type == "VDJ") {
+    df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
+  } else {
+    df$Total.insertions <- -1
+  }
+  df$Total.insertions[df$Total.insertions < 0] <- -1 
+  
+  df$V.end <- sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5)
+  df$J.start <- sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4)
+  .vend <- "V.end"
+  .jstart <- "J.start"
+  
+  logic <- nchar(df[[.dalignments]]) != 0
   df$D5.end <- -1
   df$D3.end <- -1
-  df$VD.insertions <- -1
-  df$DJ.insertions <- -1
-  df$Total.insertions <- -1
-#   if (!(.vd.insertions %in% table.colnames)) { 
-#     .vd.insertions <- "VD.insertions"
-#     if (recomb_type == "VJ") {
-#       df$VD.insertions <- -1
-#     } else if (recomb_type == "VDJ") {
-#       df$VD.insertions <- df[[.dalignments1]] - df[[.vend]] - 1
-#       df$VD.insertions[df[[.dalignments1]] == -1] <- -1
-#       df$VD.insertions[df[[.vend]] == -1] <- -1
-#     } else {
-#       df$VD.insertions <- -1
-#     }
-#   }
-#   
-#   if (!(.dj.insertions %in% table.colnames)) { 
-#     .dj.insertions <- "DJ.insertions"
-#     if (recomb_type == "VJ") {
-#       df$DJ.insertions <- -1
-#     } else if (recomb_type == "VDJ") {
-#       df$DJ.insertions <- df[[.jstart]] - df[[.dalignments2]] - 1
-#       df$DJ.insertions[df[[.dalignments2]] == -1] <- -1
-#       df$DJ.insertions[df[[.jstart]] == -1] <- -1
-#     } else {
-#       df$DJ.insertions <- -1
-#     }
-#   }
-#   
-#   if (!(.total.insertions %in% table.colnames)) {
-#     .total.insertions <- "Total.insertions"
-#     if (recomb_type == "VJ") {
-#       df$Total.insertions <- df[[.jstart]] - df[[.vend]] - 1
-#       df$Total.insertions[df[[.vend]] == -1] <- -1
-#       df$Total.insertions[df[[.jstart]] == -1] <- -1
-#     } else if (recomb_type == "VDJ" ) {
-#       df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
-#     } else {
-#       df$Total.insertions <- -1
-#     }
-#   }
+  df$D5.end[logic] <- sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 4)
+  df$D3.end[logic] <- sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 5)
+  .dalignments <- c('D5.end', 'D3.end')
   
   df <- df[, make.names(c(.barcodes, .umi.prop, .reads, .read.prop, 
                           .nuc.seq, .aa.seq,
                           .vgenes, .jgenes, .dgenes,
                           .vend, .jstart, .dalignments,
                           .vd.insertions, .dj.insertions, .total.insertions))]
-  
   
   colnames(df) <- c('Umi.count', 'Umi.proportion', 'Read.count', 'Read.proportion',
                     'CDR3.nucleotide.sequence', 'CDR3.amino.acid.sequence',
