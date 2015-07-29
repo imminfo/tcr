@@ -87,7 +87,7 @@ parse.cloneset <- function (.filename,
   }
   close(f)
   
-  table.colnames <- make.names(read.table(gzfile(.filename), sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "")[1,])
+  table.colnames <- make.names(read.table(gzfile(.filename), sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "", fill = T, quote = '')[1,])
   
   swlist <- list('character', 'character',
                  'integer', 'integer',
@@ -105,7 +105,7 @@ parse.cloneset <- function (.filename,
     do.call(switch, c(x, swlist))
   }, USE.NAMES = F))
   
-  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T, comment.char = ""))
+  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T, fill = T, comment.char = "", quote = ''))
   
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
   .read.prop <- 'Read.proportion'
@@ -565,7 +565,7 @@ parse.mixcr <- function (.filename) {
   .dj.insertions <- "DJ.insertions"
   .total.insertions <- "Total.insertions"
   
-  table.colnames <- tolower(make.names(read.table(gzfile(.filename), sep = .sep, skip = 0, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "")[1,]))
+  table.colnames <- tolower(make.names(read.table(gzfile(.filename), sep = .sep, skip = 0, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "", quote = '')[1,]))
   
   if ('all.v.hits' %in% table.colnames) {
     .vgenes <- 'all.v.hits'
@@ -607,7 +607,7 @@ parse.mixcr <- function (.filename) {
     do.call(switch, c(x, swlist))
   }, USE.NAMES = F))
   
-  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = 0, strip.white = T, comment.char = "", fill = T))
+  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = 0, strip.white = T, comment.char = "", fill = T, quote = ''))
   names(df) <- tolower(names(df))
   
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
