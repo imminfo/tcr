@@ -16,7 +16,7 @@ If you have any questions, suggestions or bug reports, feel free to raise an iss
 *Warning!*
 tcR internally expects columns with nucleotide and amino acid CDR3 sequences and columns with gene segments to have character class, not factor class. Use `stringsAsFactors=FALSE` parameter if you use R functions for parsing files with tables (.csv, .xls and others).
 
-*Note for installation on Macs with OSX Yosemite (and potentially other versions):  if you receive a compilation error, modify tcR/src/Makvars to:*
+*Note for installation on Macs with OSX Yosemite (and potentially other versions):  if you receive a compilation error, modify tcR/src/Makevars to:*
 
 ```
 CXX=clang++
