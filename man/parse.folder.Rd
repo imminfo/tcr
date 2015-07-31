@@ -5,22 +5,20 @@
 \alias{parse.file.list}
 \alias{parse.folder}
 \alias{parse.immunoseq}
-\alias{parse.imseq}
 \alias{parse.migec}
 \alias{parse.mitcr}
 \alias{parse.mitcrbc}
-\alias{parse.mixcr}
 \alias{parse.vdjtools}
 \title{Parse input table files with immune receptor repertoire data.}
 \usage{
 parse.file(.filename,
-.format = c('mitcr', 'mitcrbc', 'migec'), ...)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...)
 
 parse.file.list(.filenames,
-.format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), .namelist = NA)
 
 parse.folder(.folderpath,
-.format = c('mitcr', 'mitcrbc', 'migec'), ...)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...)
 
 parse.mitcr(.filename)
 

@@ -49,8 +49,12 @@ if (getRversion() >= "2.15.1") {
 #' vis.gene.usage(seg, NA)
 #' # Compute V-J joint usage.
 #' geneUsage(twb, list(HUMAN_TRBV, HUMAN_TRBJ))
+#' # for future:
+#' # geneUsage(twb, "human", "trbv")
 #' }
-geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"), .norm = F, .ambig = F) {
+geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"), 
+                       .norm = F, .ambig = F #, .species = c("human", "mouse"), .genes = c("trbv", "trbd", "trbj")
+                       ) {
   
   .process.df <- function (.df, .quant, .cols) {
     cast.fun <- dcast
@@ -162,9 +166,9 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
 #' Perform PCA on gene segments frequency data for V- and J-segments and either return pca object or plot the results.
 #' 
 #' @usage
-#' pca.segments(.data, .cast.freq.seg = T, ..., .text = T, .do.plot = T)
+#' pca.segments(.data, .cast.freq.seg = T, ..., .do.plot = T)
 #' 
-#' pca.segments.2D(.data, .cast.freq.seg = T, ..., .text = T, .do.plot = T)
+#' pca.segments.2D(.data, .cast.freq.seg = T, ..., .do.plot = T)
 #' 
 #' @param .data Either data.frame or a list of data.frame or a result obtained from the \code{geneUsage} function.
 #' @param .cast.freq.seg if T then apply code{geneUsage} to the supplied data.

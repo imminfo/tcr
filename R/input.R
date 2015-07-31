@@ -87,7 +87,7 @@ parse.cloneset <- function (.filename,
   }
   close(f)
   
-  table.colnames <- make.names(read.table(gzfile(.filename), sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "", fill = T, quote = '')[1,])
+  table.colnames <- make.names(read.table(gzfile(.filename), sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "")[1,])
   
   swlist <- list('character', 'character',
                  'integer', 'integer',
@@ -105,7 +105,7 @@ parse.cloneset <- function (.filename,
     do.call(switch, c(x, swlist))
   }, USE.NAMES = F))
   
-  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T, fill = T, comment.char = "", quote = ''))
+  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T, comment.char = ""))
   
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
   .read.prop <- 'Read.proportion'
@@ -191,7 +191,7 @@ parse.cloneset <- function (.filename,
 
 #' Parse input table files with immune receptor repertoire data.
 #'
-#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq parse.imseq parse.mixcr
+#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq
 #'
 #' @description
 #' Load the TCR data from the file with the given filename to a data frame or load all 
@@ -210,13 +210,13 @@ parse.cloneset <- function (.filename,
 #' 
 #' @usage
 #' parse.file(.filename, 
-#' .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...)
 #' 
 #' parse.file.list(.filenames, 
-#' .format = c('mitcr', 'mitcrbc', 'migec'), .namelist = NA)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), .namelist = NA)
 #' 
 #' parse.folder(.folderpath, 
-#' .format = c('mitcr', 'mitcrbc', 'migec'), ...)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...)
 #' 
 #' parse.mitcr(.filename)
 #' 
@@ -288,12 +288,11 @@ parse.cloneset <- function (.filename,
 #' # Parse all files in "~/data/" as MiGEC files.
 #' immdata <- parse.folder("~/data/", 'migec')
 #' }
-parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec'), ...) {
+parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...) {
   parse.file.list(list.files(.folderpath, full.names = T), .format)
 }
 
-parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'), 
-                             .namelist = NA) {
+parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), .namelist = NA) {
   # Remove full paths and extension from the given string.
   .remove.ext <- function (.str) {
     gsub(pattern = '.*/|[.].*$', replacement = '', x = .str)
@@ -317,7 +316,7 @@ parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'
   datalist
 }
 
-parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec'), ...) {
+parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...) {
   parse.fun <- switch(.format[1], 
                       mitcr = parse.mitcr,
                       mitcrbc = parse.mitcrbc,
@@ -565,7 +564,7 @@ parse.mixcr <- function (.filename) {
   .dj.insertions <- "DJ.insertions"
   .total.insertions <- "Total.insertions"
   
-  table.colnames <- tolower(make.names(read.table(gzfile(.filename), sep = .sep, skip = 0, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "", quote = '')[1,]))
+  table.colnames <- tolower(make.names(read.table(gzfile(.filename), sep = .sep, skip = 0, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "")[1,]))
   
   if ('all.v.hits' %in% table.colnames) {
     .vgenes <- 'all.v.hits'
@@ -607,7 +606,7 @@ parse.mixcr <- function (.filename) {
     do.call(switch, c(x, swlist))
   }, USE.NAMES = F))
   
-  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = 0, strip.white = T, comment.char = "", fill = T, quote = ''))
+  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = 0, strip.white = T, comment.char = "", fill = T))
   names(df) <- tolower(names(df))
   
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
@@ -700,7 +699,6 @@ parse.mixcr <- function (.filename) {
 }
 
 parse.imseq <- function (.filename) {
-  cat("WARNING: I can't understand which chain is it, so you need to modify gene columns in order to use this data frame with tcR.\n")
   f <- gzfile(.filename)
   all.lines <- strsplit(readLines(f), ":", T, useBytes = T)
   close(f)

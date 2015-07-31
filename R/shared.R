@@ -103,11 +103,6 @@ shared.repertoire <- function (.datalist, .type = 'avrc', .min.ppl = 1, .head = 
   
   
   if (nchar(.by.col[1]) == 0) {
-    if (nchar(.type) != 4) {
-      cat("Number of characters in the .type argument isn't equal to 4! Exiting...\n")
-      return(NULL)
-    }
-    
     if (substr(.type, 1, 1) == 'a') { .by.col <- 'CDR3.amino.acid.sequence' }
     else { .by.col <- 'CDR3.nucleotide.sequence' }
     
@@ -115,11 +110,6 @@ shared.repertoire <- function (.datalist, .type = 'avrc', .min.ppl = 1, .head = 
   }
   
   if (nchar(.sum.col) == 0) {
-    if (nchar(.type) != 4) {
-      cat("Number of characters in the .type argument isn't equal to 4! Exiting...\n")
-      return(NULL)
-    }
-    
     # barcode count
     if (substr(.type, 3, 3) == 'u') {
       if (substr(.type, 4, 4) == 'c') {
