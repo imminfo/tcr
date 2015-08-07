@@ -201,7 +201,7 @@ parse.cloneset <- function (.filename,
 #' 
 #' Parsers are available for:
 #' MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), ImmunoSEQ ("immunoseq"),
-#' MiXCR ("mixcr") and IMSEQ ("imseq").
+#' MiXCR ("mixcr"), IMSEQ ("imseq") and tcR ("tcr").
 #' 
 #' Output of MiXCR should contain either all hits or best hits for each gene segment.
 #' 
@@ -210,13 +210,13 @@ parse.cloneset <- function (.filename,
 #' 
 #' @usage
 #' parse.file(.filename, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...)
 #' 
 #' parse.file.list(.filenames, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), .namelist = NA)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), .namelist = NA)
 #' 
 #' parse.folder(.folderpath, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...)
 #' 
 #' parse.mitcr(.filename)
 #' 
@@ -325,6 +325,7 @@ parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjt
                       immunoseq = parse.immunoseq,
                       mixcr = parse.mixcr,
                       imseq = parse.imseq,
+                      tcr = parse.tcr,
                       parse.cloneset)
   
   parse.fun(.filename, ...)
@@ -736,5 +737,11 @@ parse.imseq <- function (.filename) {
     df[[i]] <- do.call(cls[i], list(df[[i]]))
   }
   
+  df
+}
+
+
+parse.tcr <- function (.filename) {
+  suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, sep = "\t", skip = 0, strip.white = T, comment.char = "", fill = T, stringsAsFactors = F))
   df
 }
