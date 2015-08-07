@@ -12,13 +12,13 @@
 \title{Parse input table files with immune receptor repertoire data.}
 \usage{
 parse.file(.filename,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...)
 
 parse.file.list(.filenames,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), .namelist = NA)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), .namelist = NA)
 
 parse.folder(.folderpath,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...)
 
 parse.mitcr(.filename)
 
@@ -91,7 +91,7 @@ For a general parser see \code{\link{parse.cloneset}}.
 
 Parsers are available for:
 MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), ImmunoSEQ ("immunoseq"),
-MiXCR ("mixcr") and IMSEQ ("imseq").
+MiXCR ("mixcr"), IMSEQ ("imseq") and tcR ("tcr").
 
 Output of MiXCR should contain either all hits or best hits for each gene segment.
 

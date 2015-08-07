@@ -420,3 +420,45 @@ slice.fun <- function(.data, .size, .n, .fun, ..., .simplify = T) {
   leg <- gtable_filter(ggplot_gtable(ggplot_build(.vis.list[[1]] + guides(fill=guide_legend(ncol=.legend.ncol)))), "guide-box")
   grid.arrange(do.call(arrangeGrob, c(.vis.list, nrow = .vis.nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, top ='Top crosses')
 }
+
+
+#' Save tcR data frames to disk.
+#' 
+#' @description
+#' Save repertoire files to text or gzipped text files. You can read them by the `parse.tcr` function.
+#' 
+#' @param .data Either tcR data frame or a list of tcR data frames.
+#' @param .compress If T than compress text files with GZIP.
+#' @param .names Names of output files. By default it's an empty string so names will be taken from names of the input list.
+#' @param .folder Path to the folder with output files.
+repSave <- function (.data, .compress = F, .names = "", .folder = "./") {
+  if (has.class(.data, 'data.frame')) { .data <- list(Sample = .data) }
+  
+  .folder <- paste0(.folder, "/")
+  
+  postfix <- ".txt"
+  filefun <- function (...) file(...)
+  if (.compress) { 
+    postfix <- ".txt.gz"
+    filefun <- function (...) gzfile(...)
+  }
+  
+  if (.names[1] == "") {
+    .names = paste0(.folder, names(.data), postfix)
+  } else {
+    if (length(.data) != length(.names)) {
+      cat("Number of input data frames isn't equal to number of names\n")
+      return(NULL)
+    } else {
+      .names = paste0(.folder, .names, postfix)
+    }
+  }
+  
+  for (i in 1:length(.data)) {
+    cat("Writing", .names[i], "file...\t")
+    fc <- filefun(description = .names[i], open = "w")
+    write.table(.data[[i]], fc, quote = F, row.names = F, sep = '\t')
+    close(fc)
+    cat("Done.\n")
+  }
+}
