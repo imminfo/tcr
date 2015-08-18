@@ -191,7 +191,7 @@ parse.cloneset <- function (.filename,
 
 #' Parse input table files with immune receptor repertoire data.
 #'
-#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq
+#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq parse.immunoseq2 parse.tcr
 #'
 #' @description
 #' Load the TCR data from the file with the given filename to a data frame or load all 
@@ -200,23 +200,26 @@ parse.cloneset <- function (.filename,
 #' For a general parser see \code{\link{parse.cloneset}}.
 #' 
 #' Parsers are available for:
-#' MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), ImmunoSEQ ("immunoseq"),
-#' MiXCR ("mixcr"), IMSEQ ("imseq") and tcR ("tcr").
+#' MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), 
+#' ImmunoSEQ ("immunoseq" or 'immunoseq2' for old and new formats respectively),
+#' MiXCR ("mixcr"), IMSEQ ("imseq") and tcR ("tcr", data frames saved with the `repSave()` function).
 #' 
 #' Output of MiXCR should contain either all hits or best hits for each gene segment.
 #' 
 #' Output of IMSEQ should be generated with parameter "-on". In this case there will be no positions of aligned gene segments in the output data frame
 #' due to restrictions of IMSEQ output.
 #' 
+#' tcR's data frames should be save with the `repSave()` function.
+#' 
 #' @usage
 #' parse.file(.filename, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), ...)
 #' 
 #' parse.file.list(.filenames, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), .namelist = NA)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), .namelist = NA)
 #' 
 #' parse.folder(.folderpath, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), ...)
 #' 
 #' parse.mitcr(.filename)
 #' 
@@ -228,9 +231,13 @@ parse.cloneset <- function (.filename,
 #' 
 #' parse.immunoseq(.filename)
 #' 
+#' parse.immunoseq2(.filename)
+#' 
 #' parse.mixcr(.filename)
 #' 
 #' parse.imseq(.filename)
+#' 
+#' parse.tcr(.filename)
 #'
 #' @param .filename Path to the input file with cloneset data.
 #' @param .filenames Vector or list with paths to files with cloneset data.
@@ -274,7 +281,7 @@ parse.cloneset <- function (.filename,
 #' 
 #' - "Total.insertions" - total number of inserted nucleotides (number of N-nucleotides at V-J junction for receptors with VJ recombination).
 #' 
-#' @seealso \link{parse.cloneset}
+#' @seealso \link{parse.cloneset}, \link{repSave}
 #' 
 #' @examples
 #' \dontrun{
@@ -480,6 +487,82 @@ parse.immunoseq <- function (.filename) {
   nuc.seq <- 'nucleotide'
   aa.seq <- 'aminoAcid'
   reads <- 'count'
+  barcodes <- 'vIndex'
+  vgenes <- 'vGeneName'
+  jgenes <- 'jGeneName'
+  dgenes <- 'dFamilyName'
+  vend <- 'n1Index'
+  jstart <- 'jIndex'
+  dalignments <- c('dIndex', 'n2Index')
+  vd.insertions <- "n1Insertion"
+  dj.insertions <- "n2Insertion"
+  total.insertions <- "NO SUCH COLUMN AT ALL 3"
+  .skip = 0
+  .sep = '\t'
+  
+  df <- parse.cloneset(.filename = filename, 
+                       .nuc.seq = nuc.seq,
+                       .aa.seq = aa.seq,
+                       .reads = reads,
+                       .barcodes = barcodes,
+                       .vgenes = vgenes,
+                       .jgenes = jgenes,
+                       .dgenes = dgenes,
+                       .vend = vend,
+                       .jstart = jstart,
+                       .dalignments = dalignments,
+                       .vd.insertions = vd.insertions,
+                       .dj.insertions = dj.insertions,
+                       .total.insertions = total.insertions,
+                       .skip = .skip,
+                       .sep = .sep)
+  
+  # fix nucleotide sequences
+  df$CDR3.nucleotide.sequence <- substr(df$CDR3.nucleotide.sequence, df$Umi.count + 1, nchar(df$CDR3.nucleotide.sequence) - 6)
+  
+  # add out-of-frame amino acid sequences
+  df$CDR3.amino.acid.sequence <- bunch.translate(df$CDR3.nucleotide.sequence)
+  
+  # df <- fix.alleles(df)
+  
+  # fix genes names and ","
+  .fix.genes <- function (.col) {
+    # fix ","
+    .col <- gsub(",", ", ", .col, fixed = T, useBytes = T)
+    # fix forward zeros
+    .col <- gsub("([0])([0-9])", "\\2", .col, useBytes = T)
+    # fix gene names
+    .col <- gsub("TCR", "TR", .col, fixed = T, useBytes = T)
+    .col
+  }
+  
+  df$V.gene <- .fix.genes(df$V.gene)
+  df$D.gene <- .fix.genes(df$D.gene)
+  df$J.gene <- .fix.genes(df$J.gene)
+  
+  # update V, D and J positions
+  .fix.poses <- function (.col) {
+    df[df[[.col]] != -1, .col] <- df[df[[.col]] != -1, .col] - df$Umi.count[df[[.col]] != -1]
+    df
+  }
+  
+  df <- .fix.poses("V.end")
+  df <- .fix.poses("D3.end")
+  df <- .fix.poses("D5.end")
+  df <- .fix.poses("J.start")
+  
+  # nullify barcodes
+  df$Umi.count <- NA
+  df$Umi.proportion <- NA
+  
+  df
+}
+
+parse.immunoseq2 <- function (.filename) {
+  filename <- .filename
+  nuc.seq <- 'nucleotide'
+  aa.seq <- 'aminoAcid'
+  reads <- 'count (templates)'
   barcodes <- 'vIndex'
   vgenes <- 'vGeneName'
   jgenes <- 'jGeneName'

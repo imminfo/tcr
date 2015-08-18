@@ -5,20 +5,22 @@
 \alias{parse.file.list}
 \alias{parse.folder}
 \alias{parse.immunoseq}
+\alias{parse.immunoseq2}
 \alias{parse.migec}
 \alias{parse.mitcr}
 \alias{parse.mitcrbc}
+\alias{parse.tcr}
 \alias{parse.vdjtools}
 \title{Parse input table files with immune receptor repertoire data.}
 \usage{
 parse.file(.filename,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), ...)
 
 parse.file.list(.filenames,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), .namelist = NA)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), .namelist = NA)
 
 parse.folder(.folderpath,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), ...)
 
 parse.mitcr(.filename)
 
@@ -30,9 +32,13 @@ parse.vdjtools(.filename)
 
 parse.immunoseq(.filename)
 
+parse.immunoseq2(.filename)
+
 parse.mixcr(.filename)
 
 parse.imseq(.filename)
+
+parse.tcr(.filename)
 }
 \arguments{
 \item{.folderpath}{Path to the folder with text cloneset files.}
@@ -90,13 +96,16 @@ Input files could be either text files or archived with gzip ("filename.txt.gz")
 For a general parser see \code{\link{parse.cloneset}}.
 
 Parsers are available for:
-MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"), ImmunoSEQ ("immunoseq"),
-MiXCR ("mixcr"), IMSEQ ("imseq") and tcR ("tcr").
+MiTCR ("mitcr"), MiTCR w/ UMIs ("mitcrbc"), MiGEC ("migec"), VDJtools ("vdjtools"),
+ImmunoSEQ ("immunoseq" or 'immunoseq2' for old and new formats respectively),
+MiXCR ("mixcr"), IMSEQ ("imseq") and tcR ("tcr", data frames saved with the `repSave()` function).
 
 Output of MiXCR should contain either all hits or best hits for each gene segment.
 
 Output of IMSEQ should be generated with parameter "-on". In this case there will be no positions of aligned gene segments in the output data frame
 due to restrictions of IMSEQ output.
+
+tcR's data frames should be save with the `repSave()` function.
 }
 \examples{
 \dontrun{
@@ -112,6 +121,6 @@ immdata <- parse.folder("~/data/", 'migec')
 }
 }
 \seealso{
-\link{parse.cloneset}
+\link{parse.cloneset}, \link{repSave}
 }
 
