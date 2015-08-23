@@ -462,3 +462,56 @@ repSave <- function (.data, .compress = F, .names = "", .folder = "./") {
     cat("Done.\n")
   }
 }
+
+
+#' Get all values from the matrix corresponding to specific groups.
+#' 
+#' @description 
+#' Split all matrix values to groups and return them as a data frame with two columns: for values and for group names.
+#' 
+#' @param .mat Input matrix with row and columns names.
+#' @param .groups Named list with character vectors for names of elements for each group.
+#' 
+#' @seealso \link{repOverlap}, \link{vis.group.boxplot}
+#' 
+#' @examples 
+#' \dontrun {
+#' data(twb)
+#' ov <- repOverlap(twb)
+#' sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));
+#' vis.group.boxplot(sb)
+#' }
+matrixSubgroups <- function (.mat, .groups = NA) {
+  
+  .intergroup.name <- function (.gr1, .gr2) {
+    tmp <- sort(c(.gr1, .gr2))
+    paste0(tmp[1], ':', tmp[2])
+  }
+  
+  data <- melt(.mat, na.rm = T)
+  names(data) <- c("Rep1", "Rep2", "Value")
+  data$Group <- 'no-group'
+  if (!is.na(.groups[1])) {
+    for (i in 1:length(.groups)) {
+      for (j in 1:length(.groups)) {
+        gr1 <- .groups[[i]]
+        gr2 <- .groups[[j]]
+        gr1.name <- names(.groups)[i]
+        gr2.name <- names(.groups)[j]
+        if (gr1.name == gr2.name) {
+          data$Group[data$Rep1 %in% gr1 & data$Rep2 %in% gr2] <-
+            gr1.name
+        } else {
+          if (!(.intergroup.name(gr2.name, gr1.name) %in% data$Group)) {
+            data$Group[data$Rep1 %in% gr1 & data$Rep2 %in% gr2] <-
+              .intergroup.name(gr1.name, gr2.name)
+            data$Group[data$Rep2 %in% gr1 & data$Rep1 %in% gr2] <-
+              .intergroup.name(gr1.name, gr2.name)
+          }
+        }
+      }
+    }
+  }
+  
+  data[, c('Group', 'Value')]
+}
