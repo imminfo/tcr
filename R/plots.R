@@ -219,6 +219,7 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
 #' @param .title Main title of the plot.
 #' @param .labs Labs names. Character vector of length 1 (for naming both axis with same name) or 2 (first elements stands for x-axis).
 #' @param .rotate.x if T then rotate x-axis.
+#' @param .violin If T then plot a violin plot.
 #' @param ... Parameters passed to \code{melt}, applied to \code{.data} before plotting in \code{vis.group.boxplot}.
 #' 
 #' @return ggplot object.
@@ -231,9 +232,19 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
 #' vis.group.boxplot(freq.Vb(immdata),
 #'    list(A = c('A1', 'A2'), B = c('B1', 'B2'), C = c('C1', 'C2')),
 #'    c('V segments', 'Frequency')) 
+#' 
+#' data(twb)
+#' ov <- repOverlap(twb)
+#' sb <- matrixSubgroups(ov, c('tw1', 'tw1', 'tw2', 'tw2'))
+#' vis.group.boxplot(sb)
 #' }
-vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D1', 'D2'), C = c('C1', 'C2')), .labs = c('V genes', 'Frequency'), .title = '', .rotate.x = T, ...) {
-  .data <- melt(.data, ...)
+vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Frequency'), .title = '', .rotate.x = T, .violin = T, ...) {
+  if (has.class(.data, 'data.frame')) {
+    .data$Sample <- .data[,1]
+    .data <- .data[,c(1,3,2)]
+  } else {
+    .data <- melt(.data, ...)
+  }
   
   colnames(.data) <- c('Var', 'Sample', 'Value')
   .data$Group <- as.character(.data$Sample)
@@ -245,7 +256,13 @@ vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D
     }
   }
   
-  p <- ggplot() + geom_boxplot(aes(x = Var, y = Value, fill = Group), data = .data, colour = 'black')
+  p <- ggplot() + 
+    geom_boxplot(aes(x = Var, y = Value, fill = Group), data = .data, colour = 'black')
+  
+  if (.violin) {
+    p <- p +geom_violin(aes(x = Var, y = Value, fill = Group), alpha = .2, data = .data)
+  }
+    
   if (length(.labs) >= 2) {
     p <- p + xlab(.labs[1]) + ylab(.labs[2])
   }
