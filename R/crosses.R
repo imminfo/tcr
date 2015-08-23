@@ -54,7 +54,7 @@
 #'  equal to or less than 1, "l" for match elements which have the Levenshtein distance between tham equal to or less than 1.
 #' }
 #' 
-#' @seealso  \link{repOverlap}, \link{vis.heatmap}, \link{vis.group.boxplot}
+#' @seealso  \link{repOverlap}, \link{vis.heatmap}, \link{ozScore}, \link{overlapMCTest}, \link{vis.group.boxplot}
 #' 
 #' @return
 #' \code{intersectClonesets} returns (normalised) number of similar elements or matrix with numbers of elements.
@@ -87,6 +87,10 @@
 #' imm.1.2 <- intersectLogic(twb[[1]], twb[[2]],
 #'                            .col = c('CDR3.amino.acid.sequence', 'V.gene'))  
 #' head(twb[[1]][imm.1.2, c('CDR3.amino.acid.sequence', 'V.gene')])
+#' data(twb)
+#' ov <- repOverlap(twb)
+#' sb <- matrixSubgroups(ov, c('tw1', 'tw1', 'tw2', 'tw2'))
+#' vis.group.boxplot(sb)
 #' }
 intersectClonesets <- function (.alpha = NULL, .beta = NULL, .type = 'n0e', .head = -1, .norm = F, .verbose = F) {
   if (class(.alpha) == 'list') {
@@ -235,4 +239,61 @@ convergence.index <- function (.alpha, .beta, .col.nuc = 'CDR3.nucleotide.sequen
   b.aa.logic <- .beta[, .col.aa] %in% .alpha[, .col.aa]
   c(Amino.acid.not.nucleotide.count.1 = length(unique(.alpha[a.aa.logic & !(a.nuc.logic), .col.aa])),
     Amino.acid.not.nucleotide.count.2 = length(unique(.beta[b.aa.logic & !(b.nuc.logic), .col.aa])))
+}
+
+
+#' Overlap Z-score.
+#' 
+#' @description
+#' Compute OZ-scores ("overlap Z scores") for values in the given matrix of overlaps, i.e.,.
+#' for each value compute the number of standart deviations from the mean of the matrix.
+#' 
+#' @param .mat Matrix with overlap values.
+#' @param .symm If T then remove lower triangle matrix from counting. Doesn't work if the matrix
+#' has different number of rows and columns.
+#' @param .as.matrix If T then return
+#' @param .val.col If .as.matrix is T then this is a name of the column to build matrix upon:
+#' either "oz" for the OZ-score column, "abs" for the absolute OZ-score column, or "norm" for the
+#' normalised absolute OZ-score column.
+#' 
+#' @seealso \link{repOverlap}, \link{intersectClonesets}, \link{overlapMCTest}
+#' 
+#' @examples 
+#' \dontrun{
+#' data(twb)
+#' mat <- repOverlap(twb)
+#' ozScore(mat)
+#' # Take 3x3 matrix
+#' ozScore(mat[1:3, 1:3])
+#' # Return as matrix with OZ scores
+#' ozmat <- ozScore(mat, T, T, 'oz')
+#' # Return as matrix with normalised absolute OZ scores
+#' oznorm <- ozScore(mat, T, T, 'norm')
+#' # Plot it as boxplots
+#' vis.group.boxplot(matrixSubgroups(oznorm, c('tw1', 'tw1', 'tw2', 'tw2')))
+#' }
+ozScore <- function (.mat, .symm = T, .as.matrix = F, .val.col = c('norm', 'abs', 'oz')) {
+  if (.symm && nrow(.mat) == ncol(.mat)) {
+    .mat[lower.tri(.mat)] <- NA
+  }
+  
+  res <- melt(.mat, na.rm = T)
+  res$OZ <- NA
+  colnames(res) <- c("Rep1", "Rep2", "Overlap", "OZ")
+  
+  res$OZ <- (res$Overlap - mean(res$Overlap)) / sd(res$Overlap)
+  res$Abs.OZ <- abs(res$OZ)
+  res$Norm.abs.OZ <- (res$Abs.OZ - min(res$Abs.OZ)) / (max(res$Abs.OZ) - min(res$Abs.OZ))
+  res <- res[order(res$Abs.OZ, decreasing = T),]
+  row.names(res) <- NULL
+  
+  if (.as.matrix) {
+    res <- acast(res, Rep1 ~ Rep2, value.var = switch(.val.col[1], oz = 'OZ', abs = 'Abs.OZ', norm = 'Norm.abs.OZ'))
+    res <- cbind(NA, res)
+    res <- rbind(res, NA)
+    colnames(res)[1] <- colnames(.mat)[!(colnames(.mat) %in% colnames(res))]
+    row.names(res)[nrow(res)] <- row.names(.mat)[!(row.names(.mat) %in% row.names(res))]
+  }
+  
+  res
 }
