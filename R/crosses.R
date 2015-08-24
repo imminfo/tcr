@@ -89,7 +89,7 @@
 #' head(twb[[1]][imm.1.2, c('CDR3.amino.acid.sequence', 'V.gene')])
 #' data(twb)
 #' ov <- repOverlap(twb)
-#' sb <- matrixSubgroups(ov, c('tw1', 'tw1', 'tw2', 'tw2'))
+#' sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));
 #' vis.group.boxplot(sb)
 #' }
 intersectClonesets <- function (.alpha = NULL, .beta = NULL, .type = 'n0e', .head = -1, .norm = F, .verbose = F) {
@@ -270,7 +270,8 @@ convergence.index <- function (.alpha, .beta, .col.nuc = 'CDR3.nucleotide.sequen
 #' # Return as matrix with normalised absolute OZ scores
 #' oznorm <- ozScore(mat, T, T, 'norm')
 #' # Plot it as boxplots
-#' vis.group.boxplot(matrixSubgroups(oznorm, c('tw1', 'tw1', 'tw2', 'tw2')))
+#' sb <- matrixSubgroups(oznorm, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));
+#' vis.group.boxplot(sb)
 #' }
 ozScore <- function (.mat, .symm = T, .as.matrix = F, .val.col = c('norm', 'abs', 'oz')) {
   if (.symm && nrow(.mat) == ncol(.mat)) {
