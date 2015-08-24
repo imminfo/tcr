@@ -214,7 +214,7 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
 #'
 #' @param .data Either a matrix with colnames and rownames specifyed or a data frame with the first column of
 #' strings for row names and other columns stands for values.
-#' @param .groups Named list with character vector for names of elements for each group. If NA than each
+#' @param .groups Named list with character vectors for names of elements for each group. If NA than each
 #' member is in the individual group.
 #' @param .title Main title of the plot.
 #' @param .labs Labs names. Character vector of length 1 (for naming both axis with same name) or 2 (first elements stands for x-axis).
@@ -235,7 +235,7 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
 #' 
 #' data(twb)
 #' ov <- repOverlap(twb)
-#' sb <- matrixSubgroups(ov, c('tw1', 'tw1', 'tw2', 'tw2'))
+#' sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));
 #' vis.group.boxplot(sb)
 #' }
 vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Frequency'), .title = '', .rotate.x = T, .violin = T, ...) {
