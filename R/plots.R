@@ -238,7 +238,7 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
 #' sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));
 #' vis.group.boxplot(sb)
 #' }
-vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Frequency'), .title = '', .rotate.x = T, .violin = T, ...) {
+vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Frequency'), .title = '', .rotate.x = T, .violin = T, .notch = F, ...) {
   if (has.class(.data, 'data.frame')) {
     .data$Sample <- .data[,1]
     .data <- .data[,c(1,3,2)]
@@ -257,7 +257,7 @@ vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Freque
   }
   
   p <- ggplot() + 
-    geom_boxplot(aes(x = Var, y = Value, fill = Group), data = .data, colour = 'black')
+    geom_boxplot(aes(x = Var, y = Value, fill = Group), data = .data, colour = 'black', notch = .notch)
   
   if (.violin) {
     p <- p +geom_violin(aes(x = Var, y = Value, fill = Group), alpha = .2, data = .data)
