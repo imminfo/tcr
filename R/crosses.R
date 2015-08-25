@@ -290,11 +290,154 @@ ozScore <- function (.mat, .symm = T, .as.matrix = F, .val.col = c('norm', 'abs'
   
   if (.as.matrix) {
     res <- acast(res, Rep1 ~ Rep2, value.var = switch(.val.col[1], oz = 'OZ', abs = 'Abs.OZ', norm = 'Norm.abs.OZ'))
-    res <- cbind(NA, res)
-    res <- rbind(res, NA)
-    colnames(res)[1] <- colnames(.mat)[!(colnames(.mat) %in% colnames(res))]
-    row.names(res)[nrow(res)] <- row.names(.mat)[!(row.names(.mat) %in% row.names(res))]
+    if (sum(!colnames(.mat) %in% colnames(res))) {
+      res <- cbind(NA, res)
+      colnames(res)[1] <- colnames(.mat)[!(colnames(.mat) %in% colnames(res))]
+    }
+    
+    if (sum(!row.names(.mat) %in% row.names(res))) {
+      res <- rbind(res, NA)
+      row.names(res)[nrow(res)] <- row.names(.mat)[!(row.names(.mat) %in% row.names(res))]
+    }
   }
   
   res
+}
+
+
+#" Monte Carlo permutation test for pairwise within- and inter-group differences in a set of repertoires.
+#' 
+#' @description
+#' ///
+#' 
+#' @param .mat Symmetric matrix of repertoire distances.
+#' @param .group
+#' @param .n
+#' @param .fun
+#' @param .plot
+#' @param .xlab
+#' @param .ylab
+#' @param .title
+#' @param .hjust
+#' @param .vjust
+#' 
+#' @seealso \link{repOverlap}, \link{intersectClonesets}, \link{ozScore}
+#' 
+#' @examples
+#' \dontrun {
+#' data(twb)
+#' mat <- repOverlap(twb)
+#' overlapMCTest(mat, ???)
+#' overlapMCTest(mat, ???, .fun = median)
+#' }
+###  distPermTest  ###
+###  pairwisePermTest  ###
+overlapMCTest <- function (.mat, .groups, .n = 1000, .fun = mean, 
+                           .plot = T, .xlab = "Values", .title = "Monte Carlo permutation testing of overlaps",
+                           .hjust = -.1, .vjust = -4) {
+  
+  .pairwise.test <- function (.mat, .group.logic, .n, .fun) {
+    within.val.gr1 = .fun(.mat[.group.logic, .group.logic][upper.tri(.mat[.group.logic, .group.logic])])
+    within.val.gr2 = .fun(.mat[!.group.logic, !.group.logic][upper.tri(.mat[!.group.logic, !.group.logic])])
+    inter.val = .fun(.mat[.group.logic, !.group.logic])
+    
+    within.resamp.gr1 = c()
+    within.resamp.gr2 = c()
+    inter.resamp = c()
+    
+    gr1.size <- sum(.group.logic)
+    gr2.size <- sum(!.group.logic)
+    
+    for (iter in 1:.n) {
+      new.group.logic <- rep(F, nrow(.mat))
+      new.group.logic[ sample(1:nrow(.mat), gr1.size, F) ] <- T
+      
+      within.resamp.gr1 = c(within.resamp.gr1, .fun(.mat[new.group.logic, new.group.logic][upper.tri(.mat[new.group.logic, new.group.logic])]))
+      within.resamp.gr2 = c(within.resamp.gr2, .fun(.mat[!new.group.logic, !new.group.logic][upper.tri(.mat[!new.group.logic, !new.group.logic])]))
+      inter.resamp = c(inter.resamp, .fun(.mat[new.group.logic, !new.group.logic]))
+    }
+    
+    list(within.val.gr1 = within.val.gr1,
+         within.val.gr2 = within.val.gr2,
+         inter.val = inter.val,
+         within.resamp.gr1 = within.resamp.gr1,
+         within.resamp.gr2 = within.resamp.gr2,
+         inter.resamp = inter.resamp,
+         within.p.gr1 = sum(within.val.gr1 > within.resamp.gr1) / .n,
+         within.p.gr2 = sum(within.val.gr2 > within.resamp.gr2) / .n,
+         inter.p = sum(inter.val > inter.resamp) / .n)
+  }
+  
+  .intergroup.name <- function (.gr1, .gr2) {
+    paste0(.gr1, ':', .gr2)
+  }
+  
+  res <- list()
+  
+  pb <- set.pb((length(.groups) - 1) * length(.groups) / 2)
+  
+  k <- 1
+  
+  for (i in 1:(length(.groups)-1)) {
+    gr1 <- names(.groups)[i]
+    for (j in (i+1):length(.groups)) {
+      gr2 <- names(.groups)[j]
+      
+      submat <- .mat[ row.names(.mat) %in% .groups[[i]] | row.names(.mat) %in% .groups[[j]] , colnames(.mat) %in% .groups[[i]] | colnames(.mat) %in% .groups[[j]] ]
+      submat <- submat[, row.names(submat)]
+      group.logic <- row.names(submat) %in% .groups[[i]]
+      
+      test.res.list <- .pairwise.test(submat, group.logic, .n, .fun)
+      
+      res[[k]] <- rbind(data.frame(Group1 = gr1,
+                                   Group2 = gr1,
+                                   Fun.value = test.res.list$within.val.gr1, 
+                                   Resamp.values = test.res.list$within.resamp.gr1,
+                                   P.value = test.res.list$within.p.gr1,
+                                   stringsAsFactors = F), 
+                        data.frame(Group1 = gr1,
+                                   Group2 = gr2,
+                                   Fun.value = test.res.list$inter.val, 
+                                   Resamp.values = test.res.list$inter.resamp, 
+                                   P.value = test.res.list$inter.p,
+                                   stringsAsFactors = F), 
+                        data.frame(Group1 = gr2,
+                                   Group2 = gr2,
+                                   Fun.value = test.res.list$within.val.gr2, 
+                                   Resamp.values = test.res.list$within.resamp.gr2, 
+                                   P.value = test.res.list$within.p.gr2,
+                                   stringsAsFactors = F))
+      k <- k + 1
+      
+      add.pb(pb)
+    }
+  }
+  close(pb)
+  
+  p <- list()
+  for (i in 1:(k-1)) {
+    faclevels <- unique(c(res[[i]]$Group1, res[[i]]$Group2))
+    faclevels <- c(faclevels[1], paste0(faclevels[1], " ~ ", faclevels[2]), faclevels[2])
+    
+    res[[i]]$Group3 <- paste0(res[[i]]$Group1, " ~ ", res[[i]]$Group2)
+    res[[i]]$Group3[res[[i]]$Group1 == res[[i]]$Group2] <- res[[i]]$Group1[res[[i]]$Group1 == res[[i]]$Group2]
+    res[[i]]$Group3 <- factor(res[[i]]$Group3, faclevels)
+    
+    tmp <- do.call(rbind, lapply(split(res[[i]], res[[i]]$Group3), function (x) x[1,]))
+    
+    p[[i]] <- ggplot(res[[i]], aes(x = Resamp.values)) + 
+      geom_vline(aes(xintercept = Fun.value), size = 1, linetype = "twodash", colour = "blue") + 
+      geom_histogram(alpha = .4, colour = 'grey40') + 
+      geom_text(aes(x = 0, y = 0, label = paste0("P = ", P.value)), hjust = .hjust, vjust = .vjust, size = 5, data = tmp) +
+      facet_wrap(~ Group3, ncol = 3) + 
+      ylab("Permutations, num") + 
+      xlab(.xlab) +
+      theme_bw()
+  }
+  
+  if (.plot) {
+    do.call(grid.arrange, c(p, ncol = 1, top = .title))
+  } else {
+    res
+  }
 }
