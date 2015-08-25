@@ -41,7 +41,21 @@ if (getRversion() >= "2.15.1") {
   #   cs <- c("#FFFFD9", "#41B6C4", "#225EA8")
   #   cs <- c("#FFFFBB", "#41B6C4", "#225EA8")
 #   cs <- c("#FFBB00", "#41B6C4", "#225EA8") <- old version
+  # cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
   cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
+  if (.colour) {
+    scale_colour_manual(values = colorRampPalette(cs)(.n))
+  } else {
+    scale_fill_manual(values = colorRampPalette(cs)(.n))
+  }
+}
+
+.colourblind.discrete2 <- function (.n, .colour = F) {
+  #   cs <- c("#FFFFD9", "#41B6C4", "#225EA8")
+  #   cs <- c("#FFFFBB", "#41B6C4", "#225EA8")
+    cs <- c("#FFAB00", "#41B6C4", "#225EA8") # <- old version
+  # cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
+  # cs <- c("#FF4B20", "#FFB433", "#0348A6")
   if (.colour) {
     scale_colour_manual(values = colorRampPalette(cs)(.n))
   } else {
@@ -384,10 +398,10 @@ vis.pca <- function (.data, .groups = NA) {
   }
   
   ggplot() + 
-    geom_point(aes(x = First, y = Second, colour = Group), data = .data) + 
-    geom_text(aes(x = First, y = Second, label = Sample), data = .data, hjust=0, vjust=0) +
+    geom_point(aes(x = First, y = Second, colour = Group), size = 3, data = .data) + 
+    geom_text(aes(x = First, y = Second, label = Sample, colour = Group), data = .data, hjust=0, vjust=0) +
     theme_linedraw() +
-    .colourblind.discrete(length(.groups), T)
+    .colourblind.discrete2(length(.groups), T)
 }
 
 
