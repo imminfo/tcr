@@ -416,14 +416,14 @@ permutDistTest <- function (.mat, .groups, .n = 1000, .fun = mean, .signif = .05
       p.vals[[gr1]][["within"]] <- c(p.vals[[gr1]][["within"]], test.res.list$within.p.gr1)
       names(p.vals[[gr1]][["within"]])[length(p.vals[[gr1]][["within"]])] <- gr2
       
-      p.vals[[gr2]][["within"]] <- c(p.vals[[gr2]][["within"]], test.res.list$within.p.gr1)
+      p.vals[[gr2]][["within"]] <- c(p.vals[[gr2]][["within"]], test.res.list$within.p.gr2)
       names(p.vals[[gr2]][["within"]])[length(p.vals[[gr2]][["within"]])] <- gr1
       
       p.vals[[gr1]][["inter"]] <- c(p.vals[[gr1]][["inter"]], test.res.list$inter.p)
       names(p.vals[[gr1]][["inter"]])[length(p.vals[[gr1]][["inter"]])] <- gr2
       
       p.vals[[gr2]][["inter"]] <- c(p.vals[[gr2]][["inter"]], test.res.list$inter.p)
-      names(p.vals[[gr1]][["inter"]])[length(p.vals[[gr1]][["inter"]])] <- gr2
+      names(p.vals[[gr2]][["inter"]])[length(p.vals[[gr2]][["inter"]])] <- gr1
       
       add.pb(pb)
     }
@@ -451,9 +451,36 @@ permutDistTest <- function (.mat, .groups, .n = 1000, .fun = mean, .signif = .05
       theme_bw()
   }
   
+  fmt.width <- 0
+  for (gr.name in names(.groups)) {
+    fmt.width <- max(fmt.width, nchar(gr.name))
+  }
+  fmt.width <- fmt.width + 2
+  
   flag <- F
-  cat("Significant differences between groups:\n")
+  cat("Significant differences found (OBS - observed, SIM - simulated):\n")
   for (gr.name in names(p.vals)) {
+    
+    w.signs <- c()
+    i.signs <- c()
+    
+    for (i in 1:length(p.vals[[gr.name]][["within"]])) {
+      if (p.vals[[gr.name]][["within"]][i] < 1 - p.vals[[gr.name]][["within"]][i]) {
+        w.signs <- c(w.signs, ">")
+      } else {
+        w.signs <- c(w.signs, "<")
+        p.vals[[gr.name]][["within"]][i] <- 1 - p.vals[[gr.name]][["within"]][i]
+      }
+    }
+    for (i in 1:length(p.vals[[gr.name]][["inter"]])) {
+      if (p.vals[[gr.name]][["inter"]][i] < 1 - p.vals[[gr.name]][["inter"]][i]) {
+        i.signs <- c(i.signs, ">")
+      } else {
+        i.signs <- c(i.signs, "<")
+        p.vals[[gr.name]][["inter"]][i] <- 1 - p.vals[[gr.name]][["inter"]][i]
+      }
+    }
+    
     p.vals[[gr.name]][["within"]] <- p.adjust(p.vals[[gr.name]][["within"]], "BH")
     p.vals[[gr.name]][["inter"]] <- p.adjust(p.vals[[gr.name]][["inter"]], "BH")
     
@@ -463,10 +490,11 @@ permutDistTest <- function (.mat, .groups, .n = 1000, .fun = mean, .signif = .05
     for (i in 1:length(p.vals[[gr.name]][["within"]])) {
       pval <- p.vals[[gr.name]][["within"]][i]
       if (pval <= .signif) {
-        cat('  Within "', gr.name, '" in comparison with "', names(p.vals[[gr.name]][["within"]])[i], '"\t:\tP(X < EXP) = ', pval, "\n", sep ='')
-        flag <- T
-      } else if (1 - pval <= .signif) {
-        cat('  Within "', gr.name, '" in comparison with "', names(p.vals[[gr.name]][["within"]])[i], '"\t:\tP(X > EXP) = ', 1 - pval, "\n", sep = '')
+        cat('  Within  ', 
+            formatC(paste0('"', gr.name, '"'), width = -fmt.width), 
+            ' in a pool with ', 
+            formatC(paste0('"', names(p.vals[[gr.name]][["within"]])[i], '"'), width = fmt.width), 
+            ' :\tP(OBS ', w.signs[i], ' SIM) = ', pval, "\n", sep ='')
         flag <- T
       }
     }
@@ -475,10 +503,11 @@ permutDistTest <- function (.mat, .groups, .n = 1000, .fun = mean, .signif = .05
       pval <- p.vals[[gr.name]][["inter"]][i]
       if (pval <= .signif) {
         if (pval <= .signif) {
-          cat('  Between "', gr.name, '" and "', names(p.vals[[gr.name]][["inter"]])[i], '"\t:\tP(X < EXP) = ', pval, "\n", sep = '')
-          flag <- T
-        } else if (1 - pval <= .signif) {
-          cat('  Between "', gr.name, '" and "', names(p.vals[[gr.name]][["inter"]])[i], '"\t:\tP(X > EXP) = ', 1 - pval, "\n", sep = '')
+          cat('  Between ', 
+              formatC(paste0('"', gr.name, '"'), width = -fmt.width), 
+              ' and ', 
+              formatC(paste0('"', names(p.vals[[gr.name]][["inter"]])[i], '"'), width = fmt.width + 11), 
+              ' :\tP(OBS ', i.signs[i], ' SIM) = ', pval, "\n", sep = '')
           flag <- T
         }
       }
