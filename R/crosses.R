@@ -494,7 +494,7 @@ permutDistTest <- function (.mat, .groups, .n = 1000, .fun = mean, .signif = .05
             formatC(paste0('"', gr.name, '"'), width = -fmt.width), 
             ' in a pool with ', 
             formatC(paste0('"', names(p.vals[[gr.name]][["within"]])[i], '"'), width = fmt.width), 
-            ' :\tP(OBS ', w.signs[i], ' SIM) = ', pval, "\n", sep ='')
+            '  :  P(OBS ', w.signs[i], ' SIM) = ', pval, "\n", sep ='')
         flag <- T
       }
     }
@@ -507,7 +507,7 @@ permutDistTest <- function (.mat, .groups, .n = 1000, .fun = mean, .signif = .05
               formatC(paste0('"', gr.name, '"'), width = -fmt.width), 
               ' and ', 
               formatC(paste0('"', names(p.vals[[gr.name]][["inter"]])[i], '"'), width = fmt.width + 11), 
-              ' :\tP(OBS ', i.signs[i], ' SIM) = ', pval, "\n", sep = '')
+              '  :  P(OBS ', i.signs[i], ' SIM) = ', pval, "\n", sep = '')
           flag <- T
         }
       }
