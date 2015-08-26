@@ -515,3 +515,32 @@ matrixSubgroups <- function (.mat, .groups = NA) {
   
   data[, c('Group', 'Value')]
 }
+
+
+#' Compute the Euclidean distance among principal components.
+#' 
+#' @description 
+#' Compute the Euclidean distance among principal components.
+#' 
+#' @param .pcaobj An object returned by \code{prcomp}.
+#' @param .num.comps On how many principal components compute the distance.
+#' 
+#' @return Matrix of distances.
+#' 
+#' @seealso \link{prcomp}, \link{pca.segments}, \link{repOverlap}, \link{pairwisePermTest}
+#' 
+#' @examples
+#' \dontrun{
+#' mat.ov <- repOverlap(AS_DATA, .norm = T)
+#' mat.gen.pca <- pca.segments(AS_DATA, T, .genes = HUMAN_TRBV)
+#' mat.ov.pca <- prcomp(mat.ov, scale. = T)
+#' mat.gen.pca.dist <- pca2euclid(mat.gen.pca)
+#' mat.ov.pca.dist <- pca2euclid(mat.ov.pca)
+#' permutDistTest(mat.gen.pca.dist, list(<list of groups here>))
+#' permutDistTest(mat.ov.pca.dist, list(<list of groups here>))
+#' }
+pca2euclid <- function (.pcaobj, .num.comps = 2) {
+  mat <- .pcaobj$x
+  if (.num.comps > 0) { mat <- mat[,1:.num.comps] }
+  as.matrix(dist(mat))
+}
