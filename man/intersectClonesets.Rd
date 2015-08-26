@@ -101,6 +101,6 @@ vis.group.boxplot(sb)
 }
 }
 \seealso{
-\link{repOverlap}, \link{vis.heatmap}, \link{ozScore}, \link{overlapMCTest}, \link{vis.group.boxplot}
+\link{repOverlap}, \link{vis.heatmap}, \link{ozScore}, \link{permutDistTest}, \link{vis.group.boxplot}
 }
 

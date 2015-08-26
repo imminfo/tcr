@@ -15,7 +15,7 @@ matrixSubgroups(.mat, .groups = NA)
 Split all matrix values to groups and return them as a data frame with two columns: for values and for group names.
 }
 \examples{
-\dontrun {
+\dontrun{
 data(twb)
 ov <- repOverlap(twb)
 sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));

@@ -475,7 +475,7 @@ repSave <- function (.data, .compress = F, .names = "", .folder = "./") {
 #' @seealso \link{repOverlap}, \link{vis.group.boxplot}
 #' 
 #' @examples 
-#' \dontrun {
+#' \dontrun{
 #' data(twb)
 #' ov <- repOverlap(twb)
 #' sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));
