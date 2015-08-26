@@ -54,7 +54,7 @@
 #'  equal to or less than 1, "l" for match elements which have the Levenshtein distance between tham equal to or less than 1.
 #' }
 #' 
-#' @seealso  \link{repOverlap}, \link{vis.heatmap}, \link{ozScore}, \link{overlapMCTest}, \link{vis.group.boxplot}
+#' @seealso  \link{repOverlap}, \link{vis.heatmap}, \link{ozScore}, \link{permutDistTest}, \link{vis.group.boxplot}
 #' 
 #' @return
 #' \code{intersectClonesets} returns (normalised) number of similar elements or matrix with numbers of elements.
@@ -256,7 +256,7 @@ convergence.index <- function (.alpha, .beta, .col.nuc = 'CDR3.nucleotide.sequen
 #' either "oz" for the OZ-score column, "abs" for the absolute OZ-score column, or "norm" for the
 #' normalised absolute OZ-score column.
 #' 
-#' @seealso \link{repOverlap}, \link{intersectClonesets}, \link{overlapMCTest}
+#' @seealso \link{repOverlap}, \link{intersectClonesets}, \link{permutDistTest}
 #' 
 #' @examples 
 #' \dontrun{
@@ -305,34 +305,33 @@ ozScore <- function (.mat, .symm = T, .as.matrix = F, .val.col = c('norm', 'abs'
 }
 
 
-#" Monte Carlo permutation test for pairwise within- and inter-group differences in a set of repertoires.
+#' Monte Carlo permutation test for pairwise and one-vs-all-wise within- and inter-group differences in a set of repertoires.
 #' 
 #' @description
-#' ///
+#' Blah-blah-blah permutation tests blah-blah-blah significance levels
 #' 
 #' @param .mat Symmetric matrix of repertoire distances.
-#' @param .group
-#' @param .n
-#' @param .fun
-#' @param .plot
-#' @param .xlab
-#' @param .ylab
-#' @param .title
-#' @param .hjust
-#' @param .vjust
+#' @param .group Named list with names of repertoires in groups.
+#' @param .n Number of permutations for each pair of group.
+#' @param .fun A function to apply to distances.
+#' @param .signif Significance level. Below this value hypotheses counts as significant.
+#' @param .plot If T than plot the output results. Else return them as a data frame.
+#' @param .xlab X lab label.
+#' @param .ylab Y lab label.
+#' @param .title Main title of the plot.
+#' @param .hjust Value for adjusting the x coordinate of p-value labels on plots.
+#' @param .vjust Value for adjusting the y coordinate of p-value labels on plots.
 #' 
-#' @seealso \link{repOverlap}, \link{intersectClonesets}, \link{ozScore}
+#' @seealso \link{repOverlap}, \link{intersectClonesets}, \link{ozScore}, \link{pca2euclid}
 #' 
 #' @examples
-#' \dontrun {
+#' \dontrun{
 #' data(twb)
 #' mat <- repOverlap(twb)
-#' overlapMCTest(mat, ???)
-#' overlapMCTest(mat, ???, .fun = median)
+#' permutDistTest(mat, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')))
+#' permutDistTest(mat, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')), .fun = median)
 #' }
-###  distPermTest  ###
-###  pairwisePermTest  ###
-overlapMCTest <- function (.mat, .groups, .n = 1000, .fun = mean, 
+permutDistTest <- function (.mat, .groups, .n = 1000, .fun = mean, .signif = .05,
                            .plot = T, .xlab = "Values", .title = "Monte Carlo permutation testing of overlaps",
                            .hjust = -.1, .vjust = -4) {
   
@@ -378,6 +377,11 @@ overlapMCTest <- function (.mat, .groups, .n = 1000, .fun = mean,
   
   k <- 1
   
+  p.vals <- list()
+  for (gr in names(.groups)) {
+    p.vals[[gr]] <- list(within = c(), inter = c())
+  }
+  
   for (i in 1:(length(.groups)-1)) {
     gr1 <- names(.groups)[i]
     for (j in (i+1):length(.groups)) {
@@ -409,6 +413,18 @@ overlapMCTest <- function (.mat, .groups, .n = 1000, .fun = mean,
                                    stringsAsFactors = F))
       k <- k + 1
       
+      p.vals[[gr1]][["within"]] <- c(p.vals[[gr1]][["within"]], test.res.list$within.p.gr1)
+      names(p.vals[[gr1]][["within"]])[length(p.vals[[gr1]][["within"]])] <- gr2
+      
+      p.vals[[gr2]][["within"]] <- c(p.vals[[gr2]][["within"]], test.res.list$within.p.gr1)
+      names(p.vals[[gr2]][["within"]])[length(p.vals[[gr2]][["within"]])] <- gr1
+      
+      p.vals[[gr1]][["inter"]] <- c(p.vals[[gr1]][["inter"]], test.res.list$inter.p)
+      names(p.vals[[gr1]][["inter"]])[length(p.vals[[gr1]][["inter"]])] <- gr2
+      
+      p.vals[[gr2]][["inter"]] <- c(p.vals[[gr2]][["inter"]], test.res.list$inter.p)
+      names(p.vals[[gr1]][["inter"]])[length(p.vals[[gr1]][["inter"]])] <- gr2
+      
       add.pb(pb)
     }
   }
@@ -435,8 +451,43 @@ overlapMCTest <- function (.mat, .groups, .n = 1000, .fun = mean,
       theme_bw()
   }
   
+  flag <- F
+  cat("Significant differences between groups:\n")
+  for (gr.name in names(p.vals)) {
+    p.vals[[gr.name]][["within"]] <- p.adjust(p.vals[[gr.name]][["within"]], "BH")
+    p.vals[[gr.name]][["inter"]] <- p.adjust(p.vals[[gr.name]][["inter"]], "BH")
+    
+#     cat("\tThis groups may have come from different populations\n")
+#     cat("\tThis groups may have non-random overlap and come from different populations\n")
+    
+    for (i in 1:length(p.vals[[gr.name]][["within"]])) {
+      pval <- p.vals[[gr.name]][["within"]][i]
+      if (pval <= .signif) {
+        cat('  Within "', gr.name, '" in comparison with "', names(p.vals[[gr.name]][["within"]])[i], '"\t:\tP(X < EXP) = ', pval, "\n", sep ='')
+        flag <- T
+      } else if (1 - pval <= .signif) {
+        cat('  Within "', gr.name, '" in comparison with "', names(p.vals[[gr.name]][["within"]])[i], '"\t:\tP(X > EXP) = ', 1 - pval, "\n", sep = '')
+        flag <- T
+      }
+    }
+    
+    for (i in 1:length(p.vals[[gr.name]][["inter"]])) {
+      pval <- p.vals[[gr.name]][["inter"]][i]
+      if (pval <= .signif) {
+        if (pval <= .signif) {
+          cat('  Between "', gr.name, '" and "', names(p.vals[[gr.name]][["inter"]])[i], '"\t:\tP(X < EXP) = ', pval, "\n", sep = '')
+          flag <- T
+        } else if (1 - pval <= .signif) {
+          cat('  Between "', gr.name, '" and "', names(p.vals[[gr.name]][["inter"]])[i], '"\t:\tP(X > EXP) = ', 1 - pval, "\n", sep = '')
+          flag <- T
+        }
+      }
+    }
+  }
+  if (!flag) { cat("No significant differences have been found.\n") }
+  
   if (.plot) {
-    do.call(grid.arrange, c(p, ncol = 1, top = .title))
+    suppressMessages(do.call(grid.arrange, c(p, ncol = 1, top = .title)))
   } else {
     res
   }
