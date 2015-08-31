@@ -3,12 +3,31 @@
 
 fix.alleles <- function (.data) {
   if (has.class(.data, "list")) {
-    lapply(.data, fix.alleles)
+    return(lapply(.data, fix.alleles))
   }
   
   .data$V.gene <- gsub("[*][[:digit:]]*", "", .data$V.gene)
   .data$D.gene <- gsub("[*][[:digit:]]*", "", .data$D.gene)
   .data$J.gene <- gsub("[*][[:digit:]]*", "", .data$J.gene)
+  .data
+}
+
+
+fix.genes <- function (.data) {
+  if (has.class(.data, "list")) {
+    return(lapply(.data, fix.genes))
+  }
+  
+  .fix <- function (.col) {
+    # it's not a mistake
+    .col <- gsub(", ", ",", .col, fixed = T, useBytes = T)
+    .col <- gsub(",", ", ", .col, fixed = T, useBytes = T)
+    .col
+  }
+  
+  .data$V.gene <- .fix(.data$V.gene)
+  .data$D.gene <- .fix(.data$D.gene)
+  .data$J.gene <- .fix(.data$J.gene)
   .data
 }
 

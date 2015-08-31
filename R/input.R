@@ -392,7 +392,7 @@ parse.mitcrbc <- function (.filename) {
   .skip = 0
   .sep = '\t'
   
-  parse.cloneset(.filename = filename, 
+  fix.genes(parse.cloneset(.filename = filename, 
                  .nuc.seq = nuc.seq,
                  .aa.seq = aa.seq,
                  .reads = reads,
@@ -407,7 +407,7 @@ parse.mitcrbc <- function (.filename) {
                  .dj.insertions = dj.insertions,
                  .total.insertions = total.insertions,
                  .skip = .skip,
-                 .sep = .sep)
+                 .sep = .sep))
 }
 
 parse.migec <- function (.filename) {
@@ -428,8 +428,8 @@ parse.migec <- function (.filename) {
   .skip = 0
   .sep = '\t'
   
-  parse.cloneset(.filename = filename, 
-                 .nuc.seq = nuc.seq,
+  fix.genes(parse.cloneset(.filename = filename, 
+                  .nuc.seq = nuc.seq,
                  .aa.seq = aa.seq,
                  .reads = reads,
                  .barcodes = barcodes,
@@ -443,7 +443,7 @@ parse.migec <- function (.filename) {
                  .dj.insertions = dj.insertions,
                  .total.insertions = total.insertions,
                  .skip = .skip,
-                 .sep = .sep)
+                 .sep = .sep))
 }
 
 parse.vdjtools <- function (.filename) {
