@@ -490,6 +490,8 @@ repSave <- function (.data, .compress = F, .names = "", .folder = "./") {
 #' 
 #' @param .mat Input matrix with row and columns names.
 #' @param .groups Named list with character vectors for names of elements for each group.
+#' @param .symm If T than remove symmetrical values from the input matrix.
+#' @param .diag If .symm if T and .diag is F than remove diagonal values.
 #' 
 #' @seealso \link{repOverlap}, \link{vis.group.boxplot}
 #' 
@@ -500,11 +502,15 @@ repSave <- function (.data, .compress = F, .names = "", .folder = "./") {
 #' sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));
 #' vis.group.boxplot(sb)
 #' }
-matrixSubgroups <- function (.mat, .groups = NA) {
+matrixSubgroups <- function (.mat, .groups = NA, .symm = T, .diag = F) {
   
   .intergroup.name <- function (.gr1, .gr2) {
     tmp <- sort(c(.gr1, .gr2))
     paste0(tmp[1], ':', tmp[2])
+  }
+  
+  if (.symm) {
+    data[lower.tri(.data, !.diag)] <- NA
   }
   
   data <- melt(.mat, na.rm = T)
