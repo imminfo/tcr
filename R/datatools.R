@@ -510,7 +510,7 @@ matrixSubgroups <- function (.mat, .groups = NA, .symm = T, .diag = F) {
   }
   
   if (.symm) {
-    data[lower.tri(.data, !.diag)] <- NA
+    .data[lower.tri(.data, !.diag)] <- NA
   }
   
   data <- melt(.mat, na.rm = T)
