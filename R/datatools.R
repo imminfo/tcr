@@ -3,12 +3,31 @@
 
 fix.alleles <- function (.data) {
   if (has.class(.data, "list")) {
-    lapply(.data, fix.alleles)
+    return(lapply(.data, fix.alleles))
   }
   
   .data$V.gene <- gsub("[*][[:digit:]]*", "", .data$V.gene)
   .data$D.gene <- gsub("[*][[:digit:]]*", "", .data$D.gene)
   .data$J.gene <- gsub("[*][[:digit:]]*", "", .data$J.gene)
+  .data
+}
+
+
+fix.genes <- function (.data) {
+  if (has.class(.data, "list")) {
+    return(lapply(.data, fix.genes))
+  }
+  
+  .fix <- function (.col) {
+    # it's not a mistake
+    .col <- gsub(", ", ",", .col, fixed = T, useBytes = T)
+    .col <- gsub(",", ", ", .col, fixed = T, useBytes = T)
+    .col
+  }
+  
+  .data$V.gene <- .fix(.data$V.gene)
+  .data$D.gene <- .fix(.data$D.gene)
+  .data$J.gene <- .fix(.data$J.gene)
   .data
 }
 
@@ -419,4 +438,134 @@ slice.fun <- function(.data, .size, .n, .fun, ..., .simplify = T) {
 .add.legend <- function (.vis.list, .vis.nrow = 2, .legend.ncol = 1) {
   leg <- gtable_filter(ggplot_gtable(ggplot_build(.vis.list[[1]] + guides(fill=guide_legend(ncol=.legend.ncol)))), "guide-box")
   grid.arrange(do.call(arrangeGrob, c(.vis.list, nrow = .vis.nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, top ='Top crosses')
+}
+
+
+#' Save tcR data frames to disk.
+#' 
+#' @description
+#' Save repertoire files to text or gzipped text files. You can read them by the `parse.tcr` function.
+#' 
+#' @param .data Either tcR data frame or a list of tcR data frames.
+#' @param .compress If T than compress text files with GZIP.
+#' @param .names Names of output files. By default it's an empty string so names will be taken from names of the input list.
+#' @param .folder Path to the folder with output files.
+repSave <- function (.data, .compress = F, .names = "", .folder = "./") {
+  if (has.class(.data, 'data.frame')) { .data <- list(Sample = .data) }
+  
+  .folder <- paste0(.folder, "/")
+  
+  postfix <- ".txt"
+  filefun <- function (...) file(...)
+  if (.compress) { 
+    postfix <- ".txt.gz"
+    filefun <- function (...) gzfile(...)
+  }
+  
+  if (.names[1] == "") {
+    .names = paste0(.folder, names(.data), postfix)
+  } else {
+    if (length(.data) != length(.names)) {
+      cat("Number of input data frames isn't equal to number of names\n")
+      return(NULL)
+    } else {
+      .names = paste0(.folder, .names, postfix)
+    }
+  }
+  
+  for (i in 1:length(.data)) {
+    cat("Writing", .names[i], "file...\t")
+    fc <- filefun(description = .names[i], open = "w")
+    write.table(.data[[i]], fc, quote = F, row.names = F, sep = '\t')
+    close(fc)
+    cat("Done.\n")
+  }
+}
+
+
+#' Get all values from the matrix corresponding to specific groups.
+#' 
+#' @description 
+#' Split all matrix values to groups and return them as a data frame with two columns: for values and for group names.
+#' 
+#' @param .mat Input matrix with row and columns names.
+#' @param .groups Named list with character vectors for names of elements for each group.
+#' @param .symm If T than remove symmetrical values from the input matrix.
+#' @param .diag If .symm if T and .diag is F than remove diagonal values.
+#' 
+#' @seealso \link{repOverlap}, \link{vis.group.boxplot}
+#' 
+#' @examples 
+#' \dontrun{
+#' data(twb)
+#' ov <- repOverlap(twb)
+#' sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));
+#' vis.group.boxplot(sb)
+#' }
+matrixSubgroups <- function (.mat, .groups = NA, .symm = T, .diag = F) {
+  
+  .intergroup.name <- function (.gr1, .gr2) {
+    tmp <- sort(c(.gr1, .gr2))
+    paste0(tmp[1], ':', tmp[2])
+  }
+  
+  if (.symm) {
+    .mat[lower.tri(.mat, !.diag)] <- NA
+  }
+  
+  data <- melt(.mat, na.rm = T)
+  names(data) <- c("Rep1", "Rep2", "Value")
+  data$Group <- 'no-group'
+  if (!is.na(.groups[1])) {
+    for (i in 1:length(.groups)) {
+      for (j in 1:length(.groups)) {
+        gr1 <- .groups[[i]]
+        gr2 <- .groups[[j]]
+        gr1.name <- names(.groups)[i]
+        gr2.name <- names(.groups)[j]
+        if (gr1.name == gr2.name) {
+          data$Group[data$Rep1 %in% gr1 & data$Rep2 %in% gr2] <-
+            gr1.name
+        } else {
+          if (!(.intergroup.name(gr2.name, gr1.name) %in% data$Group)) {
+            data$Group[data$Rep1 %in% gr1 & data$Rep2 %in% gr2] <-
+              .intergroup.name(gr1.name, gr2.name)
+            data$Group[data$Rep2 %in% gr1 & data$Rep1 %in% gr2] <-
+              .intergroup.name(gr1.name, gr2.name)
+          }
+        }
+      }
+    }
+  }
+  
+  data[, c('Group', 'Value')]
+}
+
+
+#' Compute the Euclidean distance among principal components.
+#' 
+#' @description 
+#' Compute the Euclidean distance among principal components.
+#' 
+#' @param .pcaobj An object returned by \code{prcomp}.
+#' @param .num.comps On how many principal components compute the distance.
+#' 
+#' @return Matrix of distances.
+#' 
+#' @seealso \link{prcomp}, \link{pca.segments}, \link{repOverlap}, \link{pairwisePermTest}
+#' 
+#' @examples
+#' \dontrun{
+#' mat.ov <- repOverlap(AS_DATA, .norm = T)
+#' mat.gen.pca <- pca.segments(AS_DATA, T, .genes = HUMAN_TRBV)
+#' mat.ov.pca <- prcomp(mat.ov, scale. = T)
+#' mat.gen.pca.dist <- pca2euclid(mat.gen.pca)
+#' mat.ov.pca.dist <- pca2euclid(mat.ov.pca)
+#' permutDistTest(mat.gen.pca.dist, list(<list of groups here>))
+#' permutDistTest(mat.ov.pca.dist, list(<list of groups here>))
+#' }
+pca2euclid <- function (.pcaobj, .num.comps = 2) {
+  mat <- .pcaobj$x
+  if (.num.comps > 0) { mat <- mat[,1:.num.comps] }
+  as.matrix(dist(mat))
 }

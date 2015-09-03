@@ -94,9 +94,13 @@ vis.heatmap(intersectClonesets(twb, 'ave'), .title = 'twb - (ave)-intersection',
 imm.1.2 <- intersectLogic(twb[[1]], twb[[2]],
                            .col = c('CDR3.amino.acid.sequence', 'V.gene'))
 head(twb[[1]][imm.1.2, c('CDR3.amino.acid.sequence', 'V.gene')])
+data(twb)
+ov <- repOverlap(twb)
+sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));
+vis.group.boxplot(sb)
 }
 }
 \seealso{
-\link{repOverlap}, \link{vis.heatmap}, \link{vis.group.boxplot}
+\link{repOverlap}, \link{vis.heatmap}, \link{ozScore}, \link{permutDistTest}, \link{vis.group.boxplot}
 }
 

@@ -61,6 +61,8 @@ Parameter \code{.method} can have one of the following value each corresponding 
 data(twb)
 repOverlap(twb, "exact", .seq = "nuc", .vgene = F)
 repOverlap(twb, "morisita", .seq = "aa", .vgene = T, .quant = "umi.count")
+ov <- repOverlap(twb)
+vis.pca(prcomp(ov, scale. = T), list(A = c(1, 2), B = c(3, 4)))
 }
 }
 \seealso{

@@ -41,7 +41,21 @@ if (getRversion() >= "2.15.1") {
   #   cs <- c("#FFFFD9", "#41B6C4", "#225EA8")
   #   cs <- c("#FFFFBB", "#41B6C4", "#225EA8")
 #   cs <- c("#FFBB00", "#41B6C4", "#225EA8") <- old version
+  # cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
   cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
+  if (.colour) {
+    scale_colour_manual(values = colorRampPalette(cs)(.n))
+  } else {
+    scale_fill_manual(values = colorRampPalette(cs)(.n))
+  }
+}
+
+.colourblind.discrete2 <- function (.n, .colour = F) {
+  #   cs <- c("#FFFFD9", "#41B6C4", "#225EA8")
+  #   cs <- c("#FFFFBB", "#41B6C4", "#225EA8")
+    cs <- c("#FFAB00", "#41B6C4", "#225EA8") # <- old version
+  # cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
+  # cs <- c("#FF4B20", "#FFB433", "#0348A6")
   if (.colour) {
     scale_colour_manual(values = colorRampPalette(cs)(.n))
   } else {
@@ -214,11 +228,12 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
 #'
 #' @param .data Either a matrix with colnames and rownames specifyed or a data frame with the first column of
 #' strings for row names and other columns stands for values.
-#' @param .groups Named list with character vector for names of elements for each group. If NA than each
+#' @param .groups Named list with character vectors for names of elements for each group. If NA than each
 #' member is in the individual group.
 #' @param .title Main title of the plot.
 #' @param .labs Labs names. Character vector of length 1 (for naming both axis with same name) or 2 (first elements stands for x-axis).
 #' @param .rotate.x if T then rotate x-axis.
+#' @param .violin If T then plot a violin plot.
 #' @param ... Parameters passed to \code{melt}, applied to \code{.data} before plotting in \code{vis.group.boxplot}.
 #' 
 #' @return ggplot object.
@@ -231,9 +246,19 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
 #' vis.group.boxplot(freq.Vb(immdata),
 #'    list(A = c('A1', 'A2'), B = c('B1', 'B2'), C = c('C1', 'C2')),
 #'    c('V segments', 'Frequency')) 
+#' 
+#' data(twb)
+#' ov <- repOverlap(twb)
+#' sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));
+#' vis.group.boxplot(sb)
 #' }
-vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D1', 'D2'), C = c('C1', 'C2')), .labs = c('V genes', 'Frequency'), .title = '', .rotate.x = T, ...) {
-  .data <- melt(.data, ...)
+vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Frequency'), .title = '', .rotate.x = T, .violin = T, .notch = F, ...) {
+  if (has.class(.data, 'data.frame')) {
+    .data$Sample <- .data[,1]
+    .data <- .data[,c(1,3,2)]
+  } else {
+    .data <- melt(.data, ...)
+  }
   
   colnames(.data) <- c('Var', 'Sample', 'Value')
   .data$Group <- as.character(.data$Sample)
@@ -245,7 +270,13 @@ vis.group.boxplot <- function (.data, .groups = list(A = c('A1', 'A2'), D = c('D
     }
   }
   
-  p <- ggplot() + geom_boxplot(aes(x = Var, y = Value, fill = Group), data = .data, colour = 'black')
+  p <- ggplot() + 
+    geom_boxplot(aes(x = Var, y = Value, fill = Group), data = .data, colour = 'black', notch = .notch)
+  
+  if (.violin) {
+    p <- p +geom_violin(aes(x = Var, y = Value, fill = Group), alpha = .2, data = .data)
+  }
+    
   if (length(.labs) >= 2) {
     p <- p + xlab(.labs[1]) + ylab(.labs[2])
   }
@@ -367,10 +398,10 @@ vis.pca <- function (.data, .groups = NA) {
   }
   
   ggplot() + 
-    geom_point(aes(x = First, y = Second, colour = Group), data = .data) + 
-    geom_text(aes(x = First, y = Second, label = Sample), data = .data, hjust=0, vjust=0) +
+    geom_point(aes(x = First, y = Second, colour = Group), size = 3, data = .data) + 
+    geom_text(aes(x = First, y = Second, label = Sample, colour = Group), data = .data, hjust=0, vjust=0) +
     theme_linedraw() +
-    .colourblind.discrete(length(.groups), T)
+    .colourblind.discrete2(length(.groups), T)
 }
 
 

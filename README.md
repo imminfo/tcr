@@ -1,6 +1,6 @@
-[![Licence](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Licence](https://img.shields.io/hexpm/l/plug.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0)
 [![RepSeq](http://statsarray.com/wp-content/uploads/2014/03/omictools-logo.png)](http://omictools.com/tcr-s9043.html)
-[![Join the chat at https://gitter.im/imminfo/tcr](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imminfo/tcr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![CRAN](http://www.r-pkg.org/badges/version/tcR?style=flat-square)](http://cran.r-project.org/web/packages/tcR)
 
 tcR
 ===
