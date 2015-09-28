@@ -1,6 +1,6 @@
 # general function for loading data frames - either from text files
 # or from MonetDB
-repLoad <- function (.path, .format = c("monetdb", "mitcr", "migec"), .user = "default", .password = "default") {
+repLoad <- function (.path, .format = c("mitcr", "migec")) {
   res <- list()
   
   for (i in 1:length(.path)) {
@@ -32,9 +32,8 @@ repLoad <- function (.path, .format = c("monetdb", "mitcr", "migec"), .user = "d
 #' Save tcR data frames to disk as text files or as MonetDB database.
 #' 
 #' @description
-#' Save repertoire files to either text files or gzipped text files or as MonetDB database.
-#' You can read them later by \code{repLoad} function with either \code{.format = "tcr"} or with
-#' \code{.format = "monetdb"}.
+#' Save repertoire files to either text files or gzipped text files.
+#' You can read them later by \code{repLoad} function with \code{.format = "tcr"}.
 #' 
 #' @param .data Either tcR data frame or a list of tcR data frames.
 #' @param .format
@@ -42,7 +41,7 @@ repLoad <- function (.path, .format = c("monetdb", "mitcr", "migec"), .user = "d
 #' @param .folder Path to the folder with output files.
 #' 
 #' @seealso \link{repLoad}
-repSave <- function (.data, .format = c("txt", "gz", "monetdb"), .names = "", .folder = "./", .user = "default", .password = "default") {
+repSave <- function (.data, .format = c("txt", "gz"), .names = "", .folder = "./") {
   if (has.class(.data, 'data.frame')) { .data <- list(Sample = .data) }
   
   .folder <- paste0(.folder, "/")
