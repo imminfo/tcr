@@ -4,12 +4,16 @@
 \alias{matrixSubgroups}
 \title{Get all values from the matrix corresponding to specific groups.}
 \usage{
-matrixSubgroups(.mat, .groups = NA)
+matrixSubgroups(.mat, .groups = NA, .symm = T, .diag = F)
 }
 \arguments{
 \item{.mat}{Input matrix with row and columns names.}
 
 \item{.groups}{Named list with character vectors for names of elements for each group.}
+
+\item{.symm}{If T than remove symmetrical values from the input matrix.}
+
+\item{.diag}{If .symm if T and .diag is F than remove diagonal values.}
 }
 \description{
 Split all matrix values to groups and return them as a data frame with two columns: for values and for group names.
