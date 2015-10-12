@@ -87,6 +87,10 @@ AA_TABLE_REVERSED <- AA_TABLE_REVERSED[order(names(AA_TABLE_REVERSED))]
 #' 
 #' MOUSE_TRBJ
 #' 
+#' MACMUL_TRBV
+#' 
+#' MACMUL_TRBJ
+#' 
 #' @description
 #' Character vector with names for segments. With \code{tcR} we provided alphabets for all alpha, beta,
 #' gamma and delta chains gene segments.
@@ -124,7 +128,7 @@ HUMAN_TRBV <- c('TRBV10-1', 'TRBV10-2', 'TRBV10-3', 'TRBV11-1', 'TRBV11-2', 'TRB
 HUMAN_TRBV <- .set.attr(HUMAN_TRBV, "column", "V.gene")
 HUMAN_TRBD <- c('TRBD1', 'TRBD2')
 HUMAN_TRBJ <- c('TRBJ1-1', 'TRBJ1-2', 'TRBJ1-3', 'TRBJ1-4', 'TRBJ1-5', 'TRBJ1-6', 'TRBJ2-1', 'TRBJ2-2',
-                         'TRBJ2-3', 'TRBJ2-4', 'TRBJ2-5', 'TRBJ2-6', 'TRBJ2-7')
+                'TRBJ2-3', 'TRBJ2-4', 'TRBJ2-5', 'TRBJ2-6', 'TRBJ2-7')
 
 HUMAN_TRBV_MITCR <- c('TRBV10-1', 'TRBV10-2', 'TRBV10-3', 'TRBV11-1', 'TRBV11-2', 'TRBV11-3', 'TRBV12-4, TRBV12-3',
                       'TRBV12-5', 'TRBV13', 'TRBV14', 'TRBV15', 'TRBV16', 'TRBV18', 'TRBV19', 'TRBV2',
@@ -196,6 +200,22 @@ MOUSE_TRBV <- c('TRBV1', 'TRBV12-1', 'TRBV12-2', 'TRBV13-1', 'TRBV13-2', 'TRBV13
                 'TRBV4', 'TRBV5')
 MOUSE_TRBJ <- c('TRBJ1-1', 'TRBJ1-2', 'TRBJ1-3', 'TRBJ1-4', 'TRBJ1-5', 'TRBJ2-1', 'TRBJ2-2',
                 'TRBJ2-3', 'TRBJ2-4', 'TRBJ2-5', 'TRBJ2-7')
+
+MACMUL_TRBV <- c('TRBD1', 'TRBD2', 'TRBJ1-1', 'TRBJ1-2', 'TRBJ1-3', 'TRBJ1-4', 'TRBJ1-5', 
+                 'TRBJ1-6', 'TRBJ2-1', 'TRBJ2-2', 'TRBJ2-2P', 'TRBJ2-3', 'TRBJ2-4', 'TRBJ2-5',
+                 'TRBJ2-6', 'TRBJ2-7', 'TRBV1-1', 'TRBV10-1', 'TRBV10-2', 'TRBV10-3', 
+                 'TRBV11-1', 'TRBV11-2', 'TRBV11-3', 'TRBV12-1', 'TRBV12-2', 'TRBV12-3', 
+                 'TRBV12-4', 'TRBV13', 'TRBV14', 'TRBV15', 'TRBV16', 'TRBV18', 'TRBV19', 
+                 'TRBV2-1', 'TRBV2-2', 'TRBV2-3', 'TRBV20-1', 'TRBV21-1', 'TRBV22-1', 
+                 'TRBV23-1', 'TRBV24-1', 'TRBV25-1', 'TRBV27', 'TRBV28', 'TRBV29-1', 
+                 'TRBV3-1', 'TRBV3-2', 'TRBV3-3', 'TRBV3-4', 'TRBV30', 'TRBV4-1', 'TRBV4-2', 
+                 'TRBV4-3', 'TRBV5-1', 'TRBV5-10', 'TRBV5-2', 'TRBV5-3', 'TRBV5-4', 
+                 'TRBV5-5', 'TRBV5-6', 'TRBV5-7', 'TRBV5-8', 'TRBV5-9', 'TRBV6-1', 'TRBV6-2',
+                 'TRBV6-3', 'TRBV6-4', 'TRBV6-5', 'TRBV6-6', 'TRBV6-7', 'TRBV7-10', 'TRBV7-2',
+                 'TRBV7-3', 'TRBV7-4', 'TRBV7-5', 'TRBV7-6', 'TRBV7-7', 'TRBV7-9', 'TRBV9')
+
+MACMUL_TRBJ <- c('TRBJ1-1', 'TRBJ1-2', 'TRBJ1-3', 'TRBJ1-4', 'TRBJ1-5', 'TRBJ1-6', 'TRBJ2-1', 'TRBJ2-2',
+                 'TRBJ2-3', 'TRBJ2-4', 'TRBJ2-5', 'TRBJ2-6', 'TRBJ2-7')
 
 
 #' Segment data.
