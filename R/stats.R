@@ -41,7 +41,7 @@ get.inframes <- function (.data, .head = 0, .coding = T) {
 }
 
 get.outframes <- function (.data, .head = 0) {
-  if (class(.data) == 'list') { return(lapply(.data, get.outframes, .head = .head, .coding = .coding)) }
+  if (class(.data) == 'list') { return(lapply(.data, get.outframes, .head = .head)) }
   .data <- head(.data, if (.head == 0) {nrow(.data)} else {.head})
   subset(.data, nchar(.data$CDR3.nucleotide.sequence) %% 3 != 0)
 }
@@ -52,19 +52,19 @@ count.inframes <- function (.data, .head = 0, .coding = T) {
 }
 
 count.outframes <- function (.data, .head = 0) {
-  if (class(.data) == 'list') { sapply(get.outframes(.data, .head, .coding), nrow) }
+  if (class(.data) == 'list') { sapply(get.outframes(.data, .head), nrow) }
   else { nrow(get.outframes(.data, .head, .coding)) }
 }
 
 get.frames <- function (.data, .frame = c('in', 'out', 'all'), .head = 0, .coding = T) {
   if (.frame[1] == 'in') { get.inframes(.data, .head, .coding) }
-  else if (.frame[1] == 'out') { get.outframes(.data, .head, .coding) }
+  else if (.frame[1] == 'out') { get.outframes(.data, .head) }
   else { head(.data, if (.head == 0) {nrow(.data)} else {.head}) }
 }
 
 count.frames <- function (.data, .frame = c('in', 'out', 'all'), .head = 0, .coding = T) {
   if (.frame[1] == 'in') { count.inframes(.data, .head, .coding) }
-  else if (.frame[1] == 'out') { count.outframes(.data, .head, .coding) }
+  else if (.frame[1] == 'out') { count.outframes(.data, .head) }
   else { nrow(head(.data, if (.head == 0) {nrow(.data)} else {.head})) }
 }
 
