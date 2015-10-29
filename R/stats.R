@@ -53,7 +53,7 @@ count.inframes <- function (.data, .head = 0, .coding = T) {
 
 count.outframes <- function (.data, .head = 0) {
   if (class(.data) == 'list') { sapply(get.outframes(.data, .head), nrow) }
-  else { nrow(get.outframes(.data, .head, .coding)) }
+  else { nrow(get.outframes(.data, .head)) }
 }
 
 get.frames <- function (.data, .frame = c('in', 'out', 'all'), .head = 0, .coding = T) {
