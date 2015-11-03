@@ -641,9 +641,9 @@ parse.mixcr <- function (.filename) {
   .reads <- 'clone.count'
   .barcodes <- 'clone.count'
   .sep = '\t'
-  .vend <- "all.v.alignment"
-  .jstart <- "all.j.alignment"
-  .dalignments <- "all.d.alignment"
+  .vend <- "all.v.alignments"
+  .jstart <- "all.j.alignments"
+  .dalignments <- "all.d.alignments"
   .vd.insertions <- "VD.insertions"
   .dj.insertions <- "DJ.insertions"
   .total.insertions <- "Total.insertions"
@@ -741,7 +741,7 @@ parse.mixcr <- function (.filename) {
   .total.insertions <- "Total.insertions"
   if (recomb_type == "VJ") {
     df$Total.insertions <- 
-      sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4) - sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5) - 1
+      as.numeric(sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4)) - as.numeric(sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5)) - 1
   } else if (recomb_type == "VDJ") {
     df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
   } else {
