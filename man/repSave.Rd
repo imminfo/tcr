@@ -2,7 +2,7 @@
 % Please edit documentation in R/io.R
 \name{repSave}
 \alias{repSave}
-\title{Save tcR data frames to disk as text files or as MonetDB database.}
+\title{Save tcR data frames to disk as text files or gzipped text files.}
 \usage{
 repSave(.data, .format = c("txt", "gz"), .names = "", .folder = "./")
 }
