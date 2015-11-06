@@ -1,6 +1,11 @@
 ########## Intersections among sets of sequences ##########
 
 
+if (getRversion() >= "2.15.1") {
+  utils::globalVariables(c("Resamp.values", "Fun.value", "P.value"))
+}
+
+
 #' Intersection between sets of sequences or any elements.
 #' 
 #' @aliases intersectClonesets intersectCount intersectLogic intersectIndices
@@ -133,8 +138,10 @@ intersectClonesets <- function (.alpha = NULL, .beta = NULL, .type = 'n0e', .hea
     if (.norm) {
       if (is.null(dim(.alpha))) {
         res <- res / (as.numeric(length(.alpha)) * length(.beta))
+        # res <- res * max(length(.alpha), length(.beta))
       } else {
         res <- res / (as.numeric(nrow(.alpha)) * nrow(.beta))
+        # res <- res * max(nrow(.alpha), nrow(.beta))
       }
     }
     res
@@ -308,16 +315,17 @@ ozScore <- function (.mat, .symm = T, .as.matrix = F, .val.col = c('norm', 'abs'
 #' Monte Carlo permutation test for pairwise and one-vs-all-wise within- and inter-group differences in a set of repertoires.
 #' 
 #' @description
-#' Blah-blah-blah permutation tests blah-blah-blah significance levels
+#' WARNING: this is an experimental procedure, work is still in progress.
+#' 
+#' Perform permutation tests of distances among groups for the given groups of samples and matrix of distances among all samples.
 #' 
 #' @param .mat Symmetric matrix of repertoire distances.
-#' @param .group Named list with names of repertoires in groups.
+#' @param .groups Named list with names of repertoires in groups.
 #' @param .n Number of permutations for each pair of group.
 #' @param .fun A function to apply to distances.
 #' @param .signif Significance level. Below this value hypotheses counts as significant.
 #' @param .plot If T than plot the output results. Else return them as a data frame.
 #' @param .xlab X lab label.
-#' @param .ylab Y lab label.
 #' @param .title Main title of the plot.
 #' @param .hjust Value for adjusting the x coordinate of p-value labels on plots.
 #' @param .vjust Value for adjusting the y coordinate of p-value labels on plots.
@@ -334,6 +342,8 @@ ozScore <- function (.mat, .symm = T, .as.matrix = F, .val.col = c('norm', 'abs'
 permutDistTest <- function (.mat, .groups, .n = 1000, .fun = mean, .signif = .05,
                            .plot = T, .xlab = "Values", .title = "Monte Carlo permutation testing of overlaps",
                            .hjust = -.1, .vjust = -4) {
+  
+  cat("WARNING: this is an experimental procedure, work is still in progress.")
   
   .pairwise.test <- function (.mat, .group.logic, .n, .fun) {
     within.val.gr1 = .fun(.mat[.group.logic, .group.logic][upper.tri(.mat[.group.logic, .group.logic])])

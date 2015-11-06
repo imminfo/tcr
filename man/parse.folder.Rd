@@ -6,21 +6,26 @@
 \alias{parse.folder}
 \alias{parse.immunoseq}
 \alias{parse.immunoseq2}
+\alias{parse.imseq}
 \alias{parse.migec}
 \alias{parse.mitcr}
 \alias{parse.mitcrbc}
+\alias{parse.mixcr}
 \alias{parse.tcr}
 \alias{parse.vdjtools}
 \title{Parse input table files with immune receptor repertoire data.}
 \usage{
 parse.file(.filename,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), ...)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq',
+'mixcr', 'imseq', 'tcr'), ...)
 
 parse.file.list(.filenames,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), .namelist = NA)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq',
+'mixcr', 'imseq', 'tcr'), .namelist = NA)
 
 parse.folder(.folderpath,
-.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), ...)
+.format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq',
+'mixcr', 'imseq', 'tcr'), ...)
 
 parse.mitcr(.filename)
 
@@ -43,7 +48,7 @@ parse.tcr(.filename)
 \arguments{
 \item{.folderpath}{Path to the folder with text cloneset files.}
 
-\item{.format}{String specifing input format of files.}
+\item{.format}{String that specifies the input format.}
 
 \item{...}{Parameters passed to \code{parse.cloneset}.}
 
@@ -105,7 +110,7 @@ Output of MiXCR should contain either all hits or best hits for each gene segmen
 Output of IMSEQ should be generated with parameter "-on". In this case there will be no positions of aligned gene segments in the output data frame
 due to restrictions of IMSEQ output.
 
-tcR's data frames should be save with the `repSave()` function.
+tcR's data frames should be saved with the `repSave()` function.
 }
 \examples{
 \dontrun{
@@ -121,6 +126,6 @@ immdata <- parse.folder("~/data/", 'migec')
 }
 }
 \seealso{
-\link{parse.cloneset}, \link{repSave}
+\link{parse.cloneset}, \link{repSave}, \link{repLoad}
 }
 

@@ -132,6 +132,34 @@ chao1 <- function (.data) {
   c(Estimator = e, SD = sqrt(v), Conf.95.lo = lo, Conf.95.hi = hi)
 }
 
+# hill.numbers <- function (.data, .max.q = 6, .min.q = 1) {
+#   print(head(.data))
+#   print(sum(.data))
+#   # .data <- check.distribution(.data)
+#   print(head(.data))
+#   
+#   if (.min.q < 0) { .min.q <- 0 }
+#   res <- c()
+#   
+#   if (.min.q == 0) {
+#     res <- length(.data)
+#     .min.q <- 1
+#   }
+#   
+#   if (.min.q == 1) {
+#     res <- c(res, exp(-sum(.data * log(.data))))
+#     .min.q <- 2
+#   }
+#   
+#   if (.max.q >= 2) {
+#     for (q in .min.q:.max.q) {
+#       res <- c(res, sum(.data ^ q)^(1 / (1 - q)))
+#     }
+#   }
+#   
+#   res
+# }
+
 
 #' Diversity evaluation using rarefaction.
 #' 

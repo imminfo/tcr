@@ -1,6 +1,11 @@
 useDynLib(tcR)
 exportPattern("^[[:alpha:]]+")
 export('.split.get')
+importFrom("grDevices", "colorRampPalette", "rainbow")
+importFrom("graphics", "segments")
+importFrom("stats", "aggregate", "as.formula", "dist", "na.exclude",
+           "p.adjust", "prcomp", "qnorm", "quantile", "rmultinom",
+           "runif", "sd")
 importFrom(Rcpp, evalCpp)
 importFrom(stringdist, stringdist)
 importFrom(gridExtra, grid.arrange, arrangeGrob)

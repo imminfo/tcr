@@ -234,6 +234,7 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
 #' @param .labs Labs names. Character vector of length 1 (for naming both axis with same name) or 2 (first elements stands for x-axis).
 #' @param .rotate.x if T then rotate x-axis.
 #' @param .violin If T then plot a violin plot.
+#' @param .notch "notch" parameter to the \code{geom_boxplot} ggplo2 function.
 #' @param ... Parameters passed to \code{melt}, applied to \code{.data} before plotting in \code{vis.group.boxplot}.
 #' 
 #' @return ggplot object.
@@ -697,3 +698,8 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
     xlab("Position") + ylab("Proportion") +
     theme_linedraw()
 }
+
+
+# vis.hill.numbers <- function (.hill.nums, .groups = NA) {
+#   
+# }

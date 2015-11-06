@@ -9,7 +9,7 @@ repSave(.data, .format = c("txt", "gz"), .names = "", .folder = "./")
 \arguments{
 \item{.data}{Either tcR data frame or a list of tcR data frames.}
 
-\item{.format}{}
+\item{.format}{"txt" for simple tab-delimited text tables, "gz" for compressed (gzipped) tables.}
 
 \item{.names}{Names of output files. By default it's an empty string so names will be taken from names of the input list.}
 

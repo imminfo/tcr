@@ -191,7 +191,7 @@ parse.cloneset <- function (.filename,
 
 #' Parse input table files with immune receptor repertoire data.
 #'
-#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq parse.immunoseq2 parse.tcr
+#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq parse.immunoseq2 parse.tcr parse.mixcr parse.imseq
 #'
 #' @description
 #' Load the TCR data from the file with the given filename to a data frame or load all 
@@ -209,17 +209,20 @@ parse.cloneset <- function (.filename,
 #' Output of IMSEQ should be generated with parameter "-on". In this case there will be no positions of aligned gene segments in the output data frame
 #' due to restrictions of IMSEQ output.
 #' 
-#' tcR's data frames should be save with the `repSave()` function.
+#' tcR's data frames should be saved with the `repSave()` function.
 #' 
 #' @usage
 #' parse.file(.filename, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), ...)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 
+#' 'mixcr', 'imseq', 'tcr'), ...)
 #' 
 #' parse.file.list(.filenames, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), .namelist = NA)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 
+#' 'mixcr', 'imseq', 'tcr'), .namelist = NA)
 #' 
 #' parse.folder(.folderpath, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), ...)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 
+#' 'mixcr', 'imseq', 'tcr'), ...)
 #' 
 #' parse.mitcr(.filename)
 #' 
@@ -242,7 +245,7 @@ parse.cloneset <- function (.filename,
 #' @param .filename Path to the input file with cloneset data.
 #' @param .filenames Vector or list with paths to files with cloneset data.
 #' @param .folderpath Path to the folder with text cloneset files.
-#' @param .format String specifing input format of files.
+#' @param .format String that specifies the input format.
 #' @param .namelist Either NA or character vector of length \code{.filenames} with names for output data frames.
 #' @param ... Parameters passed to \code{parse.cloneset}.
 #' 
@@ -281,7 +284,7 @@ parse.cloneset <- function (.filename,
 #' 
 #' - "Total.insertions" - total number of inserted nucleotides (number of N-nucleotides at V-J junction for receptors with VJ recombination).
 #' 
-#' @seealso \link{parse.cloneset}, \link{repSave}
+#' @seealso \link{parse.cloneset}, \link{repSave}, \link{repLoad}
 #' 
 #' @examples
 #' \dontrun{
@@ -295,11 +298,11 @@ parse.cloneset <- function (.filename,
 #' # Parse all files in "~/data/" as MiGEC files.
 #' immdata <- parse.folder("~/data/", 'migec')
 #' }
-parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...) {
+parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...) {
   parse.file.list(list.files(.folderpath, full.names = T), .format)
 }
 
-parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), .namelist = NA) {
+parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), .namelist = NA) {
   # Remove full paths and extension from the given string.
   .remove.ext <- function (.str) {
     gsub(pattern = '.*/|[.].*$', replacement = '', x = .str)
@@ -323,7 +326,7 @@ parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'
   datalist
 }
 
-parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...) {
+parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...) {
   parse.fun <- switch(.format[1], 
                       mitcr = parse.mitcr,
                       mitcrbc = parse.mitcrbc,

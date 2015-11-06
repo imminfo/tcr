@@ -22,6 +22,8 @@ member is in the individual group.}
 
 \item{.violin}{If T then plot a violin plot.}
 
+\item{.notch}{"notch" parameter to the \code{geom_boxplot} ggplo2 function.}
+
 \item{...}{Parameters passed to \code{melt}, applied to \code{.data} before plotting in \code{vis.group.boxplot}.}
 }
 \value{

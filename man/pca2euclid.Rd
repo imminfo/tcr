@@ -29,6 +29,6 @@ permutDistTest(mat.ov.pca.dist, list(<list of groups here>))
 }
 }
 \seealso{
-\link{prcomp}, \link{pca.segments}, \link{repOverlap}, \link{pairwisePermTest}
+\link{prcomp}, \link{pca.segments}, \link{repOverlap}, \link{permutDistTest}
 }
 

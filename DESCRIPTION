@@ -1,11 +1,11 @@
 Package: tcR
 Type: Package
 Title: Advanced Data Analysis of Immune Receptor Repertoires
-Version: 2.2
-Date: 2015-05-14
+Version: 2.2.1
+Date: 2015-11-06
 Author: Vadim Nazarov
 Maintainer: Vadim Nazarov <vdm.nazarov@gmail.com>
-Description: Platform for the advanced analysis of T cell receptor repertoires data and visualisation of the analysis results.
+Description: Platform for the advanced analysis of T cell receptor and Immunoglobulin repertoires data and visualisation of the analysis results.
 License: Apache License 2.0
 Depends: R (>= 2.15.1), ggplot2 (>= 1.0.0), dplyr (>= 0.4.0), gridExtra (>= 0.9.0), reshape2 (>= 1.2.0), igraph (>= 0.7.1)
 Imports: utils (>= 3.1.0), Rcpp (>= 0.11.1), grid (>= 3.0.0), data.table (>= 1.9.0), gtable (>= 0.1.2), stringdist (>= 0.7.3)
