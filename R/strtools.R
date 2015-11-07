@@ -112,7 +112,7 @@ revcomp <- function (.seq) {
 }
 
 bunch.translate <- function(.seq, .two.way = T) {  
-  sapply(.seq, function (y) {
+  sapply(toupper(.seq), function (y) {
     ny <- nchar(y)
     ny3 <- ny %/% 3
     tmp <- ''
