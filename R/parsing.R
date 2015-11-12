@@ -333,6 +333,8 @@ parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjt
                       migec = parse.migec,
                       vdjtools = parse.vdjtools,
                       immunoseq = parse.immunoseq,
+                      immunoseq2 = parse.immunoseq2,
+                      immunoseq3 = parse.immunoseq3,
                       mixcr = parse.mixcr,
                       imseq = parse.imseq,
                       tcr = parse.tcr,
@@ -566,6 +568,82 @@ parse.immunoseq2 <- function (.filename) {
   nuc.seq <- 'nucleotide'
   aa.seq <- 'aminoAcid'
   reads <- 'count (templates)'
+  barcodes <- 'vIndex'
+  vgenes <- 'vGeneName'
+  jgenes <- 'jGeneName'
+  dgenes <- 'dFamilyName'
+  vend <- 'n1Index'
+  jstart <- 'jIndex'
+  dalignments <- c('dIndex', 'n2Index')
+  vd.insertions <- "n1Insertion"
+  dj.insertions <- "n2Insertion"
+  total.insertions <- "NO SUCH COLUMN AT ALL 3"
+  .skip = 0
+  .sep = '\t'
+  
+  df <- parse.cloneset(.filename = filename, 
+                       .nuc.seq = nuc.seq,
+                       .aa.seq = aa.seq,
+                       .reads = reads,
+                       .barcodes = barcodes,
+                       .vgenes = vgenes,
+                       .jgenes = jgenes,
+                       .dgenes = dgenes,
+                       .vend = vend,
+                       .jstart = jstart,
+                       .dalignments = dalignments,
+                       .vd.insertions = vd.insertions,
+                       .dj.insertions = dj.insertions,
+                       .total.insertions = total.insertions,
+                       .skip = .skip,
+                       .sep = .sep)
+  
+  # fix nucleotide sequences
+  df$CDR3.nucleotide.sequence <- substr(df$CDR3.nucleotide.sequence, df$Umi.count + 1, nchar(df$CDR3.nucleotide.sequence) - 6)
+  
+  # add out-of-frame amino acid sequences
+  df$CDR3.amino.acid.sequence <- bunch.translate(df$CDR3.nucleotide.sequence)
+  
+  # df <- fix.alleles(df)
+  
+  # fix genes names and ","
+  .fix.genes <- function (.col) {
+    # fix ","
+    .col <- gsub(",", ", ", .col, fixed = T, useBytes = T)
+    # fix forward zeros
+    .col <- gsub("([0])([0-9])", "\\2", .col, useBytes = T)
+    # fix gene names
+    .col <- gsub("TCR", "TR", .col, fixed = T, useBytes = T)
+    .col
+  }
+  
+  df$V.gene <- .fix.genes(df$V.gene)
+  df$D.gene <- .fix.genes(df$D.gene)
+  df$J.gene <- .fix.genes(df$J.gene)
+  
+  # update V, D and J positions
+  .fix.poses <- function (.col) {
+    df[df[[.col]] != -1, .col] <- df[df[[.col]] != -1, .col] - df$Umi.count[df[[.col]] != -1]
+    df
+  }
+  
+  df <- .fix.poses("V.end")
+  df <- .fix.poses("D3.end")
+  df <- .fix.poses("D5.end")
+  df <- .fix.poses("J.start")
+  
+  # nullify barcodes
+  df$Umi.count <- NA
+  df$Umi.proportion <- NA
+  
+  df
+}
+
+parse.immunoseq3 <- function (.filename) {
+  filename <- .filename
+  nuc.seq <- 'nucleotide'
+  aa.seq <- 'aminoAcid'
+  reads <- 'count (reads)'
   barcodes <- 'vIndex'
   vgenes <- 'vGeneName'
   jgenes <- 'jGeneName'

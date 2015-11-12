@@ -38,7 +38,7 @@ repLoad <- function (.path, .format = c("mitcr", "migec")) {
     if (dir.exists(.path[i])) {
       res <- c(res, parse.folder(.path[i], .format[1]))
     } else if (file.exists(.path[i])) {
-      res <- c(res, parse.file(.path[1], .format[1]))
+      res <- c(res, list(parse.file(.path[1], .format[1])))
     } else {
       cat('Can\'t find folder or file:\t"', .path[i], '"', sep = '', end = '\n')
     }
