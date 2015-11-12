@@ -106,7 +106,7 @@ vis.count.len <- function (.data, .ncol = 3, .name = "", .col = 'Read.count') {
   tmp <- aggregate(as.formula(paste0(.col, " ~ nchar(CDR3.nucleotide.sequence)")), .data, sum)
   names(tmp) <- c('Lengths', "Count")
   ggplot() +
-    geom_histogram(aes(x = Lengths, y = Count, fill = Count), data = tmp, stat = 'identity', colour = 'black') +
+    geom_bar(aes(x = Lengths, y = Count, fill = Count), data = tmp, stat = 'identity', colour = 'black') +
     .colourblind.gradient(min(tmp$Count), max(tmp$Count)) +
     ggtitle(.name) + theme_linedraw()
 }
