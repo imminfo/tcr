@@ -87,11 +87,11 @@ js.div.seg <- function (.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out
   .data2 <- get.frames(.data2, .frame)
   
   if (has.class(.genes, "list") && length(.genes) == 2) {
-    freq.alpha <- geneUsage(.data, .genes = .genes, .ambig = .ambig)
-    freq.beta <- geneUsage(.data2, .genes = .genes, .ambig = .ambig)
+    freq.alpha <- geneUsage(.data, .genes = .genes, .quant = .quant, .ambig = .ambig)
+    freq.beta <- geneUsage(.data2, .genes = .genes, .quant = .quant, .ambig = .ambig)
   } else {
-    freq.alpha <- geneUsage(.data, .genes = .genes, .ambig = .ambig)[,-1]
-    freq.beta <- geneUsage(.data2, .genes = .genes, .ambig = .ambig)[,-1]
+    freq.alpha <- geneUsage(.data, .genes = .genes, .quant = .quant, .ambig = .ambig)[,-1]
+    freq.beta <- geneUsage(.data2, .genes = .genes, .quant = .quant, .ambig = .ambig)[,-1]
   }
   
   nrm = if (.norm.entropy) 0.5 * (entropy(freq.alpha) + entropy(freq.beta)) else 1
