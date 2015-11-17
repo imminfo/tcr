@@ -148,7 +148,7 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
   
   if (.norm) {
     if (length(.genes) == 1) {
-      res[,-1] <- apply(res[,-1], 2, function (col) col / sum(col))
+      res[,-1] <- apply(as.matrix(res[,-1]), 2, function (col) col / sum(col))
     } else {
       res <- res / sum(res)
     }
