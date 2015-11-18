@@ -26,9 +26,11 @@ if (getRversion() >= "2.15.1") {
 #   cs <- c("#FFFFBB", "#41B6C4", "#225EA8")
 #   cs <- c("#FFBB00", "#41B6C4", "#225EA8") <- old version
 #   cs <- c("#FF4B20", "#FFB433", "#C6EDEC", "#85CFFF", "#0348A6")
-  cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
+  # cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
+  cs <- c(c("#0072B2", "#EEEEEE", "#D55E00"))
+  # scale_fill_gradientn(guide='colourbar', colours=c("#0072B2", "#EEEEEE", "#D55E00")
   if (!is.na(.min)) {
-    scale_fill_gradientn(limits = c(.min, .max), colours = cs, na.value = 'grey60')
+    scale_fill_gradientn(limits = c(.min, .max), guide='colorbar', colours = cs, na.value = 'grey60')
   } else {
     scale_fill_gradientn(colours = cs, na.value = 'grey60')
   }
@@ -182,7 +184,12 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' # Plot a heatmap.
 #' vis.heatmap(imm.av, .title = 'Immdata - (ave)-intersection')
 #' }
-vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = c('Sample', 'Sample'), .legend = 'Shared clonotypes', .na.value = NA, .text = T) {
+vis.heatmap <- function (.data, 
+                         .title = "Number of shared clonotypes", 
+                         .labs = c('Sample', 'Sample'), 
+                         .legend = 'Shared clonotypes', 
+                         .na.value = NA, 
+                         .text = T) {
   if (has.class(.data, 'data.frame')) {
     names <- .data[,1]
     .data <- as.matrix(.data[,-1])
@@ -203,16 +210,16 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
   m[,2] <- factor(m[,2], levels = colnames(.data))
   
   p <- ggplot(m, aes(x = variable, y = name, fill = value))
-  p <- p + geom_tile(aes(fill = value))
+  p <- p + geom_tile(aes(fill = value), colour = "white")
   if (.text) {
     p <- p + geom_text(aes(fill = value, label = value), size = 4)
   }
 #   p <- p + geom_text(aes(fill = value, label = value))
 #   p <- p + .ryg.gradient(min(m$value), max(m$value))
-#   p <- p + .colourblind.gradient(min(m$value), max(m$value))
-  p <- p + .blues.gradient(min(m$value), max(m$value))
+  p <- p + .colourblind.gradient(min(m$value), max(m$value))
+  # p <- p + .blues.gradient(min(m$value), max(m$value))
   p + ggtitle(.title) + 
-    guides(fill = guide_legend(title=.legend)) +
+    guides(fill = guide_colourbar(title=.legend)) +
     xlab(.labs[1]) + ylab(.labs[2]) + coord_equal() +
     theme_linedraw() + theme(axis.text.x  = element_text(angle=90)) +
     scale_x_discrete(expand=c(0,0)) + scale_y_discrete(expand=c(0,0))
