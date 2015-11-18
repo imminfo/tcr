@@ -802,8 +802,6 @@ parse.mixcr <- function (.filename) {
     df$VD.insertions[logic] <- 
       as.numeric(sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 4)) -
       as.numeric(sapply(strsplit(df[[.vend]][logic], "|", T, F, T), "[[", 5)) - 1
-  } else {
-    df$VD.insertions <- -1
   }
   
   .dj.insertions <- "DJ.insertions"
@@ -815,8 +813,6 @@ parse.mixcr <- function (.filename) {
     df$DJ.insertions[logic] <- 
       as.numeric(sapply(strsplit(df[[.jstart]][logic], "|", T, F, T), "[[", 4)) -
       as.numeric(sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 5)) - 1
-  } else {
-    df$DJ.insertions <- -1
   }
   
   .total.insertions <- "Total.insertions"
