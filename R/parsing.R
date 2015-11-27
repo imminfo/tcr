@@ -135,41 +135,64 @@ parse.cloneset <- function (.filename,
   
   if (!(.vd.insertions %in% table.colnames)) { 
     .vd.insertions <- "VD.insertions"
-    if (recomb_type == "VJ") {
-      df$VD.insertions <- -1
-    } else if (recomb_type == "VDJ") {
-      df$VD.insertions <- df[[.dalignments1]] - df[[.vend]] - 1
-      df$VD.insertions[df[[.dalignments1]] == -1] <- -1
-      df$VD.insertions[df[[.vend]] == -1] <- -1
+    if (!is.na(.vend) && !is.na(.dalignments)) {
+      if (recomb_type == "VJ") {
+        df$VD.insertions <- -1
+      } else if (recomb_type == "VDJ") {
+        df$VD.insertions <- df[[.dalignments1]] - df[[.vend]] - 1
+        df$VD.insertions[df[[.dalignments1]] == -1] <- -1
+        df$VD.insertions[df[[.vend]] == -1] <- -1
+      } else {
+        df$VD.insertions <- -1
+      }
     } else {
       df$VD.insertions <- -1
+      df$V.end <- -1
+      df$D5.end <- -1
+      df$D3.end <- -1
+      .vend <- "V.end"
+      .dalignments <- c("D5.end", "D3.end")
     }
   }
   
   if (!(.dj.insertions %in% table.colnames)) { 
     .dj.insertions <- "DJ.insertions"
-    if (recomb_type == "VJ") {
-      df$DJ.insertions <- -1
-    } else if (recomb_type == "VDJ") {
-      df$DJ.insertions <- df[[.jstart]] - df[[.dalignments2]] - 1
-      df$DJ.insertions[df[[.dalignments2]] == -1] <- -1
-      df$DJ.insertions[df[[.jstart]] == -1] <- -1
+    if (!is.na(.jstart) && !is.na(.dalignments)) {
+      if (recomb_type == "VJ") {
+        df$DJ.insertions <- -1
+      } else if (recomb_type == "VDJ") {
+        df$DJ.insertions <- df[[.jstart]] - df[[.dalignments2]] - 1
+        df$DJ.insertions[df[[.dalignments2]] == -1] <- -1
+        df$DJ.insertions[df[[.jstart]] == -1] <- -1
+      } else {
+        df$DJ.insertions <- -1
+      }
     } else {
       df$DJ.insertions <- -1
+      df$J.start <- -1
+      df$D5.end <- -1
+      df$D3.end <- -1
+      .jstart <- "J.start"
+      .dalignments <- c("D5.end", "D3.end")
     }
   }
   
   if (!(.total.insertions %in% table.colnames)) {
     .total.insertions <- "Total.insertions"
+    df$Total.insertions <- -1
     if (recomb_type == "VJ") {
       df$Total.insertions <- df[[.jstart]] - df[[.vend]] - 1
       df$Total.insertions[df[[.vend]] == -1] <- -1
       df$Total.insertions[df[[.jstart]] == -1] <- -1
     } else if (recomb_type == "VDJ" ) {
       df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
-    } else {
-      df$Total.insertions <- -1
+      df$Total.insertions[df$Total.insertions < 0] <- -1
     }
+  }
+  
+  if (is.na(.dgenes)) {
+    df$D.gene <- ''
+    .dgenes <- "D.gene"
   }
   
   df <- df[, make.names(c(.barcodes, .umi.prop, .reads, .read.prop, 
