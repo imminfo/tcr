@@ -114,7 +114,7 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
       }
       
       if (length(gencols) > 0) {
-        x <- do.call(rbind, c(list(x), rep.int(0, length(gencols))))
+        x <- do.call(cbind, c(list(x), rep.int(0, length(gencols))))
         colnames(x)[(ncol(x) - length(gencols) + 1):ncol(x)] <- gencols
       }
 
