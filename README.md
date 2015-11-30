@@ -1,6 +1,8 @@
 [![Licence](https://img.shields.io/hexpm/l/plug.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0)
 [![RepSeq](http://statsarray.com/wp-content/uploads/2014/03/omictools-logo.png)](http://omictools.com/tcr-s9043.html)
 [![CRAN](http://www.r-pkg.org/badges/version/tcR?style=flat-square)](http://cran.r-project.org/web/packages/tcR)
+[![Downloads_all](http://cranlogs.r-pkg.org/badges/grand-total/tcR)](http://www.r-pkg.org/pkg/tcR)
+[![Downloads_week](http://cranlogs.r-pkg.org/badges/last-week/tcR)](http://www.r-pkg.org/pkg/tcR)
 
 tcR
 ===
