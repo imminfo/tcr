@@ -207,7 +207,7 @@ pca.segments.2D <- function(.data, .cast.freq.seg = T, ..., .text = T, .do.plot 
     pca.res <- data.frame(PC1 = pca.res$x[,1], PC2 = pca.res$x[,2], Subject = names(.data))
     p <- ggplot() + geom_point(aes(x = PC1, y = PC2, colour = Subject), size = 3, data = pca.res)
     if (.text) {
-      p <- geom_text(aes(x = PC1, y = PC2, label = Subject), data = pca.res, hjust=.5, vjust=-.3)
+      p <- p + geom_text(aes(x = PC1, y = PC2, label = Subject), data = pca.res, hjust=.5, vjust=-.3)
     }
     p <- p + theme_linedraw() + guides(size=F) + ggtitle("VJ-usage: Principal Components Analysis") + .colourblind.discrete(length(pca.res$Subject), T)
   } else {
