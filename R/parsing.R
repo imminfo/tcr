@@ -214,7 +214,7 @@ parse.cloneset <- function (.filename,
 
 #' Parse input table files with immune receptor repertoire data.
 #'
-#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq parse.immunoseq2 parse.tcr parse.mixcr parse.imseq
+#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq parse.immunoseq2 parse.immunoseq3 parse.tcr parse.mixcr parse.imseq
 #'
 #' @description
 #' Load the TCR data from the file with the given filename to a data frame or load all 
@@ -258,6 +258,8 @@ parse.cloneset <- function (.filename,
 #' parse.immunoseq(.filename)
 #' 
 #' parse.immunoseq2(.filename)
+#' 
+#' parse.immunoseq3(.filename)
 #' 
 #' parse.mixcr(.filename)
 #' 

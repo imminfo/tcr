@@ -6,6 +6,7 @@
 \alias{parse.folder}
 \alias{parse.immunoseq}
 \alias{parse.immunoseq2}
+\alias{parse.immunoseq3}
 \alias{parse.imseq}
 \alias{parse.migec}
 \alias{parse.mitcr}
@@ -38,6 +39,8 @@ parse.vdjtools(.filename)
 parse.immunoseq(.filename)
 
 parse.immunoseq2(.filename)
+
+parse.immunoseq3(.filename)
 
 parse.mixcr(.filename)
 
