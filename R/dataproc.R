@@ -554,14 +554,14 @@ barcodes.to.reads <- function (.data) {
 #' @examples
 #' \dontrun{
 #' # Get 100K reads (not clones!).
-#' immdata.1.100k <- get.n.barcodes(immdata[[1]], 100000, .col = "Read.count")
+#' immdata.1.100k <- resample(immdata[[1]], 100000, .col = "Read.count")
 #' }
-get.n.barcodes <- function (.data, .n = -1, .col = 'Umi.count') {
+resample <- function (.data, .n = -1, .col = 'Umi.count') {
   if (has.class(.data, 'list')) {
     if (length(.n) != length(.data)) {
       .n <- c(.n, rep.int(-1, length(.data) - length(.n)))
     }
-    return(lapply(.data, get.n.barcodes, .n = .n, .col = .col))
+    return(lapply(.data, resample, .n = .n, .col = .col))
   }
   if (.n == -1) {
     .n <- sum(.data[, .col])
