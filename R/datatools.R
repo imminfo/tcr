@@ -338,7 +338,7 @@ apply.asymm <- function (.datalist, .fun, ..., .diag = NA, .verbose = T) {
 #' @return Numeric vector.
 check.distribution <- function (.data, .do.norm = NA, .laplace = 1, .na.val = 0, .warn.zero = F, .warn.sum = T) {
   if (sum(is.na(.data)) == length(.data)) {
-    cat("Error! Input vector is completely filled with NAs. Check your input data to avoid this. Returning vectors with zeros.\n")
+    warning("Error! Input vector is completely filled with NAs. Check your input data to avoid this. Returning vectors with zeros.\n")
     return(rep.int(0, length(.data)))
   }
   
@@ -354,13 +354,21 @@ check.distribution <- function (.data, .do.norm = NA, .laplace = 1, .na.val = 0,
   }
   
   if (.warn.zero && (0 %in% .data)) {
-    cat("Warning! There are", sum(which(.data == 0)), "zeros in the input vector. Function may produce incorrect results.\nTo fix this try to set .laplace = 1 or any other small number in the function's parameters\n")
+	  warningText <- paste("Warning! There are", sum(which(.data == 0)), "zeros in the input vector. Function may produce incorrect results.\n")
+	  if(.laplace != 1){
+		  warningText <- paste(warningText, "To fix this try to set .laplace = 1 or any other small number in the function's parameters\n")
+	  }else{
+		  warningText <- paste(warningText, "To fix this try to set .laplace to any other small number in the function's parameters\n")
+	  } 
+	  warning(warningText)
   }
   
   if (.warn.sum && sum(.data) != 1) {
-    cat("Warning! Sum of the input vector is NOT equal to 1. Function may produce incorrect results.\nTo fix this try to set .do.norm = TRUE in the function's parameters.\n")
+	  warningText <- "Warning! Sum of the input vector is NOT equal to 1. Function may produce incorrect results.\n"
+	  if(!isTRUE(.do.norm)) warningText <- paste(warningText, "To fix this try to set .do.norm = TRUE in the function's parameters.\n")
+	  warning(warningText)
     if (abs(sum(.data) - 1) < 1e-14) {
-      cat("Note: difference between the sum of the input vector and 1 is ", (sum(.data) - 1), ", which may be caused by internal R subroutines and may not affect the result at all.\n")
+      message("Note: difference between the sum of the input vector and 1 is ", (sum(.data) - 1), ", which may be caused by internal R subroutines and may not affect the result at all.\n")
     }
   }
   
