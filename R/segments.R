@@ -148,7 +148,7 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
   
   if (.norm) {
     if (length(.genes) == 1) {
-      res[,-1] <- apply(res[,-1], 2, function (col) col / sum(col))
+      res[,-1] <- apply(as.matrix(res[,-1]), 2, function (col) col / sum(col))
     } else {
       res <- res / sum(res)
     }
@@ -166,9 +166,9 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
 #' Perform PCA on gene segments frequency data for V- and J-segments and either return pca object or plot the results.
 #' 
 #' @usage
-#' pca.segments(.data, .cast.freq.seg = T, ..., .do.plot = T)
+#' pca.segments(.data, .cast.freq.seg = T, ..., .text = T, .do.plot = T)
 #' 
-#' pca.segments.2D(.data, .cast.freq.seg = T, ..., .do.plot = T)
+#' pca.segments.2D(.data, .cast.freq.seg = T, ..., .text = T, .do.plot = T)
 #' 
 #' @param .data Either data.frame or a list of data.frame or a result obtained from the \code{geneUsage} function.
 #' @param .cast.freq.seg if T then apply code{geneUsage} to the supplied data.

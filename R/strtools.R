@@ -108,11 +108,11 @@ get.all.substrings <- function (.seq, .min.len = 3, .table = T) {
 #' @return Vector of corresponding revese complemented or aminoacid sequences.
 revcomp <- function (.seq) {
   rc.table <- c(A = 'T', T = 'A', C = 'G', G = 'C')
-  sapply(strsplit(.seq, '', T, F, T), function (l) paste0(rc.table[l][length(l):1], collapse = ''), USE.NAMES = F)
+  sapply(strsplit(toupper(.seq), '', T, F, T), function (l) paste0(rc.table[l][length(l):1], collapse = ''), USE.NAMES = F)
 }
 
 bunch.translate <- function(.seq, .two.way = T) {  
-  sapply(.seq, function (y) {
+  sapply(toupper(.seq), function (y) {
     ny <- nchar(y)
     ny3 <- ny %/% 3
     tmp <- ''

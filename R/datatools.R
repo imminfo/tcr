@@ -1,6 +1,14 @@
 ########## Support functions for managing the data ##########
 
 
+#' Fix alleles / genes by removing allele information / unnecessary colons. 
+#' 
+#' @aliases fix.alleles fix.genes
+#' 
+#' @description
+#' Fix alleles / genes by removing allele information / unnecessary colons. 
+#' 
+#' @param .data tcR data frame.
 fix.alleles <- function (.data) {
   if (has.class(.data, "list")) {
     return(lapply(.data, fix.alleles))
@@ -11,7 +19,6 @@ fix.alleles <- function (.data) {
   .data$J.gene <- gsub("[*][[:digit:]]*", "", .data$J.gene)
   .data
 }
-
 
 fix.genes <- function (.data) {
   if (has.class(.data, "list")) {
@@ -510,7 +517,7 @@ matrixSubgroups <- function (.mat, .groups = NA, .symm = T, .diag = F) {
 #' 
 #' @return Matrix of distances.
 #' 
-#' @seealso \link{prcomp}, \link{pca.segments}, \link{repOverlap}, \link{pairwisePermTest}
+#' @seealso \link{prcomp}, \link{pca.segments}, \link{repOverlap}, \link{permutDistTest}
 #' 
 #' @examples
 #' \dontrun{

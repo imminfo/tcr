@@ -46,7 +46,7 @@ assymetry<-function(.alpha, .beta = NULL, .by = 'CDR3.nucleotide.sequence'){
 #' only in-frame ('in'), out-of-frame ('out') or all sequences ('all').
 #' @param .norm.entropy if T then divide result by mean entropy of 2 segments' frequencies. 
 #' @param .ambig Parameter passed to \code{geneUsage}.
-#' @param .quant Which column to use for the quantity of clonotypes: "read.count" for the "Read.count" column, 
+#' @param .quant Which column to use for the quantity of clonotypes: NA for computing only number of genes without using clonotype counts, "read.count" for the "Read.count" column, 
 #' "umi.count" for the "Umi.count" column, "read.prop" for the "Read.proportion" column, "umi.prop" for 
 #' the "Umi.proportion" column.
 #' @param .verbose If T than output the data processing progress bar.
@@ -87,11 +87,11 @@ js.div.seg <- function (.data, .genes = HUMAN_TRBV, .frame = c('all', 'in', 'out
   .data2 <- get.frames(.data2, .frame)
   
   if (has.class(.genes, "list") && length(.genes) == 2) {
-    freq.alpha <- geneUsage(.data, .genes = .genes, .ambig = .ambig)
-    freq.beta <- geneUsage(.data2, .genes = .genes, .ambig = .ambig)
+    freq.alpha <- geneUsage(.data, .genes = .genes, .quant = .quant, .ambig = .ambig)
+    freq.beta <- geneUsage(.data2, .genes = .genes, .quant = .quant, .ambig = .ambig)
   } else {
-    freq.alpha <- geneUsage(.data, .genes = .genes, .ambig = .ambig)[,-1]
-    freq.beta <- geneUsage(.data2, .genes = .genes, .ambig = .ambig)[,-1]
+    freq.alpha <- geneUsage(.data, .genes = .genes, .quant = .quant, .ambig = .ambig)[,-1]
+    freq.beta <- geneUsage(.data2, .genes = .genes, .quant = .quant, .ambig = .ambig)[,-1]
   }
   
   nrm = if (.norm.entropy) 0.5 * (entropy(freq.alpha) + entropy(freq.beta)) else 1

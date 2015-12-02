@@ -135,41 +135,64 @@ parse.cloneset <- function (.filename,
   
   if (!(.vd.insertions %in% table.colnames)) { 
     .vd.insertions <- "VD.insertions"
-    if (recomb_type == "VJ") {
-      df$VD.insertions <- -1
-    } else if (recomb_type == "VDJ") {
-      df$VD.insertions <- df[[.dalignments1]] - df[[.vend]] - 1
-      df$VD.insertions[df[[.dalignments1]] == -1] <- -1
-      df$VD.insertions[df[[.vend]] == -1] <- -1
+    if (!is.na(.vend) && !is.na(.dalignments)) {
+      if (recomb_type == "VJ") {
+        df$VD.insertions <- -1
+      } else if (recomb_type == "VDJ") {
+        df$VD.insertions <- df[[.dalignments1]] - df[[.vend]] - 1
+        df$VD.insertions[df[[.dalignments1]] == -1] <- -1
+        df$VD.insertions[df[[.vend]] == -1] <- -1
+      } else {
+        df$VD.insertions <- -1
+      }
     } else {
       df$VD.insertions <- -1
+      df$V.end <- -1
+      df$D5.end <- -1
+      df$D3.end <- -1
+      .vend <- "V.end"
+      .dalignments <- c("D5.end", "D3.end")
     }
   }
   
   if (!(.dj.insertions %in% table.colnames)) { 
     .dj.insertions <- "DJ.insertions"
-    if (recomb_type == "VJ") {
-      df$DJ.insertions <- -1
-    } else if (recomb_type == "VDJ") {
-      df$DJ.insertions <- df[[.jstart]] - df[[.dalignments2]] - 1
-      df$DJ.insertions[df[[.dalignments2]] == -1] <- -1
-      df$DJ.insertions[df[[.jstart]] == -1] <- -1
+    if (!is.na(.jstart) && !is.na(.dalignments)) {
+      if (recomb_type == "VJ") {
+        df$DJ.insertions <- -1
+      } else if (recomb_type == "VDJ") {
+        df$DJ.insertions <- df[[.jstart]] - df[[.dalignments2]] - 1
+        df$DJ.insertions[df[[.dalignments2]] == -1] <- -1
+        df$DJ.insertions[df[[.jstart]] == -1] <- -1
+      } else {
+        df$DJ.insertions <- -1
+      }
     } else {
       df$DJ.insertions <- -1
+      df$J.start <- -1
+      df$D5.end <- -1
+      df$D3.end <- -1
+      .jstart <- "J.start"
+      .dalignments <- c("D5.end", "D3.end")
     }
   }
   
   if (!(.total.insertions %in% table.colnames)) {
     .total.insertions <- "Total.insertions"
+    df$Total.insertions <- -1
     if (recomb_type == "VJ") {
       df$Total.insertions <- df[[.jstart]] - df[[.vend]] - 1
       df$Total.insertions[df[[.vend]] == -1] <- -1
       df$Total.insertions[df[[.jstart]] == -1] <- -1
     } else if (recomb_type == "VDJ" ) {
       df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
-    } else {
-      df$Total.insertions <- -1
+      df$Total.insertions[df$Total.insertions < 0] <- -1
     }
+  }
+  
+  if (is.na(.dgenes)) {
+    df$D.gene <- ''
+    .dgenes <- "D.gene"
   }
   
   df <- df[, make.names(c(.barcodes, .umi.prop, .reads, .read.prop, 
@@ -191,7 +214,7 @@ parse.cloneset <- function (.filename,
 
 #' Parse input table files with immune receptor repertoire data.
 #'
-#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq parse.immunoseq2 parse.tcr
+#' @aliases parse.folder parse.file.list parse.file parse.mitcr parse.mitcrbc parse.migec parse.vdjtools parse.immunoseq parse.immunoseq2 parse.immunoseq3 parse.tcr parse.mixcr parse.imseq
 #'
 #' @description
 #' Load the TCR data from the file with the given filename to a data frame or load all 
@@ -209,17 +232,20 @@ parse.cloneset <- function (.filename,
 #' Output of IMSEQ should be generated with parameter "-on". In this case there will be no positions of aligned gene segments in the output data frame
 #' due to restrictions of IMSEQ output.
 #' 
-#' tcR's data frames should be save with the `repSave()` function.
+#' tcR's data frames should be saved with the `repSave()` function.
 #' 
 #' @usage
 #' parse.file(.filename, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), ...)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 
+#' 'mixcr', 'imseq', 'tcr'), ...)
 #' 
 #' parse.file.list(.filenames, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), .namelist = NA)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 
+#' 'mixcr', 'imseq', 'tcr'), .namelist = NA)
 #' 
 #' parse.folder(.folderpath, 
-#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'immunoseq2','mixcr', 'imseq', 'tcr'), ...)
+#' .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 
+#' 'mixcr', 'imseq', 'tcr'), ...)
 #' 
 #' parse.mitcr(.filename)
 #' 
@@ -233,6 +259,8 @@ parse.cloneset <- function (.filename,
 #' 
 #' parse.immunoseq2(.filename)
 #' 
+#' parse.immunoseq3(.filename)
+#' 
 #' parse.mixcr(.filename)
 #' 
 #' parse.imseq(.filename)
@@ -242,7 +270,7 @@ parse.cloneset <- function (.filename,
 #' @param .filename Path to the input file with cloneset data.
 #' @param .filenames Vector or list with paths to files with cloneset data.
 #' @param .folderpath Path to the folder with text cloneset files.
-#' @param .format String specifing input format of files.
+#' @param .format String that specifies the input format.
 #' @param .namelist Either NA or character vector of length \code{.filenames} with names for output data frames.
 #' @param ... Parameters passed to \code{parse.cloneset}.
 #' 
@@ -281,7 +309,7 @@ parse.cloneset <- function (.filename,
 #' 
 #' - "Total.insertions" - total number of inserted nucleotides (number of N-nucleotides at V-J junction for receptors with VJ recombination).
 #' 
-#' @seealso \link{parse.cloneset}, \link{repSave}
+#' @seealso \link{parse.cloneset}, \link{repSave}, \link{repLoad}
 #' 
 #' @examples
 #' \dontrun{
@@ -295,11 +323,11 @@ parse.cloneset <- function (.filename,
 #' # Parse all files in "~/data/" as MiGEC files.
 #' immdata <- parse.folder("~/data/", 'migec')
 #' }
-parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...) {
+parse.folder <- function (.folderpath, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...) {
   parse.file.list(list.files(.folderpath, full.names = T), .format)
 }
 
-parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), .namelist = NA) {
+parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), .namelist = NA) {
   # Remove full paths and extension from the given string.
   .remove.ext <- function (.str) {
     gsub(pattern = '.*/|[.].*$', replacement = '', x = .str)
@@ -323,13 +351,15 @@ parse.file.list <- function (.filenames, .format = c('mitcr', 'mitcrbc', 'migec'
   datalist
 }
 
-parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq'), ...) {
+parse.file <- function(.filename, .format = c('mitcr', 'mitcrbc', 'migec', 'vdjtools', 'immunoseq', 'mixcr', 'imseq', 'tcr'), ...) {
   parse.fun <- switch(.format[1], 
                       mitcr = parse.mitcr,
                       mitcrbc = parse.mitcrbc,
                       migec = parse.migec,
                       vdjtools = parse.vdjtools,
                       immunoseq = parse.immunoseq,
+                      immunoseq2 = parse.immunoseq2,
+                      immunoseq3 = parse.immunoseq3,
                       mixcr = parse.mixcr,
                       imseq = parse.imseq,
                       tcr = parse.tcr,
@@ -634,6 +664,82 @@ parse.immunoseq2 <- function (.filename) {
   df
 }
 
+parse.immunoseq3 <- function (.filename) {
+  filename <- .filename
+  nuc.seq <- 'nucleotide'
+  aa.seq <- 'aminoAcid'
+  reads <- 'count (reads)'
+  barcodes <- 'vIndex'
+  vgenes <- 'vGeneName'
+  jgenes <- 'jGeneName'
+  dgenes <- 'dFamilyName'
+  vend <- 'n1Index'
+  jstart <- 'jIndex'
+  dalignments <- c('dIndex', 'n2Index')
+  vd.insertions <- "n1Insertion"
+  dj.insertions <- "n2Insertion"
+  total.insertions <- "NO SUCH COLUMN AT ALL 3"
+  .skip = 0
+  .sep = '\t'
+  
+  df <- parse.cloneset(.filename = filename, 
+                       .nuc.seq = nuc.seq,
+                       .aa.seq = aa.seq,
+                       .reads = reads,
+                       .barcodes = barcodes,
+                       .vgenes = vgenes,
+                       .jgenes = jgenes,
+                       .dgenes = dgenes,
+                       .vend = vend,
+                       .jstart = jstart,
+                       .dalignments = dalignments,
+                       .vd.insertions = vd.insertions,
+                       .dj.insertions = dj.insertions,
+                       .total.insertions = total.insertions,
+                       .skip = .skip,
+                       .sep = .sep)
+  
+  # fix nucleotide sequences
+  df$CDR3.nucleotide.sequence <- substr(df$CDR3.nucleotide.sequence, df$Umi.count + 1, nchar(df$CDR3.nucleotide.sequence) - 6)
+  
+  # add out-of-frame amino acid sequences
+  df$CDR3.amino.acid.sequence <- bunch.translate(df$CDR3.nucleotide.sequence)
+  
+  # df <- fix.alleles(df)
+  
+  # fix genes names and ","
+  .fix.genes <- function (.col) {
+    # fix ","
+    .col <- gsub(",", ", ", .col, fixed = T, useBytes = T)
+    # fix forward zeros
+    .col <- gsub("([0])([0-9])", "\\2", .col, useBytes = T)
+    # fix gene names
+    .col <- gsub("TCR", "TR", .col, fixed = T, useBytes = T)
+    .col
+  }
+  
+  df$V.gene <- .fix.genes(df$V.gene)
+  df$D.gene <- .fix.genes(df$D.gene)
+  df$J.gene <- .fix.genes(df$J.gene)
+  
+  # update V, D and J positions
+  .fix.poses <- function (.col) {
+    df[df[[.col]] != -1, .col] <- df[df[[.col]] != -1, .col] - df$Umi.count[df[[.col]] != -1]
+    df
+  }
+  
+  df <- .fix.poses("V.end")
+  df <- .fix.poses("D3.end")
+  df <- .fix.poses("D5.end")
+  df <- .fix.poses("J.start")
+  
+  # nullify barcodes
+  df$Umi.count <- NA
+  df$Umi.proportion <- NA
+  
+  df
+}
+
 parse.mixcr <- function (.filename) {
   .filename <- .filename
   .nuc.seq <- 'n..seq..cdr3'
@@ -721,8 +827,6 @@ parse.mixcr <- function (.filename) {
     df$VD.insertions[logic] <- 
       as.numeric(sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 4)) -
       as.numeric(sapply(strsplit(df[[.vend]][logic], "|", T, F, T), "[[", 5)) - 1
-  } else {
-    df$VD.insertions <- -1
   }
   
   .dj.insertions <- "DJ.insertions"
@@ -734,8 +838,6 @@ parse.mixcr <- function (.filename) {
     df$DJ.insertions[logic] <- 
       as.numeric(sapply(strsplit(df[[.jstart]][logic], "|", T, F, T), "[[", 4)) -
       as.numeric(sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 5)) - 1
-  } else {
-    df$DJ.insertions <- -1
   }
   
   .total.insertions <- "Total.insertions"

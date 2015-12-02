@@ -56,8 +56,7 @@ repOverlap <- function (.data,
                         .a = .5,
                         .b = .5,
                         .do.unique = T,
-                        .verbose = T
-                        ) {
+                        .verbose = T) {
   
   .merge.with.v <- function (.data, .seqcol, .vgene) {
     if (.vgene) {
@@ -105,18 +104,18 @@ repOverlap <- function (.data,
       .fun <- function (x, y) { morisitas.index(x, y, F) }
     }
     
-    cat("Preprocessing data...\t")
+    .verbose.msg("Preprocessing data...\t", .verbose)
     new.data <- .merge.with.v(.data, .seqcol, .vgene)
     new.reads <- lapply(.data, "[[", quant)
     
     if (.do.unique) {
-      pb <- set.pb(length(.data))
+      if (.verbose) { pb <- set.pb(length(.data)) }
       for (i in 1:length(.data)) {
         .data[[i]] <- as.data.frame(summarise(grouped_df(data.frame(Sequence = new.data[[i]], Count = new.reads[[i]], stringsAsFactors = F),
                                            list(as.name("Sequence"))), Count = sum(Count)), stringsAsFactors = F)
-        add.pb(pb)
+        if (.verbose) { add.pb(pb) }
       }
-      close(pb)
+      if (.verbose) { close(pb) }
     }
     
     .pair.fun(.data,

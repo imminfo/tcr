@@ -1,5 +1,5 @@
 ---
-title: '<center> <h1>tcR: a package for T cell receptor repertoire advanced data analysis</h1>
+title: '<center> <h1>tcR: a package for T cell receptor and Immunoglobulin repertoires advanced data analysis</h1>
   </center> <center> <h2>Vadim I. Nazarov</h2> </center>'
 author: <center> <h4><vdm.nazarov@gmail.com></h4> </center> <center> <h4>Laboratory
   of Comparative and Functional Genomics, IBCH RAS, Moscow, Russia</h4> </center>
@@ -25,7 +25,7 @@ output:
 
 ## Introduction
 The *tcR* package designed to help researchers in the immunology field to analyse T cell receptor (`TCR`) and immunoglobulin (`Ig`) repertoires.
-In this vignette, I will cover procedures for TCR repertoire analysis provided with the package.
+In this vignette, I will cover procedures for immune receptor repertoire analysis provided with the package.
 
 Terms:
 
@@ -437,6 +437,19 @@ To visualise similarity among repertoires the `vis.heatmap` function is appropri
 repOverlap(twb, 'morisita', 'aa', 'read.count', .vgene = T, .verbose = F)
 ```
 
+
+### Overlap statistics and tests
+
+
+#### Overlap Z-score (OZ-score) - a measure for ???abnormality??? in overlaps
+
+`ozScore`
+
+#### Monte Carlo permutation test for pairwise and one-vs-all-wise within- and inter-group differences in a set of repertoires
+
+`permutDistTest`
+
+`pca2euclid`
 
 ### Shared repertoire
 To investigate a shared among a several repertoires clonotypes ("shared repertoire") the package provided the `shared.repertoire` function along with functions for computing the shared repertoire statistics. The `shared.representation` function computes the number of shared clonotypes for each repertoire for each degree of sharing (i.e., number of people, in which indicated amount of clones have been found). The function `shared.summary` is equivalent to `repOverlap(, 'exact')` but applies to the shared repertoire data frame. Measuring distances among repertoires using the cosine similarity on vector of counts of shared sequences is also possible with the `cosine.sharing` function.
