@@ -25,6 +25,8 @@
 \alias{HUMAN_TRGV}
 \alias{MACMUL_TRBJ}
 \alias{MACMUL_TRBV}
+\alias{MOUSE_TRAJ}
+\alias{MOUSE_TRAV}
 \alias{MOUSE_TRBJ}
 \alias{MOUSE_TRBV}
 \alias{genealphabets}
@@ -61,6 +63,10 @@ HUMAN_TRDJ
 MOUSE_TRBV
 
 MOUSE_TRBJ
+
+MOUSE_TRAV
+
+MOUSE_TRAJ
 
 MACMUL_TRBV
 
