@@ -715,6 +715,50 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 }
 
 
+#' Visualisation of shared clonotypes occurrences among repertoires.
+vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA, 
+                                   .title = "Shared clonotypes", .ncol = 3, 
+                                   .point.size.modif = 1) {
+  mat <- shared.matrix(.shared.rep)
+  
+  if (is.na(.x.rep) && is.na(.y.rep)) {
+    ps <- list()
+    for (i in 1:ncol(mat)) {
+      for (j in 1:ncol(mat)) {
+        ps <- c(ps, list(vis.shared.clonotypes(.shared.rep, i, j, '')))
+      }
+    }
+    do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
+  } else if (is.na(.x.rep)) {
+    ps <- lapply(1:ncol(mat), function (i) { 
+      vis.shared.clonotypes(.shared.rep, i, .y.rep, '') 
+      })
+    do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
+  } else if (is.na(.y.rep)) {
+    ps <- lapply(1:ncol(mat), function (j) { 
+      vis.shared.clonotypes(.shared.rep, .x.rep, j, '') 
+    })
+    do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
+  } else {
+    if (!is.character(.x.rep)) { .x.rep <- colnames(mat)[.x.rep] }
+    if (!is.character(.y.rep)) { .y.rep <- colnames(mat)[.y.rep] }
+    
+    df <- cbind(mat[, .x.rep], mat[, .y.rep])
+    df <- data.frame(df[df[,1] > 0 & df[,2] > 0, ])
+    df <- df[!is.na(df[,1]) & !is.na(df[,2]), ]
+    freq <- .point.size.modif * log10(sqrt(as.numeric(df[, 1]) * df[, 2])) / 2
+    names(df) <- c("Xrep", "Yrep")
+    
+    ggplot() + 
+      geom_point(aes(x = Xrep, y = Yrep, size = freq, fill = freq), data = df, shape=21) + 
+      theme_linedraw() + 
+      .colourblind.gradient(min(freq), max(freq)) +
+      scale_x_log10() + scale_y_log10() + theme(legend.position="none") +
+      xlab(.x.rep) + ylab(.y.rep) + ggtitle(.title)
+  }
+}
+
+
 # vis.hill.numbers <- function (.hill.nums, .groups = NA) {
 #   
 # }
