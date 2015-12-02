@@ -21,7 +21,7 @@ if (getRversion() >= "2.15.1") {
 # white/orange/yellow - green - blue
 # colourblind - friendly
 # for fill
-.colourblind.gradient <- function (.min = NA, .max = NA) {
+.colourblind.gradient <- function (.min = NA, .max = NA, .colour = F) {
   #   cs <- c("#FFFFD9", "#41B6C4", "#225EA8")
 #   cs <- c("#FFFFBB", "#41B6C4", "#225EA8")
 #   cs <- c("#FFBB00", "#41B6C4", "#225EA8") <- old version
@@ -30,9 +30,17 @@ if (getRversion() >= "2.15.1") {
   cs <- c(c("#0072B2", "#EEEEEE", "#D55E00"))
   # scale_fill_gradientn(guide='colourbar', colours=c("#0072B2", "#EEEEEE", "#D55E00")
   if (!is.na(.min)) {
-    scale_fill_gradientn(limits = c(.min, .max), guide='colorbar', colours = cs, na.value = 'grey60')
+    if (.colour) {
+      scale_colour_gradientn(limits = c(.min, .max), guide='colorbar', colours = cs, na.value = 'grey60')
+    } else {
+      scale_fill_gradientn(limits = c(.min, .max), guide='colorbar', colours = cs, na.value = 'grey60')
+    }
   } else {
-    scale_fill_gradientn(colours = cs, na.value = 'grey60')
+    if (.colour) {
+      scale_colour_gradientn(colours = cs, na.value = 'grey60')
+    } else {
+      scale_fill_gradientn(colours = cs, na.value = 'grey60')
+    }
   }
 }
 
