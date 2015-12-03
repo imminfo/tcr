@@ -740,7 +740,7 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 #' }
 vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA, 
                                    .title = "Shared clonotypes", .ncol = 3, 
-                                   .point.size.modif = 2) {
+                                   .point.size.modif = 1) {
   mat <- shared.matrix(.shared.rep)
   
   if (is.na(.x.rep) && is.na(.y.rep)) {
@@ -767,17 +767,18 @@ vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA,
     
     df <- data.frame(cbind(mat[, .x.rep], mat[, .y.rep]))
     df <- df[!is.na(df[,1]) & !is.na(df[,2]), ]
-    freq <- .point.size.modif * log10(sqrt(as.numeric(df[, 1]) * df[, 2])) / 2
+    freq <- log10(sqrt(as.numeric(df[, 1]) * df[, 2])) / 2
     names(df) <- c("Xrep", "Yrep")
     
     pnt.cols <- log(df[, 1] / df[, 2])
-    pnt.cols[pnt.cols > 0] <- pnt.cols[pnt.cols > 0] / max(pnt.cols[pnt.cols > 0])
-    pnt.cols[pnt.cols < 0] <- -pnt.cols[pnt.cols < 0] / min(pnt.cols[pnt.cols < 0])
+    suppressWarnings(pnt.cols[pnt.cols > 0] <- pnt.cols[pnt.cols > 0] / max(pnt.cols[pnt.cols > 0]))
+    suppressWarnings(pnt.cols[pnt.cols < 0] <- -pnt.cols[pnt.cols < 0] / min(pnt.cols[pnt.cols < 0]))
     
     mat.lims <- c(min(as.matrix(df)), max(as.matrix(df)))
     
     ggplot() + 
       geom_point(aes(x = Xrep, y = Yrep, size = freq, fill = pnt.cols), data = df, shape=21) + 
+      scale_radius(range = c(.point.size.modif, .point.size.modif * 6)) +
       geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
       theme_linedraw() + 
       .colourblind.gradient(min(pnt.cols), max(pnt.cols)) +
