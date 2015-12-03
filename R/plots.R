@@ -716,9 +716,31 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 
 
 #' Visualisation of shared clonotypes occurrences among repertoires.
+#' 
+#' @examples 
+#' \dontrun{
+#' data(twb)
+#' # Show shared nucleotide clonotypes of all possible pairs 
+#' # using the Read.proportion column
+#' twb.sh <- shared.repertoire(twb, "n0rp")
+#' vis.shared.clonotypes(twb.sh, .ncol = 4)
+#' 
+#' # Show shared amino acid + Vseg clonotypes of pairs 
+#' # including the Subj.A (the first one) using
+#' # the Read.count column.
+#' twb.sh <- shared.repertoire(twb, "avrc")
+#' vis.shared.clonotypes(twb.sh, 1, NA, .ncol = 4)
+#' # same, just another order of axis
+#' vis.shared.clonotypes(twb.sh, NA, 1, .ncol = 4)
+#' 
+#' # Show shared nucleotide clonotypes of Subj.A (the first one)
+#' # Subj.B (the second one) using the Read.proportion column.
+#' twb.sh <- shared.repertoire(twb, "n0rp")
+#' vis.shared.clonotypes(twb.sh, 1, 2)
+#' }
 vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA, 
                                    .title = "Shared clonotypes", .ncol = 3, 
-                                   .point.size.modif = 1) {
+                                   .point.size.modif = 2) {
   mat <- shared.matrix(.shared.rep)
   
   if (is.na(.x.rep) && is.na(.y.rep)) {
@@ -743,17 +765,24 @@ vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA,
     if (!is.character(.x.rep)) { .x.rep <- colnames(mat)[.x.rep] }
     if (!is.character(.y.rep)) { .y.rep <- colnames(mat)[.y.rep] }
     
-    df <- cbind(mat[, .x.rep], mat[, .y.rep])
-    df <- data.frame(df[df[,1] > 0 & df[,2] > 0, ])
+    df <- data.frame(cbind(mat[, .x.rep], mat[, .y.rep]))
     df <- df[!is.na(df[,1]) & !is.na(df[,2]), ]
     freq <- .point.size.modif * log10(sqrt(as.numeric(df[, 1]) * df[, 2])) / 2
     names(df) <- c("Xrep", "Yrep")
     
+    pnt.cols <- log(df[, 1] / df[, 2])
+    pnt.cols[pnt.cols > 0] <- pnt.cols[pnt.cols > 0] / max(pnt.cols[pnt.cols > 0])
+    pnt.cols[pnt.cols < 0] <- -pnt.cols[pnt.cols < 0] / min(pnt.cols[pnt.cols < 0])
+    
+    mat.lims <- c(min(as.matrix(df)), max(as.matrix(df)))
+    
     ggplot() + 
-      geom_point(aes(x = Xrep, y = Yrep, size = freq, fill = freq), data = df, shape=21) + 
+      geom_point(aes(x = Xrep, y = Yrep, size = freq, fill = pnt.cols), data = df, shape=21) + 
+      geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
       theme_linedraw() + 
-      .colourblind.gradient(min(freq), max(freq)) +
+      .colourblind.gradient(min(pnt.cols), max(pnt.cols)) +
       scale_x_log10() + scale_y_log10() + theme(legend.position="none") +
+      coord_fixed(xlim = mat.lims, ylim = mat.lims) +
       xlab(.x.rep) + ylab(.y.rep) + ggtitle(.title)
   }
 }
