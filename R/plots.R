@@ -717,6 +717,22 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 
 #' Visualisation of shared clonotypes occurrences among repertoires.
 #' 
+#' @description 
+#' Visualise counts or proportions of shared clonotypes among repertoires.
+#' 
+#' @param .shared.rep Shared repertoires, as from \link{shared.repertoire} function.
+#' @param .x.rep Which repertoire show on x-axis. Either a name or an index of a repertoire 
+#' in the \code{.shared.rep} or NA to choose all repertoires.
+#' @param .x.rep Which repertoire show on y-axis. Either a name or an index of a repertoire 
+#' in the \code{.shared.rep} or NA to choose all repertoires.
+#' @param .title Main title of the plot.
+#' @param .ncol Number of columns in the resulting plot.
+#' @param .point.size.modif Modify this to correct sizes of points.
+#' 
+#' @return ggplot2 object or plot
+#' 
+#' @seealso \link{shared.repertoire}
+#' 
 #' @examples 
 #' \dontrun{
 #' data(twb)
@@ -737,6 +753,9 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 #' # Subj.B (the second one) using the Read.proportion column.
 #' twb.sh <- shared.repertoire(twb, "n0rp")
 #' vis.shared.clonotypes(twb.sh, 1, 2)
+#' 
+#' # Show the same plot, but with much larget points.
+#' vis.shared.clonotypes(twb.sh, 1, 2, .point.size.modif = 3)
 #' }
 vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA, 
                                    .title = "Shared clonotypes", .ncol = 3, 
