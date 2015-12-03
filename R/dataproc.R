@@ -542,29 +542,35 @@ barcodes.to.reads <- function (.data) {
 #' 
 #' @param .data Data frame with the column \code{.col} or list of such data frames.
 #' @param .n Number of values / reads / UMIs to choose.
-#' @param .col Which column choose to compute probabilities of getting a row. See "Details".
+#' @param .col Which column choose to represent quanitites of clonotypes. See "Details".
 #' 
 #' @return Data frame with \code{sum(.data[, .col]) == .n}.
 #' 
 #' @details
-#' Using multinomial distribution, compute the number of occurences for each cloneset, than remove zero-number clonotypes and
+#' \code{resample}. Using multinomial distribution, compute the number of occurences for each cloneset, than remove zero-number clonotypes and
 #' return resulting data frame. Probabilities for \code{rmultinom} for each cloneset is a percentage of this cloneset in
-#' the \code{.col} column.
+#' the \code{.col} column. It's a some sort of simulation of how clonotypes are chosen from the organisms. For now it's not working
+#' very well, so use \code{downsample} instead.
+#' 
+#' \code{downsample}. Choose \code{.n} clones (not clonotypes!) from the input repertoires without any probabilistic simulation, but
+#' exactly computing each choosed clones. Its output is same as for \code{resample} (repertoires), but is more consistent and
+#' biologically pleasant.
 #' 
 #' @seealso \link{rmultinom}
 #' 
 #' @examples
 #' \dontrun{
 #' # Get 100K reads (not clones!).
-#' immdata.1.100k <- resample(immdata[[1]], 100000, .col = "Read.count")
+#' immdata.1.100k <- resample(immdata[[1]], 100000, .col = "read.count")
 #' }
-resample <- function (.data, .n = -1, .col = 'Umi.count') {
+resample <- function (.data, .n = -1, .col = 'read.count') {
   if (has.class(.data, 'list')) {
     if (length(.n) != length(.data)) {
       .n <- c(.n, rep.int(-1, length(.data) - length(.n)))
     }
     return(lapply(.data, resample, .n = .n, .col = .col))
   }
+  .col <- .column.choice(.col[1])
   if (.n == -1) {
     .n <- sum(.data[, .col])
   }
@@ -582,7 +588,7 @@ downsample <- function (.data, .n, .col = c("read.count", "umi.count")) {
     return(lapply(.data, downsample, .n = .n, .col = .col))
   }
   
-  col_current = .column.choice(.col[1])
+  col_current <- .column.choice(.col[1])
   read_vec <- .data[, col_current]
   read_indices <- rep(0, sum(read_vec))
   cppFunction(
