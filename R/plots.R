@@ -170,6 +170,8 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' @param .legend Title for the legend.
 #' @param .na.value Replace NAs with this values.
 #' @param .text if T then print \code{.data} values at tiles.
+#' @param .scientific If T then show scientific values in the heatmap plot
+#' @param sizeText size for the text in the cells of the heatmap, 4 by default
 #' 
 #' @return ggplot object.
 #' 
@@ -182,7 +184,8 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' # Plot a heatmap.
 #' vis.heatmap(imm.av, .title = 'Immdata - (ave)-intersection')
 #' }
-vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = c('Sample', 'Sample'), .legend = 'Shared clonotypes', .na.value = NA, .text = T) {
+vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = c('Sample', 'Sample'), .legend = 'Shared clonotypes', 
+		.na.value = NA, .text = T, .scientific = FALSE, sizeText = 4) {
   if (has.class(.data, 'data.frame')) {
     names <- .data[,1]
     .data <- as.matrix(.data[,-1])
@@ -202,10 +205,13 @@ vis.heatmap <- function (.data, .title = "Number of shared clonotypes", .labs = 
   m[,1] <- factor(m[,1], levels = rev(rownames(.data)))
   m[,2] <- factor(m[,2], levels = colnames(.data))
   
+  m$scientific <- scales::scientific(m$value)
+  label <- ifelse(.scientific, "scientific", "value")
+  
   p <- ggplot(m, aes(x = variable, y = name, fill = value))
   p <- p + geom_tile(aes(fill = value))
   if (.text) {
-    p <- p + geom_text(aes(fill = value, label = value), size = 4)
+    p <- p + geom_text(aes(fill = value, label = label), size = sizeText)
   }
 #   p <- p + geom_text(aes(fill = value, label = value))
 #   p <- p + .ryg.gradient(min(m$value), max(m$value))
