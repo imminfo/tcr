@@ -6,7 +6,7 @@
 \usage{
 vis.heatmap(.data, .title = "Number of shared clonotypes",
   .labs = c("Sample", "Sample"), .legend = "Shared clonotypes",
-  .na.value = NA, .text = T)
+  .na.value = NA, .text = T, .scientific = FALSE, .size.text = 4)
 }
 \arguments{
 \item{.data}{Either a matrix with colnames and rownames specifyed or a data.frame with the first column of
@@ -21,6 +21,10 @@ strings for row names and other columns stands for values.}
 \item{.na.value}{Replace NAs with this values.}
 
 \item{.text}{if T then print \code{.data} values at tiles.}
+
+\item{.scientific}{If T then force show scientific values in the heatmap plot.}
+
+\item{.size.text}{Size for the text in the cells of the heatmap, 4 by default.}
 }
 \value{
 ggplot object.

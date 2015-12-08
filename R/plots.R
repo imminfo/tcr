@@ -180,6 +180,8 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' @param .legend Title for the legend.
 #' @param .na.value Replace NAs with this values.
 #' @param .text if T then print \code{.data} values at tiles.
+#' @param .scientific If T then force show scientific values in the heatmap plot.
+#' @param .size.text Size for the text in the cells of the heatmap, 4 by default.
 #' 
 #' @return ggplot object.
 #' 
@@ -197,7 +199,9 @@ vis.heatmap <- function (.data,
                          .labs = c('Sample', 'Sample'), 
                          .legend = 'Shared clonotypes', 
                          .na.value = NA, 
-                         .text = T) {
+                         .text = T, 
+                         .scientific = FALSE, 
+                         .size.text = 4) {
   if (has.class(.data, 'data.frame')) {
     names <- .data[,1]
     .data <- as.matrix(.data[,-1])
@@ -217,14 +221,19 @@ vis.heatmap <- function (.data,
   m[,1] <- factor(m[,1], levels = rev(rownames(.data)))
   m[,2] <- factor(m[,2], levels = colnames(.data))
   
+  .cg <- .colourblind.gradient(min(m$value), max(m$value))
+  
   p <- ggplot(m, aes(x = variable, y = name, fill = value))
   p <- p + geom_tile(aes(fill = value), colour = "white")
   if (.text) {
-    p <- p + geom_text(aes(fill = value, label = value), size = 4)
+    if (.scientific) {
+      m$value <- scales::scientific(m$value)
+    }
+    p <- p + geom_text(aes(fill = value, label = value), size = .size.text)
   }
 #   p <- p + geom_text(aes(fill = value, label = value))
 #   p <- p + .ryg.gradient(min(m$value), max(m$value))
-  p <- p + .colourblind.gradient(min(m$value), max(m$value))
+  p <- p + .cg
   # p <- p + .blues.gradient(min(m$value), max(m$value))
   p + ggtitle(.title) + 
     guides(fill = guide_colourbar(title=.legend)) +
