@@ -534,35 +534,43 @@ barcodes.to.reads <- function (.data) {
 
 #' Resample data frame using values from the column with number of clonesets.
 #' 
+#' @aliases resample downsample
+#' 
 #' @description
 #' Resample data frame using values from the column with number of clonesets. Number of clonestes (i.e., rows of a MiTCR data frame)
 #' are reads (usually the "Read.count" column) or UMIs (i.e., barcodes, usually the "Umi.count" column).
 #' 
 #' @param .data Data frame with the column \code{.col} or list of such data frames.
 #' @param .n Number of values / reads / UMIs to choose.
-#' @param .col Which column choose to compute probabilities of getting a row. See "Details".
+#' @param .col Which column choose to represent quanitites of clonotypes. See "Details".
 #' 
 #' @return Data frame with \code{sum(.data[, .col]) == .n}.
 #' 
 #' @details
-#' Using multinomial distribution, compute the number of occurences for each cloneset, than remove zero-number clonotypes and
+#' \code{resample}. Using multinomial distribution, compute the number of occurences for each cloneset, than remove zero-number clonotypes and
 #' return resulting data frame. Probabilities for \code{rmultinom} for each cloneset is a percentage of this cloneset in
-#' the \code{.col} column.
+#' the \code{.col} column. It's a some sort of simulation of how clonotypes are chosen from the organisms. For now it's not working
+#' very well, so use \code{downsample} instead.
+#' 
+#' \code{downsample}. Choose \code{.n} clones (not clonotypes!) from the input repertoires without any probabilistic simulation, but
+#' exactly computing each choosed clones. Its output is same as for \code{resample} (repertoires), but is more consistent and
+#' biologically pleasant.
 #' 
 #' @seealso \link{rmultinom}
 #' 
 #' @examples
 #' \dontrun{
 #' # Get 100K reads (not clones!).
-#' immdata.1.100k <- resample(immdata[[1]], 100000, .col = "Read.count")
+#' immdata.1.100k <- resample(immdata[[1]], 100000, .col = "read.count")
 #' }
-resample <- function (.data, .n = -1, .col = 'Umi.count') {
+resample <- function (.data, .n = -1, .col = 'read.count') {
   if (has.class(.data, 'list')) {
     if (length(.n) != length(.data)) {
       .n <- c(.n, rep.int(-1, length(.data) - length(.n)))
     }
     return(lapply(.data, resample, .n = .n, .col = .col))
   }
+  .col <- .column.choice(.col[1])
   if (.n == -1) {
     .n <- sum(.data[, .col])
   }
@@ -573,6 +581,51 @@ resample <- function (.data, .n = -1, .col = 'Umi.count') {
   perc.col <- paste0(strsplit(.col, ".", T)[[1]][1], ".proportion")
   .data[[perc.col]] <- new.bc[non.zeros] / sum(new.bc)
   .data[order(.data[[perc.col]], decreasing = T),]
+}
+
+downsample <- function (.data, .n, .col = c("read.count", "umi.count")) {
+  if (has.class(.data, 'list')) {
+    return(lapply(.data, downsample, .n = .n, .col = .col))
+  }
+  
+  col_current <- .column.choice(.col[1])
+  read_vec <- .data[, col_current]
+  read_indices <- rep(0, sum(read_vec))
+  cppFunction(
+    '
+  NumericVector fill_vec(NumericVector read_vec, NumericVector read_indices) 
+  {
+    int dummy = 0;
+    for (int i = 0; i < read_vec.size(); i++)
+    {
+      for (int j = dummy; j < (read_vec[i] + dummy); j++)
+  	{
+	    read_indices[j] = i;
+  	}
+  	dummy = dummy + read_vec[i];
+    }
+    return read_indices;
+  }
+  '
+  )
+  read_indices <- fill_vec(read_vec, read_indices)
+  new_counts <- sample(read_indices, .n)
+  new_reads <- rep(0, length(read_vec))
+  cppFunction(
+    '
+  NumericVector fill_reads(NumericVector new_reads, NumericVector new_counts) 
+  {
+    for (int i = 0; i < new_counts.size(); i++)
+    {
+	    new_reads[new_counts[i]] = new_reads[new_counts[i]] + 1;
+	  }
+    return new_reads;
+  }
+  '
+  )
+  .data[, col_current] <- fill_reads(new_reads, new_counts)
+  
+  subset(.data, .data[, col_current] > 0)
 }
 
 

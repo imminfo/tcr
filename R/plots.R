@@ -21,7 +21,7 @@ if (getRversion() >= "2.15.1") {
 # white/orange/yellow - green - blue
 # colourblind - friendly
 # for fill
-.colourblind.gradient <- function (.min = NA, .max = NA) {
+.colourblind.gradient <- function (.min = NA, .max = NA, .colour = F) {
   #   cs <- c("#FFFFD9", "#41B6C4", "#225EA8")
 #   cs <- c("#FFFFBB", "#41B6C4", "#225EA8")
 #   cs <- c("#FFBB00", "#41B6C4", "#225EA8") <- old version
@@ -30,9 +30,17 @@ if (getRversion() >= "2.15.1") {
   cs <- c(c("#0072B2", "#EEEEEE", "#D55E00"))
   # scale_fill_gradientn(guide='colourbar', colours=c("#0072B2", "#EEEEEE", "#D55E00")
   if (!is.na(.min)) {
-    scale_fill_gradientn(limits = c(.min, .max), guide='colorbar', colours = cs, na.value = 'grey60')
+    if (.colour) {
+      scale_colour_gradientn(limits = c(.min, .max), guide='colorbar', colours = cs, na.value = 'grey60')
+    } else {
+      scale_fill_gradientn(limits = c(.min, .max), guide='colorbar', colours = cs, na.value = 'grey60')
+    }
   } else {
-    scale_fill_gradientn(colours = cs, na.value = 'grey60')
+    if (.colour) {
+      scale_colour_gradientn(colours = cs, na.value = 'grey60')
+    } else {
+      scale_fill_gradientn(colours = cs, na.value = 'grey60')
+    }
   }
 }
 
@@ -172,6 +180,8 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' @param .legend Title for the legend.
 #' @param .na.value Replace NAs with this values.
 #' @param .text if T then print \code{.data} values at tiles.
+#' @param .scientific If T then force show scientific values in the heatmap plot.
+#' @param .size.text Size for the text in the cells of the heatmap, 4 by default.
 #' 
 #' @return ggplot object.
 #' 
@@ -189,7 +199,9 @@ vis.heatmap <- function (.data,
                          .labs = c('Sample', 'Sample'), 
                          .legend = 'Shared clonotypes', 
                          .na.value = NA, 
-                         .text = T) {
+                         .text = T, 
+                         .scientific = FALSE, 
+                         .size.text = 4) {
   if (has.class(.data, 'data.frame')) {
     names <- .data[,1]
     .data <- as.matrix(.data[,-1])
@@ -209,14 +221,19 @@ vis.heatmap <- function (.data,
   m[,1] <- factor(m[,1], levels = rev(rownames(.data)))
   m[,2] <- factor(m[,2], levels = colnames(.data))
   
+  .cg <- .colourblind.gradient(min(m$value), max(m$value))
+  
   p <- ggplot(m, aes(x = variable, y = name, fill = value))
   p <- p + geom_tile(aes(fill = value), colour = "white")
   if (.text) {
-    p <- p + geom_text(aes(fill = value, label = value), size = 4)
+    if (.scientific) {
+      m$value <- scales::scientific(m$value)
+    }
+    p <- p + geom_text(aes(fill = value, label = value), size = .size.text)
   }
 #   p <- p + geom_text(aes(fill = value, label = value))
 #   p <- p + .ryg.gradient(min(m$value), max(m$value))
-  p <- p + .colourblind.gradient(min(m$value), max(m$value))
+  p <- p + .cg
   # p <- p + .blues.gradient(min(m$value), max(m$value))
   p + ggtitle(.title) + 
     guides(fill = guide_colourbar(title=.legend)) +
@@ -704,6 +721,99 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
                                               dodge.width = .dodge.width)) +
     xlab("Position") + ylab("Proportion") +
     theme_linedraw()
+}
+
+
+#' Visualisation of shared clonotypes occurrences among repertoires.
+#' 
+#' @description 
+#' Visualise counts or proportions of shared clonotypes among repertoires.
+#' 
+#' @param .shared.rep Shared repertoires, as from \link{shared.repertoire} function.
+#' @param .x.rep Which repertoire show on x-axis. Either a name or an index of a repertoire 
+#' in the \code{.shared.rep} or NA to choose all repertoires.
+#' @param .x.rep Which repertoire show on y-axis. Either a name or an index of a repertoire 
+#' in the \code{.shared.rep} or NA to choose all repertoires.
+#' @param .title Main title of the plot.
+#' @param .ncol Number of columns in the resulting plot.
+#' @param .point.size.modif Modify this to correct sizes of points.
+#' 
+#' @return ggplot2 object or plot
+#' 
+#' @seealso \link{shared.repertoire}
+#' 
+#' @examples 
+#' \dontrun{
+#' data(twb)
+#' # Show shared nucleotide clonotypes of all possible pairs 
+#' # using the Read.proportion column
+#' twb.sh <- shared.repertoire(twb, "n0rp")
+#' vis.shared.clonotypes(twb.sh, .ncol = 4)
+#' 
+#' # Show shared amino acid + Vseg clonotypes of pairs 
+#' # including the Subj.A (the first one) using
+#' # the Read.count column.
+#' twb.sh <- shared.repertoire(twb, "avrc")
+#' vis.shared.clonotypes(twb.sh, 1, NA, .ncol = 4)
+#' # same, just another order of axis
+#' vis.shared.clonotypes(twb.sh, NA, 1, .ncol = 4)
+#' 
+#' # Show shared nucleotide clonotypes of Subj.A (the first one)
+#' # Subj.B (the second one) using the Read.proportion column.
+#' twb.sh <- shared.repertoire(twb, "n0rp")
+#' vis.shared.clonotypes(twb.sh, 1, 2)
+#' 
+#' # Show the same plot, but with much larget points.
+#' vis.shared.clonotypes(twb.sh, 1, 2, .point.size.modif = 3)
+#' }
+vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA, 
+                                   .title = "Shared clonotypes", .ncol = 3, 
+                                   .point.size.modif = 1) {
+  mat <- shared.matrix(.shared.rep)
+  
+  if (is.na(.x.rep) && is.na(.y.rep)) {
+    ps <- list()
+    for (i in 1:ncol(mat)) {
+      for (j in 1:ncol(mat)) {
+        ps <- c(ps, list(vis.shared.clonotypes(.shared.rep, i, j, '')))
+      }
+    }
+    do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
+  } else if (is.na(.x.rep)) {
+    ps <- lapply(1:ncol(mat), function (i) { 
+      vis.shared.clonotypes(.shared.rep, i, .y.rep, '') 
+      })
+    do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
+  } else if (is.na(.y.rep)) {
+    ps <- lapply(1:ncol(mat), function (j) { 
+      vis.shared.clonotypes(.shared.rep, .x.rep, j, '') 
+    })
+    do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
+  } else {
+    if (!is.character(.x.rep)) { .x.rep <- colnames(mat)[.x.rep] }
+    if (!is.character(.y.rep)) { .y.rep <- colnames(mat)[.y.rep] }
+    
+    df <- data.frame(cbind(mat[, .x.rep], mat[, .y.rep]))
+    df <- df[!is.na(df[,1]) & !is.na(df[,2]), ]
+    freq <- log10(sqrt(as.numeric(df[, 1]) * df[, 2])) / 2
+    names(df) <- c("Xrep", "Yrep")
+    
+    pnt.cols <- log(df[, 1] / df[, 2])
+    suppressWarnings(pnt.cols[pnt.cols > 0] <- pnt.cols[pnt.cols > 0] / max(pnt.cols[pnt.cols > 0]))
+    suppressWarnings(pnt.cols[pnt.cols < 0] <- -pnt.cols[pnt.cols < 0] / min(pnt.cols[pnt.cols < 0]))
+    
+    mat.lims <- c(min(as.matrix(df)), max(as.matrix(df)))
+    
+    ggplot() + 
+      geom_point(aes(x = Xrep, y = Yrep, size = freq, fill = pnt.cols), data = df, shape=21) + 
+      scale_radius(range = c(.point.size.modif, .point.size.modif * 6)) +
+      geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+      theme_linedraw() + 
+      .colourblind.gradient(min(pnt.cols), max(pnt.cols)) +
+      scale_x_log10() + scale_y_log10() + theme(legend.position="none") +
+      coord_fixed(xlim = mat.lims, ylim = mat.lims) +
+      xlab(.x.rep) + ylab(.y.rep) + ggtitle(.title)
+  }
 }
 
 
