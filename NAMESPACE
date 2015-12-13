@@ -6,7 +6,6 @@ importFrom("graphics", "segments")
 importFrom("stats", "aggregate", "as.formula", "dist", "na.exclude",
            "p.adjust", "prcomp", "qnorm", "quantile", "rmultinom",
            "runif", "sd")
-importFrom(scales, scientific)
 importFrom(Rcpp, evalCpp, cppFunction)
 importFrom(stringdist, stringdist)
 importFrom(gridExtra, grid.arrange, arrangeGrob)
