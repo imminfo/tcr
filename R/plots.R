@@ -181,6 +181,7 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' @param .na.value Replace NAs with this values.
 #' @param .text if T then print \code{.data} values at tiles.
 #' @param .scientific If T then force show scientific values in the heatmap plot.
+#' @param .signif.digits Number of significant digits to show. Default - 4.
 #' @param .size.text Size for the text in the cells of the heatmap, 4 by default.
 #' 
 #' @return ggplot object.
@@ -201,6 +202,7 @@ vis.heatmap <- function (.data,
                          .na.value = NA, 
                          .text = T, 
                          .scientific = FALSE, 
+                         .signif.digits = 4,
                          .size.text = 4) {
   if (has.class(.data, 'data.frame')) {
     names <- .data[,1]
@@ -222,14 +224,13 @@ vis.heatmap <- function (.data,
   m[,2] <- factor(m[,2], levels = colnames(.data))
   
   .cg <- .colourblind.gradient(min(m$value), max(m$value))
+
+  m$label <- format(m$value, scientific = .scientific, digits = .signif.digits)
   
   p <- ggplot(m, aes(x = variable, y = name, fill = value))
   p <- p + geom_tile(aes(fill = value), colour = "white")
   if (.text) {
-    if (.scientific) {
-      m$value <- scales::scientific(m$value)
-    }
-    p <- p + geom_text(aes(fill = value, label = value), size = .size.text)
+    p <- p + geom_text(aes(fill = value, label = label), size = .size.text)
   }
 #   p <- p + geom_text(aes(fill = value, label = value))
 #   p <- p + .ryg.gradient(min(m$value), max(m$value))

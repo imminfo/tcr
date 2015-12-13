@@ -6,7 +6,8 @@
 \usage{
 vis.heatmap(.data, .title = "Number of shared clonotypes",
   .labs = c("Sample", "Sample"), .legend = "Shared clonotypes",
-  .na.value = NA, .text = T, .scientific = FALSE, .size.text = 4)
+  .na.value = NA, .text = T, .scientific = FALSE, .signif.digits = 4,
+  .size.text = 4)
 }
 \arguments{
 \item{.data}{Either a matrix with colnames and rownames specifyed or a data.frame with the first column of
@@ -23,6 +24,8 @@ strings for row names and other columns stands for values.}
 \item{.text}{if T then print \code{.data} values at tiles.}
 
 \item{.scientific}{If T then force show scientific values in the heatmap plot.}
+
+\item{.signif.digits}{Number of significant digits to show. Default - 4.}
 
 \item{.size.text}{Size for the text in the cells of the heatmap, 4 by default.}
 }
