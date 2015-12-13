@@ -732,7 +732,7 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 #' @param .shared.rep Shared repertoires, as from \link{shared.repertoire} function.
 #' @param .x.rep Which repertoire show on x-axis. Either a name or an index of a repertoire 
 #' in the \code{.shared.rep} or NA to choose all repertoires.
-#' @param .x.rep Which repertoire show on y-axis. Either a name or an index of a repertoire 
+#' @param .y.rep Which repertoire show on y-axis. Either a name or an index of a repertoire 
 #' in the \code{.shared.rep} or NA to choose all repertoires.
 #' @param .title Main title of the plot.
 #' @param .ncol Number of columns in the resulting plot.

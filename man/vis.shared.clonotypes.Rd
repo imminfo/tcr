@@ -13,14 +13,14 @@ vis.shared.clonotypes(.shared.rep, .x.rep = NA, .y.rep = NA,
 \item{.x.rep}{Which repertoire show on x-axis. Either a name or an index of a repertoire 
 in the \code{.shared.rep} or NA to choose all repertoires.}
 
+\item{.y.rep}{Which repertoire show on y-axis. Either a name or an index of a repertoire 
+in the \code{.shared.rep} or NA to choose all repertoires.}
+
 \item{.title}{Main title of the plot.}
 
 \item{.ncol}{Number of columns in the resulting plot.}
 
 \item{.point.size.modif}{Modify this to correct sizes of points.}
-
-\item{.x.rep}{Which repertoire show on y-axis. Either a name or an index of a repertoire 
-in the \code{.shared.rep} or NA to choose all repertoires.}
 }
 \value{
 ggplot2 object or plot
