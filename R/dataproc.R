@@ -531,6 +531,25 @@ barcodes.to.reads <- function (.data) {
   .data[order(.data$Percentage, decreasing = T),]
 }
 
+simplePCA <- function(.data, .method, .onlyx) {
+  if (.method == 'prcomp') {
+    if (.onlyx) {
+      return (prcomp(t(as.matrix(.data)), ...)$x)
+    }
+    if (!.onlyx) {
+      return (prcomp(t(as.matrix(.data)), ...))
+    }
+  }
+  if (.method == 'fasthcs') {
+    if (.onlyx) {
+      return (FastHCS(t(as.matrix(.data)), ...)$scores)
+    }
+    if (!.onlyx) {
+      return (FastHCS(t(as.matrix(.data)), ...))
+    }
+  }
+}
+
 
 #' Resample data frame using values from the column with number of clonesets.
 #' 

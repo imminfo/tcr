@@ -185,11 +185,11 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
 #' # Plot a plot of results of PCA on V-segments usage.
 #' pca.segments(twb, T, scale. = T)
 #' }
-pca.segments <- function(.data, .cast.freq.seg = T, ..., .text = T, .do.plot = T){
+pca.segments <- function(.data, .cast.freq.seg = T, ..., .text = T, .do.plot = T, .onlyx = T){
   if (.cast.freq.seg) { .data <- geneUsage(.data, ...)[,-1] }
-  pca.res <- prcomp(t(as.matrix(.data)), ...)
+  pca.res <- simplePCA(.data, .method, .onlyx)
   if (.do.plot) {
-    pca.res <- data.frame(PC1 = pca.res$x[,1], PC2 = pca.res$x[,2], Subject = names(.data))
+    pca.res <- data.frame(PC1 = pca.res[,1], PC2 = pca.res[,2], Subject = names(.data))
     p <- ggplot() + geom_point(aes(x = PC1, y = PC2, colour = Subject), size = 3, data = pca.res)
     if (.text) {
       p <- p + geom_text(aes(x = PC1, y = PC2, label = Subject), data = pca.res, hjust=.5, vjust=-.3)
