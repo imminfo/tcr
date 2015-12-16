@@ -532,19 +532,19 @@ barcodes.to.reads <- function (.data) {
 }
 
 simplePCA <- function(.data, .method, .onlyx) {
-  if (.method == 'prcomp') {
+  if (.method[1] == 'prcomp') {
     if (.onlyx) {
       return (prcomp(t(as.matrix(.data)), ...)$x)
     }
-    if (!.onlyx) {
+    else {
       return (prcomp(t(as.matrix(.data)), ...))
     }
   }
-  if (.method == 'fasthcs') {
+  if (.method[1] == 'fasthcs') {
     if (.onlyx) {
       return (FastHCS(t(as.matrix(.data)), ...)$scores)
     }
-    if (!.onlyx) {
+    else {
       return (FastHCS(t(as.matrix(.data)), ...))
     }
   }
