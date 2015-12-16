@@ -531,21 +531,27 @@ barcodes.to.reads <- function (.data) {
   .data[order(.data$Percentage, decreasing = T),]
 }
 
-simplePCA <- function(.data, .method, .onlyx) {
+simplePCA <- function(.data, .method =  c(“prcomp”, “fasthcs”), .onlyx = T, .t = F, ...) {
+  if (.t) {
+    data_matrix <- t(as.matrix(.data))
+  }
+  else {
+    data_matrix <- as.matrix(.data)
+  }
   if (.method[1] == 'prcomp') {
     if (.onlyx) {
-      return (prcomp(t(as.matrix(.data)), ...)$x)
+      return (prcomp(data_matrix), .scale = T, ...)$x)
     }
     else {
-      return (prcomp(t(as.matrix(.data)), ...))
+      return (prcomp(data_matrix), .scale = T, ...))
     }
   }
-  if (.method[1] == 'fasthcs') {
+  else {
     if (.onlyx) {
-      return (FastHCS(t(as.matrix(.data)), ...)$scores)
+      return (FastHCS(data_matrix), ...)$scores)
     }
     else {
-      return (FastHCS(t(as.matrix(.data)), ...))
+      return (FastHCS(data_matrix), ...))
     }
   }
 }
