@@ -106,7 +106,7 @@ parse.cloneset <- function (.filename,
   }, USE.NAMES = F))
   
   suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T, comment.char = "", quote = ""))
-  
+
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
   .read.prop <- 'Read.proportion'
   
@@ -480,8 +480,8 @@ parse.vdjtools <- function (.filename) {
   filename <- .filename
   nuc.seq <- 'cdr3nt'
   aa.seq <- 'cdr3aa'
-  reads <- '#count'
-  barcodes <- '#count'
+  reads <- 'count'
+  barcodes <- 'count'
   vgenes <- 'v'
   jgenes <- 'j'
   dgenes <- 'd'

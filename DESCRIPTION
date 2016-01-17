@@ -2,7 +2,7 @@ Package: tcR
 Type: Package
 Title: Advanced Data Analysis of Immune Receptor Repertoires
 Version: 2.2.1.7
-Date: 2015-11-06
+Date: 2015-12-13
 Author: Vadim Nazarov
 Maintainer: Vadim Nazarov <vdm.nazarov@gmail.com>
 Description: Platform for the advanced analysis of T cell receptor and
@@ -21,7 +21,8 @@ Imports:
     grid (>= 3.0.0),
     data.table (>= 1.9.0),
     gtable (>= 0.1.2),
-    stringdist (>= 0.7.3)
+    stringdist (>= 0.7.3),
+    scales (>= 0.3.0)
 Suggests:
     knitr (>= 1.8),
     roxygen2 (>= 3.0.0)
