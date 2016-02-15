@@ -592,7 +592,9 @@ vis.rarefaction <- function (.muc.res, .groups = NULL, .log = F) {
 #' p2 <- vis.kmer.histogran(imm.km, .position = 'fill')
 #' grid.arrange(p1, p2)
 #' }
-vis.kmer.histogram <- function (.kmers, .head = 100, .position = c('stack', 'dodge', 'fill')) {
+vis.kmer.histogram <- function (.kmers, 
+                                .head = 100, 
+                                .position = c('stack', 'dodge', 'fill')) {
   kmers.df <- data.frame(Kmers = '')
   for (i in 2:ncol(.kmers)) {
     kmers.df <- merge(head(.kmers[order(.kmers[, i], decreasing = T), c(1,i)], .head), kmers.df, all = T)
@@ -606,7 +608,7 @@ vis.kmer.histogram <- function (.kmers, .head = 100, .position = c('stack', 'dod
   } else {
     p <- p + ylab('Proportions') + theme(axis.text.x  = element_text(angle=90))
   }
-  p + scale_y_continuous(expand = c(0, 0)) + .colourblind.discrete(length(unique(kmers.df)))
+  p + scale_y_continuous(expand = c(0, 0)) + .colourblind.discrete2(length(unique(kmers.df$People)))
 }
 
 
