@@ -84,6 +84,9 @@ parse.cloneset <- function (.filename,
       .barcodes <- "count"
       .skip <- 1
     }
+  } else if (substr(l, 1, 1) == "#") {
+    .reads <- "X.count"
+    .barcodes <- "X.count"
   }
   close(f)
   
