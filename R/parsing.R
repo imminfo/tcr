@@ -189,9 +189,9 @@ parse.cloneset <- function (.filename,
       df$Total.insertions[df[[.jstart]] == -1] <- -1
     } else if (recomb_type == "VDJ" ) {
       df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
-      df$Total.insertions[df$Total.insertions < 0] <- -1
     }
   }
+  df$Total.insertions[df$Total.insertions < 0] <- -1
   
   if (is.na(.dgenes)) {
     df$D.gene <- ''
@@ -932,4 +932,40 @@ parse.imseq <- function (.filename) {
 parse.tcr <- function (.filename) {
   suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, sep = "\t", skip = 0, strip.white = T, comment.char = "", quote = "", fill = T, stringsAsFactors = F))
   df
+}
+
+parse.migmap <- function (.filename) {
+  filename <- .filename
+  nuc.seq <- 'cdr3nt'
+  aa.seq <- 'cdr3aa'
+  reads <- 'count'
+  barcodes <- 'count'
+  vgenes <- 'v'
+  jgenes <- 'j'
+  dgenes <- 'd'
+  vend <- 'v.end.in.cdr3'
+  jstart <- 'j.start.in.cdr3'
+  dalignments <- c('d.start.in.cdr3', 'd.end.in.cdr3')
+  vd.insertions <- ""
+  dj.insertions <- ""
+  total.insertions <- ""
+  .skip = 0
+  .sep = '\t'
+  
+  parse.cloneset(.filename = filename, 
+                       .nuc.seq = nuc.seq,
+                       .aa.seq = aa.seq,
+                       .reads = reads,
+                       .barcodes = barcodes,
+                       .vgenes = vgenes,
+                       .jgenes = jgenes,
+                       .dgenes = dgenes,
+                       .vend = vend,
+                       .jstart = jstart,
+                       .dalignments = dalignments,
+                       .vd.insertions = vd.insertions,
+                       .dj.insertions = dj.insertions,
+                       .total.insertions = total.insertions,
+                       .skip = .skip,
+                       .sep = .sep)
 }
