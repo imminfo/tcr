@@ -185,6 +185,7 @@ parse.cloneset <- function (.filename,
     df$Total.insertions <- -1
     if (recomb_type == "VJ") {
       df$Total.insertions <- df[[.jstart]] - df[[.vend]] - 1
+      df$Total.insertions[df$Total.insertions < 0] <- 0
       df$Total.insertions[df[[.vend]] == -1] <- -1
       df$Total.insertions[df[[.jstart]] == -1] <- -1
     } else if (recomb_type == "VDJ" ) {
@@ -269,6 +270,8 @@ parse.cloneset <- function (.filename,
 #' parse.imseq(.filename)
 #' 
 #' parse.tcr(.filename)
+#' 
+#' parse.migmap(.filename)
 #'
 #' @param .filename Path to the input file with cloneset data.
 #' @param .filenames Vector or list with paths to files with cloneset data.
@@ -946,9 +949,9 @@ parse.migmap <- function (.filename) {
   vend <- 'v.end.in.cdr3'
   jstart <- 'j.start.in.cdr3'
   dalignments <- c('d.start.in.cdr3', 'd.end.in.cdr3')
-  vd.insertions <- ""
-  dj.insertions <- ""
-  total.insertions <- ""
+  vd.insertions <- "NONE"
+  dj.insertions <- "NONE"
+  total.insertions <- "NONE"
   .skip = 0
   .sep = '\t'
   

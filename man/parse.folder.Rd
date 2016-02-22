@@ -47,6 +47,8 @@ parse.mixcr(.filename)
 parse.imseq(.filename)
 
 parse.tcr(.filename)
+
+parse.migmap(.filename)
 }
 \arguments{
 \item{.folderpath}{Path to the folder with text cloneset files.}
