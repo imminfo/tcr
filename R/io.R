@@ -67,7 +67,7 @@ repSave <- function (.data, .format = c("txt", "gz"), .names = "", .folder = "./
   
   postfix <- ".txt"
   filefun <- function (...) file(...)
-  if (.format[0] == "gz") { 
+  if (.format[1] == "gz") { 
     postfix <- ".txt.gz"
     filefun <- function (...) gzfile(...)
   }
