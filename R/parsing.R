@@ -748,40 +748,47 @@ parse.immunoseq3 <- function (.filename) {
 
 parse.mixcr <- function (.filename) {
   .filename <- .filename
-  .nuc.seq <- 'n..seq..cdr3'
-  .aa.seq <- 'aa..seq..cdr3'
-  .reads <- 'clone.count'
-  .barcodes <- 'clone.count'
+  .nuc.seq <- 'nseqcdr3'
+  .aa.seq <- 'aaseqcdr3'
+  .reads <- 'clonecount'
+  .barcodes <- 'clonecount'
   .sep = '\t'
-  .vend <- "all.v.alignments"
-  .jstart <- "all.j.alignments"
-  .dalignments <- "all.d.alignments"
+  .vend <- "allvalignments"
+  .jstart <- "alljalignments"
+  .dalignments <- "alldalignments"
   .vd.insertions <- "VD.insertions"
   .dj.insertions <- "DJ.insertions"
   .total.insertions <- "Total.insertions"
   
   table.colnames <- tolower(make.names(read.table(gzfile(.filename), sep = .sep, skip = 0, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "", quote = "")[1,]))
+  table.colnames <- gsub(".", "", table.colnames, fixed = T)
   
-  if ('all.v.hits' %in% table.colnames) {
-    .vgenes <- 'all.v.hits'
-  } else if ('v.hits' %in% table.colnames) {
-    .vgenes <- 'v.hits'
+  if ('allvhits' %in% table.colnames) {
+    .vgenes <- 'allvhits'
+  } else if ('vhits' %in% table.colnames) {
+    .vgenes <- 'vhits'
+  } else if ('allvhitswithscore' %in% table.colnames) {
+    .vgenes <- 'allvhitswithscore'
   } else {
     cat("Error: can't find a column with V genes")
   }
   
-  if ('all.j.hits' %in% table.colnames) {
-    .jgenes <- 'all.j.hits'
-  } else if ('j.hits' %in% table.colnames) {
-    .jgenes <- 'j.hits'
+  if ('alljhits' %in% table.colnames) {
+    .jgenes <- 'alljhits'
+  } else if ('jhits' %in% table.colnames) {
+    .jgenes <- 'jhits'
+  } else if ('alljhitswithscore' %in% table.colnames) {
+    .jgenes <- 'alljhitswithscore'
   } else {
     cat("Error: can't find a column with J genes")
   }
   
-  if ('all.d.hits' %in% table.colnames) {
-    .dgenes <- 'all.d.hits'
-  } else if ('d.hits' %in% table.colnames) {
-    .dgenes <- 'd.hits'
+  if ('alldhits' %in% table.colnames) {
+    .dgenes <- 'alldhits'
+  } else if ('dhits' %in% table.colnames) {
+    .dgenes <- 'dhits'
+  } else if ('alldhitswithscore' %in% table.colnames) {
+    .dgenes <- 'alldhitswithscore'
   } else {
     cat("Error: can't find a column with D genes")
   }
@@ -803,13 +810,14 @@ parse.mixcr <- function (.filename) {
   }, USE.NAMES = F))
   
   suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = 0, strip.white = T, comment.char = "", quote = "", fill = T))
-  names(df) <- tolower(names(df))
+  names(df) <- tolower(gsub(".", "", names(df), fixed = T))
   
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
   .read.prop <- 'Read.proportion'
   
   df$Umi.count <- df[, .reads]
   df$Umi.proportion <- df$Umi.count / sum(df$Umi.count)
+  .barcodes <- 'Umi.count'
   .umi.prop <- 'Umi.proportion'
   
   df$CDR3.amino.acid.sequence <- bunch.translate(df[[.nuc.seq]])
