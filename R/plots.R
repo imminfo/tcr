@@ -214,6 +214,10 @@ vis.heatmap <- function (.data,
     colnames(.data) <- paste0('C', 1:ncol(.data))
   }
   
+  if (is.null(row.names(.data))) {
+    row.names(.data) <- paste0('C', 1:nrow(.data))
+  }
+  
   .data[is.na(.data)] <- .na.value
   
   tmp <- as.data.frame(.data)
