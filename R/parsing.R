@@ -770,7 +770,7 @@ parse.mixcr <- function (.filename) {
   } else if ('allvhitswithscore' %in% table.colnames) {
     .vgenes <- 'allvhitswithscore'
   } else {
-    cat("Error: can't find a column with V genes")
+    cat("Error: can't find a column with V genes\n")
   }
   
   if ('alljhits' %in% table.colnames) {
@@ -780,7 +780,7 @@ parse.mixcr <- function (.filename) {
   } else if ('alljhitswithscore' %in% table.colnames) {
     .jgenes <- 'alljhitswithscore'
   } else {
-    cat("Error: can't find a column with J genes")
+    cat("Error: can't find a column with J genes\n")
   }
   
   if ('alldhits' %in% table.colnames) {
@@ -790,7 +790,7 @@ parse.mixcr <- function (.filename) {
   } else if ('alldhitswithscore' %in% table.colnames) {
     .dgenes <- 'alldhitswithscore'
   } else {
-    cat("Error: can't find a column with D genes")
+    cat("Error: can't find a column with D genes\n")
   }
   
   swlist <- list('character', 'character',
@@ -854,10 +854,14 @@ parse.mixcr <- function (.filename) {
       as.numeric(sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 5)) - 1
   }
   
+  logic <- (sapply(strsplit(df[[.vend]], "|", T, F, T), length) > 4) & (sapply(strsplit(df[[.jstart]], "|", T, F, T), length) > 4)
   .total.insertions <- "Total.insertions"
   if (recomb_type == "VJ") {
-    df$Total.insertions <- 
-      as.numeric(sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4)) - as.numeric(sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5)) - 1
+    df$Total.insertions <- -1
+    if (length(which(logic)) > 0) {
+      df$Total.insertions[logic] <- 
+        as.numeric(sapply(strsplit(df[[.jstart]][logic], "|", T, F, T), "[[", 4)) - as.numeric(sapply(strsplit(df[[.vend]][logic], "|", T, F, T), "[[", 5)) - 1
+    }
   } else if (recomb_type == "VDJ") {
     df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
   } else {
@@ -865,8 +869,13 @@ parse.mixcr <- function (.filename) {
   }
   df$Total.insertions[df$Total.insertions < 0] <- -1 
   
-  df$V.end <- sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5)
-  df$J.start <- sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4)
+  df$V.end <- -1
+  df$J.start <- -1
+  if (length(which(logic)) > 0) {
+    df$V.end <- sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5)
+    df$J.start <- sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4)
+  }
+  
   .vend <- "V.end"
   .jstart <- "J.start"
   
