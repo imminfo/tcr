@@ -84,6 +84,9 @@ parse.cloneset <- function (.filename,
       .barcodes <- "count"
       .skip <- 1
     }
+  } else if (substr(l, 1, 1) == "#") {
+    .reads <- "X.count"
+    .barcodes <- "X.count"
   }
   close(f)
   
@@ -182,13 +185,14 @@ parse.cloneset <- function (.filename,
     df$Total.insertions <- -1
     if (recomb_type == "VJ") {
       df$Total.insertions <- df[[.jstart]] - df[[.vend]] - 1
+      df$Total.insertions[df$Total.insertions < 0] <- 0
       df$Total.insertions[df[[.vend]] == -1] <- -1
       df$Total.insertions[df[[.jstart]] == -1] <- -1
     } else if (recomb_type == "VDJ" ) {
       df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
-      df$Total.insertions[df$Total.insertions < 0] <- -1
     }
   }
+  df$Total.insertions[df$Total.insertions < 0] <- -1
   
   if (is.na(.dgenes)) {
     df$D.gene <- ''
@@ -266,6 +270,8 @@ parse.cloneset <- function (.filename,
 #' parse.imseq(.filename)
 #' 
 #' parse.tcr(.filename)
+#' 
+#' parse.migmap(.filename)
 #'
 #' @param .filename Path to the input file with cloneset data.
 #' @param .filenames Vector or list with paths to files with cloneset data.
@@ -742,42 +748,55 @@ parse.immunoseq3 <- function (.filename) {
 
 parse.mixcr <- function (.filename) {
   .filename <- .filename
-  .nuc.seq <- 'n..seq..cdr3'
-  .aa.seq <- 'aa..seq..cdr3'
-  .reads <- 'clone.count'
-  .barcodes <- 'clone.count'
+  .nuc.seq <- 'nseqcdr3'
+  .aa.seq <- 'aaseqcdr3'
+  .reads <- 'clonecount'
+  .barcodes <- 'clonecount'
   .sep = '\t'
-  .vend <- "all.v.alignments"
-  .jstart <- "all.j.alignments"
-  .dalignments <- "all.d.alignments"
+  .vend <- "allvalignments"
+  .jstart <- "alljalignments"
+  .dalignments <- "alldalignments"
   .vd.insertions <- "VD.insertions"
   .dj.insertions <- "DJ.insertions"
   .total.insertions <- "Total.insertions"
   
   table.colnames <- tolower(make.names(read.table(gzfile(.filename), sep = .sep, skip = 0, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "", quote = "")[1,]))
+  table.colnames <- gsub(".", "", table.colnames, fixed = T)
   
-  if ('all.v.hits' %in% table.colnames) {
-    .vgenes <- 'all.v.hits'
-  } else if ('v.hits' %in% table.colnames) {
-    .vgenes <- 'v.hits'
+  if ("bestvhit" %in% table.colnames) {
+    .vgenes <- 'bestvhit'
+  } else if ('allvhits' %in% table.colnames) {
+    .vgenes <- 'allvhits'
+  } else if ('vhits' %in% table.colnames) {
+    .vgenes <- 'vhits'
+  } else if ('allvhitswithscore' %in% table.colnames) {
+    .vgenes <- 'allvhitswithscore'
   } else {
-    cat("Error: can't find a column with V genes")
+    cat("Error: can't find a column with V genes\n")
   }
   
-  if ('all.j.hits' %in% table.colnames) {
-    .jgenes <- 'all.j.hits'
-  } else if ('j.hits' %in% table.colnames) {
-    .jgenes <- 'j.hits'
+  if ("bestjhit" %in% table.colnames) {
+    .jgenes <- 'bestjhit'
+  } else if ('alljhits' %in% table.colnames) {
+    .jgenes <- 'alljhits'
+  } else if ('jhits' %in% table.colnames) {
+    .jgenes <- 'jhits'
+  } else if ('alljhitswithscore' %in% table.colnames) {
+    .jgenes <- 'alljhitswithscore'
   } else {
-    cat("Error: can't find a column with J genes")
+    cat("Error: can't find a column with J genes\n")
   }
   
-  if ('all.d.hits' %in% table.colnames) {
-    .dgenes <- 'all.d.hits'
-  } else if ('d.hits' %in% table.colnames) {
-    .dgenes <- 'd.hits'
+  if ("bestdhit" %in% table.colnames) {
+    .dgenes <- 'bestdhit'
+  } else if ('alldhits' %in% table.colnames) {
+    .dgenes <- 'alldhits'
+  } else if ('dhits' %in% table.colnames) {
+    .dgenes <- 'dhits'
+  } else if ('alldhitswithscore' %in% table.colnames) {
+    .dgenes <- 'alldhitswithscore'
   } else {
-    cat("Error: can't find a column with D genes")
+    cat("Error: can't find a column with D genes\n")
   }
   
   swlist <- list('character', 'character',
@@ -797,13 +816,14 @@ parse.mixcr <- function (.filename) {
   }, USE.NAMES = F))
   
   suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = 0, strip.white = T, comment.char = "", quote = "", fill = T))
-  names(df) <- tolower(names(df))
+  names(df) <- tolower(gsub(".", "", names(df), fixed = T))
   
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
   .read.prop <- 'Read.proportion'
   
   df$Umi.count <- df[, .reads]
   df$Umi.proportion <- df$Umi.count / sum(df$Umi.count)
+  .barcodes <- 'Umi.count'
   .umi.prop <- 'Umi.proportion'
   
   df$CDR3.amino.acid.sequence <- bunch.translate(df[[.nuc.seq]])
@@ -840,10 +860,14 @@ parse.mixcr <- function (.filename) {
       as.numeric(sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 5)) - 1
   }
   
+  logic <- (sapply(strsplit(df[[.vend]], "|", T, F, T), length) > 4) & (sapply(strsplit(df[[.jstart]], "|", T, F, T), length) > 4)
   .total.insertions <- "Total.insertions"
   if (recomb_type == "VJ") {
-    df$Total.insertions <- 
-      as.numeric(sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4)) - as.numeric(sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5)) - 1
+    df$Total.insertions <- -1
+    if (length(which(logic)) > 0) {
+      df$Total.insertions[logic] <- 
+        as.numeric(sapply(strsplit(df[[.jstart]][logic], "|", T, F, T), "[[", 4)) - as.numeric(sapply(strsplit(df[[.vend]][logic], "|", T, F, T), "[[", 5)) - 1
+    }
   } else if (recomb_type == "VDJ") {
     df$Total.insertions <- df[[.vd.insertions]] + df[[.dj.insertions]]
   } else {
@@ -851,8 +875,13 @@ parse.mixcr <- function (.filename) {
   }
   df$Total.insertions[df$Total.insertions < 0] <- -1 
   
-  df$V.end <- sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5)
-  df$J.start <- sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4)
+  df$V.end <- -1
+  df$J.start <- -1
+  if (length(which(logic)) > 0) {
+    df$V.end <- sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5)
+    df$J.start <- sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4)
+  }
+  
   .vend <- "V.end"
   .jstart <- "J.start"
   
@@ -881,7 +910,8 @@ parse.mixcr <- function (.filename) {
   df$D.gene <- gsub(",", ", ", df$D.gene)
   df$J.gene <- gsub("([*][[:digit:]]*)([(][[:digit:]]*[.]*[[:digit:]]*[)])", "", df$J.gene)
   df$J.gene <- gsub(",", ", ", df$J.gene)
-  df
+  
+  fix.alleles(df)
 }
 
 parse.imseq <- function (.filename) {
@@ -929,4 +959,40 @@ parse.imseq <- function (.filename) {
 parse.tcr <- function (.filename) {
   suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, sep = "\t", skip = 0, strip.white = T, comment.char = "", quote = "", fill = T, stringsAsFactors = F))
   df
+}
+
+parse.migmap <- function (.filename) {
+  filename <- .filename
+  nuc.seq <- 'cdr3nt'
+  aa.seq <- 'cdr3aa'
+  reads <- 'count'
+  barcodes <- 'count'
+  vgenes <- 'v'
+  jgenes <- 'j'
+  dgenes <- 'd'
+  vend <- 'v.end.in.cdr3'
+  jstart <- 'j.start.in.cdr3'
+  dalignments <- c('d.start.in.cdr3', 'd.end.in.cdr3')
+  vd.insertions <- "NONE"
+  dj.insertions <- "NONE"
+  total.insertions <- "NONE"
+  .skip = 0
+  .sep = '\t'
+  
+  parse.cloneset(.filename = filename, 
+                       .nuc.seq = nuc.seq,
+                       .aa.seq = aa.seq,
+                       .reads = reads,
+                       .barcodes = barcodes,
+                       .vgenes = vgenes,
+                       .jgenes = jgenes,
+                       .dgenes = dgenes,
+                       .vend = vend,
+                       .jstart = jstart,
+                       .dalignments = dalignments,
+                       .vd.insertions = vd.insertions,
+                       .dj.insertions = dj.insertions,
+                       .total.insertions = total.insertions,
+                       .skip = .skip,
+                       .sep = .sep)
 }
