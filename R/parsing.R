@@ -763,7 +763,9 @@ parse.mixcr <- function (.filename) {
   table.colnames <- tolower(make.names(read.table(gzfile(.filename), sep = .sep, skip = 0, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "", quote = "")[1,]))
   table.colnames <- gsub(".", "", table.colnames, fixed = T)
   
-  if ('allvhits' %in% table.colnames) {
+  if ("bestvhit" %in% table.colnames) {
+    .vgenes <- 'bestvhit'
+  } else if ('allvhits' %in% table.colnames) {
     .vgenes <- 'allvhits'
   } else if ('vhits' %in% table.colnames) {
     .vgenes <- 'vhits'
@@ -773,7 +775,9 @@ parse.mixcr <- function (.filename) {
     cat("Error: can't find a column with V genes\n")
   }
   
-  if ('alljhits' %in% table.colnames) {
+  if ("bestjhit" %in% table.colnames) {
+    .jgenes <- 'bestjhit'
+  } else if ('alljhits' %in% table.colnames) {
     .jgenes <- 'alljhits'
   } else if ('jhits' %in% table.colnames) {
     .jgenes <- 'jhits'
@@ -783,7 +787,9 @@ parse.mixcr <- function (.filename) {
     cat("Error: can't find a column with J genes\n")
   }
   
-  if ('alldhits' %in% table.colnames) {
+  if ("bestdhit" %in% table.colnames) {
+    .dgenes <- 'bestdhit'
+  } else if ('alldhits' %in% table.colnames) {
     .dgenes <- 'alldhits'
   } else if ('dhits' %in% table.colnames) {
     .dgenes <- 'dhits'
@@ -904,7 +910,8 @@ parse.mixcr <- function (.filename) {
   df$D.gene <- gsub(",", ", ", df$D.gene)
   df$J.gene <- gsub("([*][[:digit:]]*)([(][[:digit:]]*[.]*[[:digit:]]*[)])", "", df$J.gene)
   df$J.gene <- gsub(",", ", ", df$J.gene)
-  df
+  
+  fix.alleles(df)
 }
 
 parse.imseq <- function (.filename) {
