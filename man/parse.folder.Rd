@@ -9,6 +9,7 @@
 \alias{parse.immunoseq3}
 \alias{parse.imseq}
 \alias{parse.migec}
+\alias{parse.migmap}
 \alias{parse.mitcr}
 \alias{parse.mitcrbc}
 \alias{parse.mixcr}
