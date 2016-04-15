@@ -27,8 +27,10 @@ if (getRversion() >= "2.15.1") {
 #   cs <- c("#FFBB00", "#41B6C4", "#225EA8") <- old version
 #   cs <- c("#FF4B20", "#FFB433", "#C6EDEC", "#85CFFF", "#0348A6")
   # cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
-  cs <- c(c("#0072B2", "#EEEEEE", "#D55E00"))
   # scale_fill_gradientn(guide='colourbar', colours=c("#0072B2", "#EEEEEE", "#D55E00")
+  
+  cs <- c(c("#0072B2", "#EEEEEE", "#D55E00"))
+  
   if (!is.na(.min)) {
     if (.colour) {
       scale_colour_gradientn(limits = c(.min, .max), guide='colorbar', colours = cs, na.value = 'grey60')
@@ -183,6 +185,8 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' @param .scientific If T then force show scientific values in the heatmap plot.
 #' @param .signif.digits Number of significant digits to show. Default - 4.
 #' @param .size.text Size for the text in the cells of the heatmap, 4 by default.
+#' @param .no.legend If T than remove the legend from the plot.
+#' @param .no.labs If T than remove x / y labels names from the plot.
 #' 
 #' @return ggplot object.
 #' 
@@ -203,7 +207,9 @@ vis.heatmap <- function (.data,
                          .text = T, 
                          .scientific = FALSE, 
                          .signif.digits = 4,
-                         .size.text = 4) {
+                         .size.text = 4, 
+                         .no.legend = F, 
+                         .no.labs = F) {
   if (has.class(.data, 'data.frame')) {
     names <- .data[,1]
     .data <- as.matrix(.data[,-1])
@@ -240,11 +246,22 @@ vis.heatmap <- function (.data,
 #   p <- p + .ryg.gradient(min(m$value), max(m$value))
   p <- p + .cg
   # p <- p + .blues.gradient(min(m$value), max(m$value))
-  p + ggtitle(.title) + 
+  
+  p <- p + ggtitle(.title) + 
     guides(fill = guide_colourbar(title=.legend)) +
-    xlab(.labs[1]) + ylab(.labs[2]) + coord_equal() +
+    xlab(.labs[1]) + ylab(.labs[2]) + coord_fixed() +
     theme_linedraw() + theme(axis.text.x  = element_text(angle=90)) +
     scale_x_discrete(expand=c(0,0)) + scale_y_discrete(expand=c(0,0))
+  
+  if (.no.legend) {
+    p <- p + theme(legend.position="none")
+  }
+  
+  if (.no.labs) {
+    p <- p + theme(axis.title.x = element_blank(), axis.title.y = element_blank())
+  }
+  
+  p
 }
 
 
