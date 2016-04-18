@@ -1,4 +1,4 @@
-if(getRversion() >= "2.15.1")  utils::globalVariables(c("alpha.prob", "beta.prob"))
+if(getRversion() >= "2.15.1")  utils::globalVariables(c("alpha.prob", "beta.prob", "fill_vec", "fill_reads"))
 
 
 #' Compute the number of deletions in MiTCR data frames.

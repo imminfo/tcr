@@ -4,7 +4,8 @@
 if (getRversion() >= "2.15.1") {
   utils::globalVariables(c("Segment", 'Size', 'Freq', 'Sample', 'V.gene', 'J.gene', '..count..', 'Time.point', 'Proportion', 'Sequence',
                            'Lower', 'Upper', 'Lengths', 'Read.count', 'Var', 'Value', 'Group', 'variable', 'name', 'value', 'Kmers',
-                           'Count', 'People', 'First', 'Second', 'Var1', 'Q0.025', 'Q0.975', 'Mean', 'Type', 'Clone.size', 'Q1', 'Q2', 'Symbol', 'Gene', 'Genes', 'Sample'))
+                           'Count', 'People', 'First', 'Second', 'Var1', 'Q0.025', 'Q0.975', 'Mean', 'Type', 'Clone.size', 'Q1', 'Q2', 
+                           'Symbol', 'Gene', 'Genes', 'Sample', 'label', 'Xrep', 'Yrep'))
 }
 
 
