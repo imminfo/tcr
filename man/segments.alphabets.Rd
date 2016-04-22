@@ -25,12 +25,22 @@
 \alias{HUMAN_TRGV}
 \alias{MACMUL_TRBJ}
 \alias{MACMUL_TRBV}
+\alias{MOUSE_IGHD}
+\alias{MOUSE_IGHJ}
+\alias{MOUSE_IGHV}
 \alias{MOUSE_IGKJ}
 \alias{MOUSE_IGKV}
+\alias{MOUSE_IGLJ}
+\alias{MOUSE_IGLV}
 \alias{MOUSE_TRAJ}
 \alias{MOUSE_TRAV}
 \alias{MOUSE_TRBJ}
 \alias{MOUSE_TRBV}
+\alias{MOUSE_TRDD}
+\alias{MOUSE_TRDJ}
+\alias{MOUSE_TRDV}
+\alias{MOUSE_TRGJ}
+\alias{MOUSE_TRGV}
 \alias{genealphabets}
 \alias{segments.alphabets}
 \title{Alphabets of TCR and Ig gene segments.}
@@ -74,6 +84,12 @@ MOUSE_IGKV
 
 MOUSE_IGKJ
 
+MOUSE_IGHV
+
+MOUSE_IGHD
+
+MOUSE_IGHJ
+
 MACMUL_TRBV
 
 MACMUL_TRBJ
@@ -87,6 +103,10 @@ HUMAN_IGHJ
 HUMAN_IGLV
 
 HUMAN_IGLJ
+
+MOUSE_IGLJ
+
+MOUSE_IGLV
 }
 \description{
 Character vector with names for segments. With \code{tcR} we provided alphabets for all alpha, beta,

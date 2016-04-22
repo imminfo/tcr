@@ -843,7 +843,8 @@ parse.mixcr <- function (.filename) {
   if (recomb_type == "VJ") {
     df$VD.insertions <- -1
   } else if (recomb_type == "VDJ") {
-    logic <- nchar(df[[.vend]]) != 0 & nchar(df[[.dalignments]]) != 0
+    logic <- sapply(strsplit(df[[.dalignments]], "|", T, F, T), length) >= 4 & 
+      sapply(strsplit(df[[.vend]], "|", T, F, T), length) >= 5
     df$VD.insertions[logic] <- 
       as.numeric(sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 4)) -
       as.numeric(sapply(strsplit(df[[.vend]][logic], "|", T, F, T), "[[", 5)) - 1
@@ -854,13 +855,14 @@ parse.mixcr <- function (.filename) {
   if (recomb_type == "VJ") {
     df$DJ.insertions <- -1
   } else if (recomb_type == "VDJ") {
-    logic <- nchar(df[[.jstart]]) != 0 & nchar(df[[.dalignments]]) != 0
+    logic <- sapply(strsplit(df[[.jstart]], "|", T, F, T), length) >= 4 & 
+      sapply(strsplit(df[[.dalignments]], "|", T, F, T), length) >= 5
     df$DJ.insertions[logic] <- 
       as.numeric(sapply(strsplit(df[[.jstart]][logic], "|", T, F, T), "[[", 4)) -
       as.numeric(sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 5)) - 1
   }
   
-  logic <- (sapply(strsplit(df[[.vend]], "|", T, F, T), length) > 4) & (sapply(strsplit(df[[.jstart]], "|", T, F, T), length) > 4)
+  logic <- (sapply(strsplit(df[[.vend]], "|", T, F, T), length) > 4) & (sapply(strsplit(df[[.jstart]], "|", T, F, T), length) >= 4)
   .total.insertions <- "Total.insertions"
   if (recomb_type == "VJ") {
     df$Total.insertions <- -1
@@ -877,15 +879,15 @@ parse.mixcr <- function (.filename) {
   
   df$V.end <- -1
   df$J.start <- -1
-  if (length(which(logic)) > 0) {
-    df$V.end <- sapply(strsplit(df[[.vend]], "|", T, F, T), "[[", 5)
-    df$J.start <- sapply(strsplit(df[[.jstart]], "|", T, F, T), "[[", 4)
-  }
+  logic = sapply(strsplit(df[[.vend]], "|", T, F, T), length) >= 5
+  df$V.end <- sapply(strsplit(df[[.vend]][logic], "|", T, F, T), "[[", 5)
+  logic = sapply(strsplit(df[[.jstart]], "|", T, F, T), length) >= 4
+  df$J.start <- sapply(strsplit(df[[.jstart]][logic], "|", T, F, T), "[[", 4)
   
   .vend <- "V.end"
   .jstart <- "J.start"
   
-  logic <- nchar(df[[.dalignments]]) != 0
+  logic <- sapply(strsplit(df[[.dalignments]], "|", T, F, T), length) >= 5
   df$D5.end <- -1
   df$D3.end <- -1
   df$D5.end[logic] <- sapply(strsplit(df[[.dalignments]][logic], "|", T, F, T), "[[", 4)
