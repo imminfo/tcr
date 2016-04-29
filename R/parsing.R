@@ -879,10 +879,11 @@ parse.mixcr <- function (.filename) {
   
   df$V.end <- -1
   df$J.start <- -1
+  df[[.vend]] = gsub(";", "", df[[.vend]], fixed = T)
   logic = sapply(strsplit(df[[.vend]], "|", T, F, T), length) >= 5
-  df$V.end <- sapply(strsplit(df[[.vend]][logic], "|", T, F, T), "[[", 5)
+  df$V.end[logic] <- sapply(strsplit(df[[.vend]][logic], "|", T, F, T), "[[", 5)
   logic = sapply(strsplit(df[[.jstart]], "|", T, F, T), length) >= 4
-  df$J.start <- sapply(strsplit(df[[.jstart]][logic], "|", T, F, T), "[[", 4)
+  df$J.start[logic] <- sapply(strsplit(df[[.jstart]][logic], "|", T, F, T), "[[", 4)
   
   .vend <- "V.end"
   .jstart <- "J.start"
