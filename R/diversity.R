@@ -168,9 +168,9 @@ chao1 <- function (.data) {
 #' For more details on the procedure see "Details".
 #' 
 #' @param .data Data frame or a list with data frames.
-#' @param .step Step's size.
+#' @param .step Step's size. By default - minimal repertoire size divided by 50.
 #' @param .quantile Numeric vector of length 2 with quantiles for confidence intervals.
-#' @param .extrapolation If N > 0 than perform extrapolation of all samples to the size of the max one +N reads or UMIs.
+#' @param .extrapolation If N > 0 than perform extrapolation of all samples to the size of the max one +N reads or UMIs. By default - 200000.
 #' @param .col Column's name from which choose frequency of each clone.
 #' @param .verbose if T then print progress bar.
 #' 
@@ -192,9 +192,13 @@ chao1 <- function (.data) {
 #' \dontrun{
 #' rarefaction(immdata, .col = "Read.count")
 #' }
-rarefaction <- function (.data, .step = 30000, .quantile = c(.025, .975), .extrapolation = 200000, .col = 'Umi.count', .verbose = T) {
+rarefaction <- function (.data, .step = NA, .quantile = c(.025, .975), .extrapolation = 200000, .col = 'Umi.count', .verbose = T) {
   if (has.class(.data, 'data.frame')) {
     .data <- list(Sample = .data)
+  }
+  
+  if (is.na(.step)) {
+    .step = min(sapply(.data, function (x) sum(x[[.col]]))) / 50.
   }
   
   # multinom
