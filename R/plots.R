@@ -215,6 +215,8 @@ vis.heatmap <- function (.data,
     names <- .data[,1]
     .data <- as.matrix(.data[,-1])
     row.names(.data) <- names
+  } else if (is.null(dim(.data))) {
+    .data = as.matrix(.data)
   }
 
   if (is.null(colnames(.data))) {
