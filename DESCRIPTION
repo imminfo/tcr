@@ -1,8 +1,8 @@
 Package: tcR
 Type: Package
 Title: Advanced Data Analysis of Immune Receptor Repertoires
-Version: 2.2.1.13
-Date: 2016-04-22
+Version: 2.2.1.14
+Date: 2016-06-27
 Author: Vadim Nazarov
 Maintainer: Vadim Nazarov <vdm.nazarov@gmail.com>
 Description: Platform for the advanced analysis of T cell receptor and
