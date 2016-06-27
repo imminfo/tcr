@@ -78,15 +78,17 @@ parse.cloneset <- function (.filename,
   if (length(grep("MiTCRFullExportV1.1", l, fixed = T))) { .skip <- 1 }
   
   # Check for different VDJtools outputs
-  if (length(strsplit(l, "-", T)[[1]]) == 3) {
-    if (strsplit(l, "-", T)[[1]][2] == "header") {
-      .reads <- "count"
-      .barcodes <- "count"
-      .skip <- 1
+  if (length(strsplit(l, "-", T)) > 0) {
+    if (length(strsplit(l, "-", T)[[1]]) == 3) {
+      if (strsplit(l, "-", T)[[1]][2] == "header") {
+        .reads <- "count"
+        .barcodes <- "count"
+        .skip <- 1
+      }
+    } else if (substr(l, 1, 1) == "#") {
+      .reads <- "X.count"
+      .barcodes <- "X.count"
     }
-  } else if (substr(l, 1, 1) == "#") {
-    .reads <- "X.count"
-    .barcodes <- "X.count"
   }
   close(f)
   
