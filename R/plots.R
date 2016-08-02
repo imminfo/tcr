@@ -424,9 +424,17 @@ vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3,
 #' stands for the first PC and the second PC.
 #' @param .groups List with names for groups and indices of the group members. If NA than each
 #' member is in the individual group.
+#' @param .text If T than print the names of the subjects.
 #' 
 #' @return ggplot object.
-vis.pca <- function (.data, .groups = NA) {
+#' 
+#' @examples
+#' \dontrun{
+#' data(twb)
+#' tmp = geneUsage(twb)
+#' vis.pca(prcomp(t(tmp[,-1])))
+#' }
+vis.pca <- function (.data, .groups = NA, .text = T) {
   if (has.class(.data, 'data.frame')) {
     dnames <- row.names(.data)
     .data <- data.frame(First = .data[,1], Second = .data[,2], Sample = row.names(.data),
@@ -447,11 +455,15 @@ vis.pca <- function (.data, .groups = NA) {
     }
   }
   
-  ggplot() + 
-    geom_point(aes(x = First, y = Second, colour = Group), size = 3, data = .data) + 
-    geom_text(aes(x = First, y = Second, label = Sample, colour = Group), data = .data, hjust=0, vjust=0) +
-    theme_linedraw() +
-    .colourblind.discrete2(length(.groups), T)
+  p = ggplot() + 
+    geom_point(aes(x = First, y = Second, colour = Group), size = 3, data = .data)
+  if (.text) {
+    p = p +
+      geom_text(aes(x = First, y = Second, label = Sample, colour = Group), data = .data, hjust=0, vjust=0)
+  }
+  p = p + theme_linedraw() +
+      .colourblind.discrete2(length(.groups), T)
+  p
 }
 
 
