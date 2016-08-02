@@ -384,12 +384,19 @@ vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3,
   
   if (length(unique(res$Sample)) > 1) {    
     if (.dodge) {      
-      ggplot() + 
-        geom_bar(aes(x = Gene, y = Freq, fill = Sample), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
-        theme_linedraw() + 
-        theme(axis.text.x = element_text(angle=90)) + 
-        .colourblind.discrete(length(unique(res$Sample))) +
-        scale_y_continuous(expand = c(.02,0))
+      p = ggplot() + 
+            geom_bar(aes(x = Gene, y = Freq, fill = Sample), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
+            theme_linedraw() + 
+            ggtitle(.main) + 
+            theme(axis.text.x = element_text(angle=90)) + 
+            .colourblind.discrete(length(unique(res$Sample))) +
+            scale_y_continuous(expand = c(.02,0)) + 
+            xlab(.labs[1]) + ylab(.labs[2])
+      
+      if (.coord.flip) { p <- p + coord_flip() }
+      
+      p
+      
     } else {
       res <- split(res, res$Sample)
       ps <- lapply(1:length(res), function (i) {
