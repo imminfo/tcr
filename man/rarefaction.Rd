@@ -4,17 +4,17 @@
 \alias{rarefaction}
 \title{Diversity evaluation using rarefaction.}
 \usage{
-rarefaction(.data, .step = 30000, .quantile = c(0.025, 0.975),
+rarefaction(.data, .step = NA, .quantile = c(0.025, 0.975),
   .extrapolation = 2e+05, .col = "Umi.count", .verbose = T)
 }
 \arguments{
 \item{.data}{Data frame or a list with data frames.}
 
-\item{.step}{Step's size.}
+\item{.step}{Step's size. By default - minimal repertoire size divided by 50.}
 
 \item{.quantile}{Numeric vector of length 2 with quantiles for confidence intervals.}
 
-\item{.extrapolation}{If N > 0 than perform extrapolation of all samples to the size of the max one +N reads or UMIs.}
+\item{.extrapolation}{If N > 0 than perform extrapolation of all samples to the size of the max one +N reads or UMIs. By default - 200000.}
 
 \item{.col}{Column's name from which choose frequency of each clone.}
 

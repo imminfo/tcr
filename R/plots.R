@@ -215,6 +215,8 @@ vis.heatmap <- function (.data,
     names <- .data[,1]
     .data <- as.matrix(.data[,-1])
     row.names(.data) <- names
+  } else if (is.null(dim(.data))) {
+    .data = as.matrix(.data)
   }
 
   if (is.null(colnames(.data))) {
@@ -301,13 +303,19 @@ vis.heatmap <- function (.data,
 #' vis.group.boxplot(sb)
 #' }
 vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Frequency'), .title = '', .rotate.x = T, .violin = T, .notch = F, ...) {
-  if (has.class(.data, 'data.frame')) {
-    .data$Sample <- .data[,1]
-    .data <- .data[,c(1,3,2)]
-  } else {
+  # if (has.class(.data, 'data.frame')) {
+    # .data$Sample <- .data[,1]
+    # .data <- .data[,c(1,3,2)]
+  # } else {
+  if (ncol(.data) > 2) {
     .data <- melt(.data, ...)
+  } else {
+    .data$Sample = .data[,1]
+    .data = .data[,c(1,3,2)]
   }
+  # }
   
+  print(head(.data))
   colnames(.data) <- c('Var', 'Sample', 'Value')
   .data$Group <- as.character(.data$Sample)
   if (!is.na(.groups)[1]) {
@@ -317,6 +325,7 @@ vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Freque
       }
     }
   }
+  print(head(.data))
   
   p <- ggplot() + 
     geom_boxplot(aes(x = Var, y = Value, fill = Group), data = .data, colour = 'black', notch = .notch)
@@ -382,12 +391,19 @@ vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3,
   
   if (length(unique(res$Sample)) > 1) {    
     if (.dodge) {      
-      ggplot() + 
-        geom_bar(aes(x = Gene, y = Freq, fill = Sample), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
-        theme_linedraw() + 
-        theme(axis.text.x = element_text(angle=90)) + 
-        .colourblind.discrete(length(unique(res$Sample))) +
-        scale_y_continuous(expand = c(.02,0))
+      p = ggplot() + 
+            geom_bar(aes(x = Gene, y = Freq, fill = Sample), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
+            theme_linedraw() + 
+            ggtitle(.main) + 
+            theme(axis.text.x = element_text(angle=90)) + 
+            .colourblind.discrete(length(unique(res$Sample))) +
+            scale_y_continuous(expand = c(.02,0)) + 
+            xlab(.labs[1]) + ylab(.labs[2])
+      
+      if (.coord.flip) { p <- p + coord_flip() }
+      
+      p
+      
     } else {
       res <- split(res, res$Sample)
       ps <- lapply(1:length(res), function (i) {
@@ -422,9 +438,17 @@ vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3,
 #' stands for the first PC and the second PC.
 #' @param .groups List with names for groups and indices of the group members. If NA than each
 #' member is in the individual group.
+#' @param .text If T than print the names of the subjects.
 #' 
 #' @return ggplot object.
-vis.pca <- function (.data, .groups = NA) {
+#' 
+#' @examples
+#' \dontrun{
+#' data(twb)
+#' tmp = geneUsage(twb)
+#' vis.pca(prcomp(t(tmp[,-1])))
+#' }
+vis.pca <- function (.data, .groups = NA, .text = T) {
   if (has.class(.data, 'data.frame')) {
     dnames <- row.names(.data)
     .data <- data.frame(First = .data[,1], Second = .data[,2], Sample = row.names(.data),
@@ -445,11 +469,15 @@ vis.pca <- function (.data, .groups = NA) {
     }
   }
   
-  ggplot() + 
-    geom_point(aes(x = First, y = Second, colour = Group), size = 3, data = .data) + 
-    geom_text(aes(x = First, y = Second, label = Sample, colour = Group), data = .data, hjust=0, vjust=0) +
-    theme_linedraw() +
-    .colourblind.discrete2(length(.groups), T)
+  p = ggplot() + 
+    geom_point(aes(x = First, y = Second, colour = Group), size = 3, data = .data)
+  if (.text) {
+    p = p +
+      geom_text(aes(x = First, y = Second, label = Sample, colour = Group), data = .data, hjust=0, vjust=0)
+  }
+  p = p + theme_linedraw() +
+      .colourblind.discrete2(length(.groups), T)
+  p
 }
 
 

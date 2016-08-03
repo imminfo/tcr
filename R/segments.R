@@ -20,7 +20,7 @@ if (getRversion() >= "2.15.1") {
 #' "read.count" for the "Read.count" column, "umi.count" for the "Umi.count" column, "read.prop" for the "Read.proportion" column,
 #' "umi.prop" for the "Umi.proportion" column.
 #' @param .norm If T then return proportions of resulting counting of genes.
-#' @param .ambig If F than remove from counting genes which are not presented in the given gene alphabet(s).
+#' @param .ambig If F than remove from counting genes which are not presented in the given gene alphabet(s). 
 #' 
 #' @return 
 #' If \code{.data} is a cloneset and \code{.genes} is NOT a list than return a data frame with first column "Gene" with genes and second with counts / proportions.
@@ -108,18 +108,21 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
     tbls <- lapply(tbls, function (x) {
       genrows <- .genes[[1]][is.na(match(.genes[[1]], row.names(x)))]
       gencols <- .genes[[2]][is.na(match(.genes[[2]], colnames(x)))]
+
       if (length(genrows) > 0) {
-        x <- do.call(rbind, c(list(x), rep.int(0, length(genrows))))
+        x = rbind(x, matrix(0, ncol = ncol(x), nrow = length(genrows)))
         row.names(x)[(nrow(x) - length(genrows) + 1):nrow(x)] <- genrows
       }
-      
+
       if (length(gencols) > 0) {
-        x <- do.call(cbind, c(list(x), rep.int(0, length(gencols))))
+        x = cbind(x, matrix(0, nrow = nrow(x), ncol = length(gencols)))
         colnames(x)[(ncol(x) - length(gencols) + 1):ncol(x)] <- gencols
       }
 
       x[is.na(x)] <- 0
-      x[order(.genes[[1]]), ][, order(.genes[[2]])]
+      # x = x[order(.genes[[1]]), ][, order(.genes[[2]])]
+      # View(x, "y")
+      x
     })
     
     if (.norm) {

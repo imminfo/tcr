@@ -4,7 +4,7 @@
 \alias{vis.pca}
 \title{PCA result visualisation}
 \usage{
-vis.pca(.data, .groups = NA)
+vis.pca(.data, .groups = NA, .text = T)
 }
 \arguments{
 \item{.data}{Result from prcomp() function or a data frame with two columns 'First' and 'Second'
@@ -12,11 +12,20 @@ stands for the first PC and the second PC.}
 
 \item{.groups}{List with names for groups and indices of the group members. If NA than each
 member is in the individual group.}
+
+\item{.text}{If T than print the names of the subjects.}
 }
 \value{
 ggplot object.
 }
 \description{
 Plot the given pca results with colour divided by the given groups.
+}
+\examples{
+\dontrun{
+data(twb)
+tmp = geneUsage(twb)
+vis.pca(prcomp(t(tmp[,-1])))
+}
 }
 
