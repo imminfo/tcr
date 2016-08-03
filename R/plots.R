@@ -303,13 +303,19 @@ vis.heatmap <- function (.data,
 #' vis.group.boxplot(sb)
 #' }
 vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Frequency'), .title = '', .rotate.x = T, .violin = T, .notch = F, ...) {
-  if (has.class(.data, 'data.frame')) {
-    .data$Sample <- .data[,1]
-    .data <- .data[,c(1,3,2)]
-  } else {
+  # if (has.class(.data, 'data.frame')) {
+    # .data$Sample <- .data[,1]
+    # .data <- .data[,c(1,3,2)]
+  # } else {
+  if (ncol(.data) > 2) {
     .data <- melt(.data, ...)
+  } else {
+    .data$Sample = .data[,1]
+    .data = .data[,c(1,3,2)]
   }
+  # }
   
+  print(head(.data))
   colnames(.data) <- c('Var', 'Sample', 'Value')
   .data$Group <- as.character(.data$Sample)
   if (!is.na(.groups)[1]) {
@@ -319,6 +325,7 @@ vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Freque
       }
     }
   }
+  print(head(.data))
   
   p <- ggplot() + 
     geom_boxplot(aes(x = Var, y = Value, fill = Group), data = .data, colour = 'black', notch = .notch)
