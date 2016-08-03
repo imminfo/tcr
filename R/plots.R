@@ -315,7 +315,6 @@ vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Freque
   }
   # }
   
-  print(head(.data))
   colnames(.data) <- c('Var', 'Sample', 'Value')
   .data$Group <- as.character(.data$Sample)
   if (!is.na(.groups)[1]) {
@@ -325,7 +324,6 @@ vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Freque
       }
     }
   }
-  print(head(.data))
   
   p <- ggplot() + 
     geom_boxplot(aes(x = Var, y = Value, fill = Group), data = .data, colour = 'black', notch = .notch)
@@ -720,15 +718,17 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
     }
     
     perc <- melt(tapply(melted$Proportion, list(melted$Group, melted$Clone.size), function (x) c(quantile(x, probs = .25), mean(x), quantile(x, probs = .75))))
-    return(perc)
+    # return(perc)
     perc <- data.frame(row.names(perc), perc, stringsAsFactors = F)
-    colnames(perc) <- c('Group', 'Q1', 'Mean', 'Q2')
+    colnames(perc) <- c("Index", 'Group', "Clone.size", 'Q1', 'Mean', 'Q2')
+    print(perc)
     
     p <- ggplot() +
-      geom_bar(aes(x = Group, y = Mean, fill = Clone.size), data = melted, colour = 'black', stat = 'identity') +
-      geom_errorbar(aes(x = Group, ymin = Q1, ymax = Q2), data = melted, colour = 'black') +
+      geom_bar(aes(x = Group, y = Mean, fill = Clone.size), data = perc, colour = 'black', stat = 'identity') +
+      geom_errorbar(aes(x = Group, ymin = Q1, ymax = Q2), data = perc, colour = 'black') +
       xlab("Sample")
   } else {
+    melted$Group = factor(melted$Group, levels = row.names(.clonal.space.data))
     p <- ggplot() +
       geom_bar(aes(x = Group, y = Proportion, fill = Clone.size), data = melted, colour = 'black', stat = 'identity', position = 'stack') +
       xlab("Sample")
