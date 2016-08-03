@@ -728,6 +728,7 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
       geom_errorbar(aes(x = Group, ymin = Q1, ymax = Q2), data = perc, colour = 'black') +
       xlab("Sample")
   } else {
+    melted$Group = factor(melted$Group, levels = row.names(.clonal.space.data))
     p <- ggplot() +
       geom_bar(aes(x = Group, y = Proportion, fill = Clone.size), data = melted, colour = 'black', stat = 'identity', position = 'stack') +
       xlab("Sample")
