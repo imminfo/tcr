@@ -257,7 +257,7 @@ vis.heatmap <- function (.data,
   p <- p + ggtitle(.title) + 
     guides(fill = guide_colourbar(title=.legend)) +
     xlab(.labs[1]) + ylab(.labs[2]) + coord_fixed() +
-    theme_linedraw() + theme(axis.text.x  = element_text(angle=90)) +
+    theme_linedraw() + theme(axis.text.x  = element_text(angle=90, vjust = .5)) +
     scale_x_discrete(expand=c(0,0)) + scale_y_discrete(expand=c(0,0))
   
   if (.no.legend) {
