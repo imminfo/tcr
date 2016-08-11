@@ -50,12 +50,16 @@ if (getRversion() >= "2.15.1") {
 # white/orange/yellow - green - blue
 # colourblind - friendly
 # for fill and colour
+.colourblind.vector <- function() {
+  c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
+}
+
 .colourblind.discrete <- function (.n, .colour = F) {
   #   cs <- c("#FFFFD9", "#41B6C4", "#225EA8")
   #   cs <- c("#FFFFBB", "#41B6C4", "#225EA8")
 #   cs <- c("#FFBB00", "#41B6C4", "#225EA8") <- old version
   # cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
-  cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
+  cs <- .colourblind.vector()
   if (.colour) {
     scale_colour_manual(values = colorRampPalette(cs)(.n))
   } else {
@@ -780,7 +784,8 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 #' Visualisation of shared clonotypes occurrences among repertoires.
 #' 
 #' @description 
-#' Visualise counts or proportions of shared clonotypes among repertoires.
+#' Visualise counts or proportions of shared clonotypes among repertoires. 
+#' Code adapted from https://www.r-bloggers.com/ggplot2-cheatsheet-for-visualizing-distributions/.
 #' 
 #' @param .shared.rep Shared repertoires, as from \link{shared.repertoire} function.
 #' @param .x.rep Which repertoire show on x-axis. Either a name or an index of a repertoire 
@@ -790,6 +795,8 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 #' @param .title Main title of the plot.
 #' @param .ncol Number of columns in the resulting plot.
 #' @param .point.size.modif Modify this to correct sizes of points.
+#' @param .cut.axes If T than cut axes' limits to show only frequencies that exists.
+#' @param .plot If F than return grobs instead of plotting.
 #' 
 #' @return ggplot2 object or plot
 #' 
@@ -820,52 +827,127 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 #' vis.shared.clonotypes(twb.sh, 1, 2, .point.size.modif = 3)
 #' }
 vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA, 
-                                   .title = "Shared clonotypes", .ncol = 3, 
-                                   .point.size.modif = 1) {
+                                   .title = NA, .ncol = 3, 
+                                   .point.size.modif = 1, .cut.axes = T, 
+                                   .plot = T) {
   mat <- shared.matrix(.shared.rep)
   
   if (is.na(.x.rep) && is.na(.y.rep)) {
     ps <- list()
     for (i in 1:ncol(mat)) {
       for (j in 1:ncol(mat)) {
-        ps <- c(ps, list(vis.shared.clonotypes(.shared.rep, i, j, '')))
+        ps <- c(ps, list(vis.shared.clonotypes(.shared.rep, i, j, '', .point.size.modif = .point.size.modif, .cut.axes = .cut.axes, .plot = F)))
       }
     }
-    do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
+    grid.arrange(grobs = ps, ncol = .ncol, top = .title)
   } else if (is.na(.x.rep)) {
     ps <- lapply(1:ncol(mat), function (i) { 
-      vis.shared.clonotypes(.shared.rep, i, .y.rep, '') 
+      vis.shared.clonotypes(.shared.rep, i, .y.rep, '', .point.size.modif = .point.size.modif, .cut.axes = .cut.axes) 
       })
     do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
   } else if (is.na(.y.rep)) {
     ps <- lapply(1:ncol(mat), function (j) { 
-      vis.shared.clonotypes(.shared.rep, .x.rep, j, '') 
+      vis.shared.clonotypes(.shared.rep, .x.rep, j, '', .point.size.modif = .point.size.modif, .cut.axes = .cut.axes) 
     })
     do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
   } else {
     if (!is.character(.x.rep)) { .x.rep <- colnames(mat)[.x.rep] }
     if (!is.character(.y.rep)) { .y.rep <- colnames(mat)[.y.rep] }
     
+    if (.x.rep == .y.rep) {
+      return(rectGrob(gp=gpar(col="white")))
+    }
+    
     df <- data.frame(cbind(mat[, .x.rep], mat[, .y.rep]))
+    df[,1] = df[,1] / sum(df[,1], na.rm = T)
+    df[,2] = df[,2] / sum(df[,2], na.rm = T)
+    df_full = df
     df <- df[!is.na(df[,1]) & !is.na(df[,2]), ]
     freq <- log10(sqrt(as.numeric(df[, 1]) * df[, 2])) / 2
     names(df) <- c("Xrep", "Yrep")
+    names(df_full) <- c("Xrep", "Yrep")
     
     pnt.cols <- log(df[, 1] / df[, 2])
     suppressWarnings(pnt.cols[pnt.cols > 0] <- pnt.cols[pnt.cols > 0] / max(pnt.cols[pnt.cols > 0]))
     suppressWarnings(pnt.cols[pnt.cols < 0] <- -pnt.cols[pnt.cols < 0] / min(pnt.cols[pnt.cols < 0]))
     
-    mat.lims <- c(min(as.matrix(df)), max(as.matrix(df)))
+    if (.cut.axes) {
+      mat.lims <- c(min(as.matrix(df_full), na.rm = T), max(as.matrix(df_full), na.rm = T))
+    } else {
+      mat.lims <- c(min(as.matrix(df_full), na.rm = T), 1)
+    }
     
-    ggplot() + 
+    empty <- ggplot()+geom_point(aes(1,1), colour="white") +
+      theme(                              
+        plot.background = element_blank(), 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.border = element_blank(), 
+        panel.background = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank()
+      )
+    
+    lm_obj = lm(Yrep ~ Xrep, df)
+    
+    min_df = min(floor(log10(min(df_full[,1], na.rm = T))), floor(log10(min(df_full[,2], na.rm = T))))
+    max_df = max(trunc(log10(max(df_full[,1], na.rm = T))), trunc(log10(max(df_full[,2], na.rm = T))))
+    breaks_values = 10**seq(min_df, 1)
+    breaks_labels = format(log10(breaks_values), scientific = F)
+    
+    grey_col = "#CCCCCC"
+    
+    df2 = data.frame(Clonotype = df_full[!is.na(df_full[,1]) & is.na(df_full[,2]), 1], Type = "unique", stringsAsFactors = F)
+    df2 = rbind(df2, data.frame(Clonotype = df_full[!is.na(df_full[,1]) & !is.na(df_full[,2]), 1], Type = "shared", stringsAsFactors = F))
+    top_plot = ggplot() + 
+      geom_density(aes(x = Clonotype, fill = Type), colour = "grey25", data = df2, alpha = .3) + 
+      scale_x_log10(breaks = 10**(seq(min_df, 0)), lim = mat.lims, expand = c(.12, .015)) + 
+      theme_bw() + theme(axis.title.x = element_blank(),
+                         axis.title.y = element_blank(),
+                         axis.text.x = element_blank(),
+                         axis.text.y = element_blank(),
+                         axis.ticks = element_blank(), 
+                         legend.position = "none") + 
+      scale_fill_manual(values = colorRampPalette(c(.colourblind.vector()[5], grey_col))(2))
+    
+    df2 = data.frame(Clonotype = df_full[!is.na(df_full[,2]) & is.na(df_full[,1]), 2], Type = "unique", stringsAsFactors = F)
+    df2 = rbind(df2, data.frame(Clonotype = df_full[!is.na(df_full[,2]) & !is.na(df_full[,1]), 2], Type = "shared", stringsAsFactors = F))
+    right_plot = ggplot() + 
+      geom_density(aes(x = Clonotype, fill = Type), colour = "grey25", data = df2, alpha = .3) + 
+      scale_x_log10(breaks = 10**(seq(min_df, 0)), lim = mat.lims, expand = c(.12, .015)) + 
+      coord_flip() + 
+      theme_bw() + theme(axis.title.x = element_blank(),
+                         axis.title.y = element_blank(),
+                         axis.text.x = element_blank(),
+                         axis.text.y = element_blank(),
+                         axis.ticks = element_blank(), 
+                         legend.position = "none") +
+      scale_fill_manual(values = colorRampPalette(c(.colourblind.vector()[1], grey_col))(2))
+    
+    points = ggplot() + 
       geom_point(aes(x = Xrep, y = Yrep, size = freq, fill = pnt.cols), data = df, shape=21) + 
       scale_radius(range = c(.point.size.modif, .point.size.modif * 6)) +
       geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+      geom_smooth(aes(x = Xrep, y = Yrep), method = "lm", data = df, fullrange = T, colour = "grey20", size = .5) +
       theme_linedraw() + 
       .colourblind.gradient(min(pnt.cols), max(pnt.cols)) +
-      scale_x_log10() + scale_y_log10() + theme(legend.position="none") +
-      coord_fixed(xlim = mat.lims, ylim = mat.lims) +
-      xlab(.x.rep) + ylab(.y.rep) + ggtitle(.title)
+      scale_x_log10(breaks = breaks_values, labels = breaks_labels, lim = mat.lims, expand = c(.015, .015)) + 
+      scale_y_log10(breaks = breaks_values, labels = breaks_labels, lim = mat.lims, expand = c(.015, .015)) + 
+      theme(legend.position="none") +
+      # coord_fixed(xlim = mat.lims, ylim = mat.lims) +
+      xlab(.x.rep) + ylab(.y.rep)
+    if (!is.na(.title)) {
+      points = points + ggtitle(.title)
+    }
+    
+    if (.plot) {
+      grid.arrange(top_plot, empty, points, right_plot, ncol=2, nrow=2, widths=c(4, 1), heights=c(1, 4))
+    } else {
+      arrangeGrob(top_plot, empty, points, right_plot, ncol=2, nrow=2, widths=c(4, 1), heights=c(1, 4))
+    }
   }
 }
 

@@ -4,8 +4,8 @@
 \alias{vis.shared.clonotypes}
 \title{Visualisation of shared clonotypes occurrences among repertoires.}
 \usage{
-vis.shared.clonotypes(.shared.rep, .x.rep = NA, .y.rep = NA,
-  .title = "Shared clonotypes", .ncol = 3, .point.size.modif = 1)
+vis.shared.clonotypes(.shared.rep, .x.rep = NA, .y.rep = NA, .title = NA,
+  .ncol = 3, .point.size.modif = 1, .cut.axes = T, .plot = T)
 }
 \arguments{
 \item{.shared.rep}{Shared repertoires, as from \link{shared.repertoire} function.}
@@ -21,12 +21,17 @@ in the \code{.shared.rep} or NA to choose all repertoires.}
 \item{.ncol}{Number of columns in the resulting plot.}
 
 \item{.point.size.modif}{Modify this to correct sizes of points.}
+
+\item{.cut.axes}{If T than cut axes' limits to show only frequencies that exists.}
+
+\item{.plot}{If F than return grobs instead of plotting.}
 }
 \value{
 ggplot2 object or plot
 }
 \description{
-Visualise counts or proportions of shared clonotypes among repertoires.
+Visualise counts or proportions of shared clonotypes among repertoires. 
+Code adapted from https://www.r-bloggers.com/ggplot2-cheatsheet-for-visualizing-distributions/.
 }
 \examples{
 \dontrun{
