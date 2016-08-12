@@ -796,6 +796,8 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 #' @param .ncol Number of columns in the resulting plot.
 #' @param .point.size.modif Modify this to correct sizes of points.
 #' @param .cut.axes If T than cut axes' limits to show only frequencies that exists.
+#' @param .density If T than plot densities of shared and unique clonotypes.
+#' @param .lm If T than fit and plot a linear model to shared clonotypes.
 #' @param .plot If F than return grobs instead of plotting.
 #' 
 #' @return ggplot2 object or plot
@@ -828,8 +830,8 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 #' }
 vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA, 
                                    .title = NA, .ncol = 3, 
-                                   .point.size.modif = 1, .cut.axes = T, 
-                                   .plot = T) {
+                                   .point.size.modif = 1, .cut.axes = T,
+                                   .density = T, .lm = T, .plot = T) {
   mat <- shared.matrix(.shared.rep)
   
   if (is.na(.x.rep) && is.na(.y.rep)) {
@@ -891,8 +893,6 @@ vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA,
         axis.ticks = element_blank()
       )
     
-    lm_obj = lm(Yrep ~ Xrep, df)
-    
     min_df = min(floor(log10(min(df_full[,1], na.rm = T))), floor(log10(min(df_full[,2], na.rm = T))))
     max_df = max(trunc(log10(max(df_full[,1], na.rm = T))), trunc(log10(max(df_full[,2], na.rm = T))))
     breaks_values = 10**seq(min_df, 1)
@@ -900,54 +900,64 @@ vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA,
     
     grey_col = "#CCCCCC"
     
-    df2 = data.frame(Clonotype = df_full[!is.na(df_full[,1]) & is.na(df_full[,2]), 1], Type = "unique", stringsAsFactors = F)
-    df2 = rbind(df2, data.frame(Clonotype = df_full[!is.na(df_full[,1]) & !is.na(df_full[,2]), 1], Type = "shared", stringsAsFactors = F))
-    top_plot = ggplot() + 
-      geom_density(aes(x = Clonotype, fill = Type), colour = "grey25", data = df2, alpha = .3) + 
-      scale_x_log10(breaks = 10**(seq(min_df, 0)), lim = mat.lims, expand = c(.12, .015)) + 
-      theme_bw() + theme(axis.title.x = element_blank(),
-                         axis.title.y = element_blank(),
-                         axis.text.x = element_blank(),
-                         axis.text.y = element_blank(),
-                         axis.ticks = element_blank(), 
-                         legend.position = "none") + 
-      scale_fill_manual(values = colorRampPalette(c(.colourblind.vector()[5], grey_col))(2))
-    
-    df2 = data.frame(Clonotype = df_full[!is.na(df_full[,2]) & is.na(df_full[,1]), 2], Type = "unique", stringsAsFactors = F)
-    df2 = rbind(df2, data.frame(Clonotype = df_full[!is.na(df_full[,2]) & !is.na(df_full[,1]), 2], Type = "shared", stringsAsFactors = F))
-    right_plot = ggplot() + 
-      geom_density(aes(x = Clonotype, fill = Type), colour = "grey25", data = df2, alpha = .3) + 
-      scale_x_log10(breaks = 10**(seq(min_df, 0)), lim = mat.lims, expand = c(.12, .015)) + 
-      coord_flip() + 
-      theme_bw() + theme(axis.title.x = element_blank(),
-                         axis.title.y = element_blank(),
-                         axis.text.x = element_blank(),
-                         axis.text.y = element_blank(),
-                         axis.ticks = element_blank(), 
-                         legend.position = "none") +
-      scale_fill_manual(values = colorRampPalette(c(.colourblind.vector()[1], grey_col))(2))
-    
     points = ggplot() + 
       geom_point(aes(x = Xrep, y = Yrep, size = freq, fill = pnt.cols), data = df, shape=21) + 
       scale_radius(range = c(.point.size.modif, .point.size.modif * 6)) +
       geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
-      geom_smooth(aes(x = Xrep, y = Yrep), method = "lm", data = df, fullrange = T, colour = "grey20", size = .5) +
       theme_linedraw() + 
       .colourblind.gradient(min(pnt.cols), max(pnt.cols)) +
       scale_x_log10(breaks = breaks_values, labels = breaks_labels, lim = mat.lims, expand = c(.015, .015)) + 
       scale_y_log10(breaks = breaks_values, labels = breaks_labels, lim = mat.lims, expand = c(.015, .015)) + 
       theme(legend.position="none") +
-      # coord_fixed(xlim = mat.lims, ylim = mat.lims) +
       xlab(.x.rep) + ylab(.y.rep)
     if (!is.na(.title)) {
       points = points + ggtitle(.title)
     }
-    
-    if (.plot) {
-      grid.arrange(top_plot, empty, points, right_plot, ncol=2, nrow=2, widths=c(4, 1), heights=c(1, 4))
-    } else {
-      arrangeGrob(top_plot, empty, points, right_plot, ncol=2, nrow=2, widths=c(4, 1), heights=c(1, 4))
+    if (.lm) {
+      # adj.R.sq = summary(lm(Yrep ~ Xrep, df))$adj.
+      
+      points = points + 
+        geom_smooth(aes(x = Xrep, y = Yrep), method = "lm", data = df, fullrange = T, colour = "grey20", size = .5)
+        # geom_text(aes(x = 10**max_df, y = 10**max_df, vjust = .5, label = paste0("R^2(adj.) = ", as.character(round(adj.R.sq, 2)))))
     }
+    
+    if (.density) {
+      df2 = data.frame(Clonotype = df_full[!is.na(df_full[,1]) & is.na(df_full[,2]), 1], Type = "unique", stringsAsFactors = F)
+      df2 = rbind(df2, data.frame(Clonotype = df_full[!is.na(df_full[,1]) & !is.na(df_full[,2]), 1], Type = "shared", stringsAsFactors = F))
+      top_plot = ggplot() + 
+        geom_density(aes(x = Clonotype, fill = Type), colour = "grey25", data = df2, alpha = .3) + 
+        scale_x_log10(breaks = 10**(seq(min_df, 0)), lim = mat.lims, expand = c(.12, .015)) + 
+        theme_bw() + theme(axis.title.x = element_blank(),
+                           axis.title.y = element_blank(),
+                           axis.text.x = element_blank(),
+                           axis.text.y = element_blank(),
+                           axis.ticks = element_blank(), 
+                           legend.position = "none") + 
+        scale_fill_manual(values = colorRampPalette(c(.colourblind.vector()[5], grey_col))(2))
+      
+      df2 = data.frame(Clonotype = df_full[!is.na(df_full[,2]) & is.na(df_full[,1]), 2], Type = "unique", stringsAsFactors = F)
+      df2 = rbind(df2, data.frame(Clonotype = df_full[!is.na(df_full[,2]) & !is.na(df_full[,1]), 2], Type = "shared", stringsAsFactors = F))
+      right_plot = ggplot() + 
+        geom_density(aes(x = Clonotype, fill = Type), colour = "grey25", data = df2, alpha = .3) + 
+        scale_x_log10(breaks = 10**(seq(min_df, 0)), lim = mat.lims, expand = c(.12, .015)) + 
+        coord_flip() + 
+        theme_bw() + theme(axis.title.x = element_blank(),
+                           axis.title.y = element_blank(),
+                           axis.text.x = element_blank(),
+                           axis.text.y = element_blank(),
+                           axis.ticks = element_blank(), 
+                           legend.position = "none") +
+        scale_fill_manual(values = colorRampPalette(c(.colourblind.vector()[1], grey_col))(2))
+      
+      if (.plot) {
+        grid.arrange(top_plot, empty, points, right_plot, ncol=2, nrow=2, widths=c(4, 1), heights=c(1, 4))
+      } else {
+        arrangeGrob(top_plot, empty, points, right_plot, ncol=2, nrow=2, widths=c(4, 1), heights=c(1, 4))
+      }
+    } else {
+      points
+    }
+    
   }
 }
 
