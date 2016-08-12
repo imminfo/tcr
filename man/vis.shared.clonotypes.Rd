@@ -5,7 +5,8 @@
 \title{Visualisation of shared clonotypes occurrences among repertoires.}
 \usage{
 vis.shared.clonotypes(.shared.rep, .x.rep = NA, .y.rep = NA, .title = NA,
-  .ncol = 3, .point.size.modif = 1, .cut.axes = T, .plot = T)
+  .ncol = 3, .point.size.modif = 1, .cut.axes = T, .density = T,
+  .lm = T, .plot = T)
 }
 \arguments{
 \item{.shared.rep}{Shared repertoires, as from \link{shared.repertoire} function.}
@@ -23,6 +24,10 @@ in the \code{.shared.rep} or NA to choose all repertoires.}
 \item{.point.size.modif}{Modify this to correct sizes of points.}
 
 \item{.cut.axes}{If T than cut axes' limits to show only frequencies that exists.}
+
+\item{.density}{If T than plot densities of shared and unique clonotypes.}
+
+\item{.lm}{If T than fit and plot a linear model to shared clonotypes.}
 
 \item{.plot}{If F than return grobs instead of plotting.}
 }
