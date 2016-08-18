@@ -838,18 +838,22 @@ vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA,
     ps <- list()
     for (i in 1:ncol(mat)) {
       for (j in 1:ncol(mat)) {
-        ps <- c(ps, list(vis.shared.clonotypes(.shared.rep, i, j, '', .point.size.modif = .point.size.modif, .cut.axes = .cut.axes, .plot = F)))
+        ps <- c(ps, list(vis.shared.clonotypes(.shared.rep, i, j, '', .point.size.modif = .point.size.modif, 
+                                               .cut.axes = .cut.axes, .density = .density, .lm = .lm, 
+                                               .plot = F)))
       }
     }
     grid.arrange(grobs = ps, ncol = .ncol, top = .title)
   } else if (is.na(.x.rep)) {
     ps <- lapply(1:ncol(mat), function (i) { 
-      vis.shared.clonotypes(.shared.rep, i, .y.rep, '', .point.size.modif = .point.size.modif, .cut.axes = .cut.axes) 
+      vis.shared.clonotypes(.shared.rep, i, .y.rep, '', .point.size.modif = .point.size.modif, 
+                            .cut.axes = .cut.axes, .density = .density, .lm = .lm) 
       })
     do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
   } else if (is.na(.y.rep)) {
     ps <- lapply(1:ncol(mat), function (j) { 
-      vis.shared.clonotypes(.shared.rep, .x.rep, j, '', .point.size.modif = .point.size.modif, .cut.axes = .cut.axes) 
+      vis.shared.clonotypes(.shared.rep, .x.rep, j, '', .point.size.modif = .point.size.modif, 
+                            .cut.axes = .cut.axes, .density = .density, .lm = .lm) 
     })
     do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
   } else {
