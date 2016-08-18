@@ -397,7 +397,7 @@ vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3,
             geom_bar(aes(x = Gene, y = Freq, fill = Sample), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
             theme_linedraw() + 
             ggtitle(.main) + 
-            theme(axis.text.x = element_text(angle=90)) + 
+            theme(axis.text.x = element_text(angle=90, vjust = .5)) + 
             .colourblind.discrete(length(unique(res$Sample))) +
             scale_y_continuous(expand = c(.02,0)) + 
             xlab(.labs[1]) + ylab(.labs[2])
@@ -422,7 +422,7 @@ vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3,
     if (.coord.flip) { p <- p + coord_flip() }
     
     p + theme_linedraw() + 
-      theme(axis.text.x = element_text(angle=90)) + 
+      theme(axis.text.x = element_text(angle=90, vjust = .5)) + 
       ggtitle(.main) + 
       .colourblind.gradient() +
       scale_y_continuous(expand = c(.02,0)) + 
@@ -561,7 +561,7 @@ vis.top.proportions <- function (.data, .head = c(10, 100, 1000, 10000, 30000, 1
   #   res$variable <- factor(as.character(res$variable), labels = paste0('[', c(1, .head[-length(.head)] + 1), ':', .head, ')'), ordered = T)
   ggplot() + geom_bar(aes(x = People, y = value, fill = variable), data = res, stat = 'identity', position = 'stack', colour = 'black')+ 
     theme_linedraw()  + 
-    theme(axis.text.x  = element_text(angle=90)) +
+    theme(axis.text.x  = element_text(angle=90, vjust = .5)) +
     ylab("Clonal proportion") + 
     xlab("Sample") + 
     ggtitle("Summary proportion of the top N clones")  + 
@@ -656,9 +656,9 @@ vis.kmer.histogram <- function (.kmers,
   names(kmers.df) <- c('Kmers', 'People', 'Count')
   p <- ggplot() + geom_bar(aes(x = Kmers, y = Count, fill = People), data = kmers.df, stat = 'identity', position = .position[1]) + theme_linedraw()
   if (.position[1] == 'stack' || .position[1] == 'dodge') {
-    p <- p + ylab('Count') + theme(axis.text.x  = element_text(angle=90))
+    p <- p + ylab('Count') + theme(axis.text.x  = element_text(angle=90, vjust = .5))
   } else {
-    p <- p + ylab('Proportions') + theme(axis.text.x  = element_text(angle=90))
+    p <- p + ylab('Proportions') + theme(axis.text.x  = element_text(angle=90, vjust = .5))
   }
   p + scale_y_continuous(expand = c(0, 0)) + .colourblind.discrete2(length(unique(kmers.df$People)))
 }
@@ -736,11 +736,10 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
     p <- ggplot() +
       geom_bar(aes(x = Group, y = Proportion, fill = Clone.size), data = melted, colour = 'black', stat = 'identity', position = 'stack') +
       xlab("Sample")
-      
   }
-    
+
   p + theme_linedraw() + 
-    theme(axis.text.x = element_text(angle=90)) + ylab("Occupied homeostatic space, proportion") + 
+    theme(axis.text.x = element_text(angle=90, vjust = .5)) + ylab("Occupied homeostatic space, proportion") + 
     ggtitle("Clonal space homeostasis") + 
     guides(fill = guide_legend("Clone size")) + .colourblind.discrete(length(unique(melted$Clone.size))) +
     scale_y_continuous(expand = c(.01, .01)) + scale_x_discrete(expand = c(.02, .02))
