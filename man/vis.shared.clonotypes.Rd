@@ -6,7 +6,7 @@
 \usage{
 vis.shared.clonotypes(.shared.rep, .x.rep = NA, .y.rep = NA, .title = NA,
   .ncol = 3, .point.size.modif = 1, .cut.axes = T, .density = T,
-  .lm = T, .plot = T)
+  .lm = T, .radj.size = 3.5, .plot = T)
 }
 \arguments{
 \item{.shared.rep}{Shared repertoires, as from \link{shared.repertoire} function.}
@@ -28,6 +28,8 @@ in the \code{.shared.rep} or NA to choose all repertoires.}
 \item{.density}{If T than plot densities of shared and unique clonotypes.}
 
 \item{.lm}{If T than fit and plot a linear model to shared clonotypes.}
+
+\item{.radj.size}{Size of the text for R^2-adjusted.}
 
 \item{.plot}{If F than return grobs instead of plotting.}
 }

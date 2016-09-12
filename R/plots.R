@@ -797,6 +797,7 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 #' @param .cut.axes If T than cut axes' limits to show only frequencies that exists.
 #' @param .density If T than plot densities of shared and unique clonotypes.
 #' @param .lm If T than fit and plot a linear model to shared clonotypes.
+#' @param .radj.size Size of the text for R^2-adjusted.
 #' @param .plot If F than return grobs instead of plotting.
 #' 
 #' @return ggplot2 object or plot
@@ -830,7 +831,7 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA, 
                                    .title = NA, .ncol = 3, 
                                    .point.size.modif = 1, .cut.axes = T,
-                                   .density = T, .lm = T, .plot = T) {
+                                   .density = T, .lm = T, .radj.size = 3.5, .plot = T) {
   mat <- shared.matrix(.shared.rep)
   
   if (is.na(.x.rep) && is.na(.y.rep)) {
@@ -838,7 +839,7 @@ vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA,
     for (i in 1:ncol(mat)) {
       for (j in 1:ncol(mat)) {
         ps <- c(ps, list(vis.shared.clonotypes(.shared.rep, i, j, '', .point.size.modif = .point.size.modif, 
-                                               .cut.axes = .cut.axes, .density = .density, .lm = .lm, 
+                                               .cut.axes = .cut.axes, .density = .density, .lm = .lm, .radj.size = .radj.size,
                                                .plot = F)))
       }
     }
@@ -917,11 +918,14 @@ vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA,
       points = points + ggtitle(.title)
     }
     if (.lm) {
-      # adj.R.sq = summary(lm(Yrep ~ Xrep, df))$adj.
+      adj.R.sq = summary(lm(Yrep ~ Xrep, df))$adj.
       
       points = points + 
-        geom_smooth(aes(x = Xrep, y = Yrep), method = "lm", data = df, fullrange = T, colour = "grey20", size = .5)
-        # geom_text(aes(x = 10**max_df, y = 10**max_df, vjust = .5, label = paste0("R^2(adj.) = ", as.character(round(adj.R.sq, 2)))))
+        geom_smooth(aes(x = Xrep, y = Yrep), method = "lm", data = df, fullrange = T, colour = "grey20", size = .5) + 
+        geom_text(aes(x = max(df_full, na.rm = T) / 4, 
+                      y = min(df_full, na.rm = T), 
+                      label = paste0("R^2(adj.) = ", as.character(round(adj.R.sq, 2)))), size = .radj.size)
+        # ggtitle(paste0("R^2(adj.) = ", as.character(round(adj.R.sq, 2))))
     }
     
     if (.density) {
