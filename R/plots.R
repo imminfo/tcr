@@ -490,7 +490,8 @@ vis.pca <- function (.data, .groups = NA, .text = T) {
 #' 
 #' @param .data Square data frame or matrix with row names and col names stands for objects and values for distances.
 #' @param .ncol Number of columns in the grid.
-#' @param .expand Interger vector of length 2, for \code{scale_y_continous(expand = .expand)} function.
+#' @param .which Character vector, which datasets to show.
+#' @param .expand Integer vector of length 2, for \code{scale_y_continous(expand = .expand)} function.
 #' 
 #' @seealso \link{repOverlap}, \link{js.div}
 #' 
@@ -502,7 +503,7 @@ vis.pca <- function (.data, .groups = NA, .text = T) {
 #' # Plot it.
 #' vis.radarlike(imm.js)
 #' }
-vis.radarlike <- function (.data, .ncol = 3, .expand = c(.25, 0)) {
+vis.radarlike <- function (.data, .ncol = 3, .which = NA, .expand = c(.25, 0)) {
   step = ncol(.data)
   data.names <- colnames(.data)
   .data <- as.data.frame(melt(.data))
@@ -520,6 +521,9 @@ vis.radarlike <- function (.data, .ncol = 3, .expand = c(.25, 0)) {
     ps[[i]] <- ps[[i]] + ggtitle(data.names[i]) + .colourblind.discrete(length(data.names))
   }
   
+  if (!is.na(.which[1])) {
+    ps = ps[match(.which, data.names)]
+  }
   do.call(grid.arrange, c(ps, ncol = .ncol))
 }
 
