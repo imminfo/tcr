@@ -5,13 +5,13 @@
 \alias{kmer.table}
 \title{Make and manage the table of the most frequent k-mers.}
 \usage{
-kmer.table(.data, .heads = c(10, 100, 300, 1000, 3000, 10000, 30000), .nrow = 20,
+kmer.table(.data, .heads = c(10, 100, 300, 1000, 3000, 10000, 30000), .k = 5, .nrow = 20,
            .clean = T, .meat = F)
 
 get.kmer.column(.kmer.table.list, .head)
 }
 \arguments{
-\item{.data}{Mitcr data.frame or a list with mitcr data.frames.}
+\item{.data}{tcR data.frame or a list with tcR data.frames.}
 
 \item{.heads}{Vector of parameter for the \code{head()} function, supplied sequentialy to the \code{get.kmers()} function. -1 means all rows.}
 
@@ -20,6 +20,8 @@ get.kmer.column(.kmer.table.list, .head)
 \item{.clean}{Parameter for the \code{get.kmers()} function.}
 
 \item{.meat}{Parameter for the \code{get.kmers()} function.}
+
+\item{.k}{Size of the kmer.}
 
 \item{.kmer.table.list}{Result from the \code{kmer.table} function if \code{.data} supplied as a list.}
 
