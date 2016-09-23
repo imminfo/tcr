@@ -20,6 +20,8 @@ spectratype(.data, .quant = c("read.count", "umi.count", "id"), .gene = "V",
 \item{.main}{Main title.}
 
 \item{.legend}{Legend title.}
+
+\item{.labs}{Character vector of length 2 for x-lab and y-lab.}
 }
 \description{
 Plot a spectratype plot - a histogram of read counts / umi counts by CDR3 length.

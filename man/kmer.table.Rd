@@ -15,13 +15,13 @@ get.kmer.column(.kmer.table.list, .head)
 
 \item{.heads}{Vector of parameter for the \code{head()} function, supplied sequentialy to the \code{get.kmers()} function. -1 means all rows.}
 
+\item{.k}{Size of the kmer.}
+
 \item{.nrow}{How many most frequent k-mers include to the output table.}
 
 \item{.clean}{Parameter for the \code{get.kmers()} function.}
 
 \item{.meat}{Parameter for the \code{get.kmers()} function.}
-
-\item{.k}{Size of the kmer.}
 
 \item{.kmer.table.list}{Result from the \code{kmer.table} function if \code{.data} supplied as a list.}
 

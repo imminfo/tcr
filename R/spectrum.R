@@ -1,6 +1,11 @@
 ########## Spectratyping ##########
 
 
+if (getRversion() >= "2.15.1") {
+  utils::globalVariables(c("Length", "Val"))
+}
+
+
 #' Spectratype
 #' 
 #' @description Plot a spectratype plot - a histogram of read counts / umi counts by CDR3 length.
@@ -11,6 +16,7 @@
 #' @param .plot If T than plot the spectratype plot, otherwise return a table with data for lengths and counts.
 #' @param .main Main title.
 #' @param .legend Legend title.
+#' @param .labs Character vector of length 2 for x-lab and y-lab.
 #' 
 #' @examples
 #' \dontrun{
@@ -50,7 +56,7 @@ spectratype <- function (.data, .quant = c("read.count", "umi.count", "id"), .ge
     p = ggplot() + geom_bar(aes(x = Length, y = Val, fill = Gene), data = df, stat = "identity") + 
       scale_fill_manual(name = .legend, breaks = c(sort(uniq), "Z"),
                         labels=c(sort(uniq), "Other"), 
-                        values = c(RColorBrewer::brewer.pal(11, "Spectral"), "grey75")) + 
+                        values = c("#9E0142", "#D53E4F", "#F46D43", "#FDAE61", "#FEE08B", "#FFFFBF", "#E6F598", "#ABDDA4", "#66C2A5", "#3288BD", "#5E4FA2", "grey75")) + 
       ggtitle(.main)
   }
   

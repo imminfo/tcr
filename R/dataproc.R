@@ -540,6 +540,13 @@ barcodes.to.reads <- function (.data) {
 #' Resample data frame using values from the column with number of clonesets. Number of clonestes (i.e., rows of a MiTCR data frame)
 #' are reads (usually the "Read.count" column) or UMIs (i.e., barcodes, usually the "Umi.count" column).
 #' 
+#' @usage 
+#' resample(.data, .n = -1, .col = c("read.count", "umi.count"))
+#' 
+#' downsample(.data, .n, .col = c("read.count", "umi.count"))
+#' 
+#' prop.sample(.data, .perc = 50, .col = c("read.count", "umi.count"))
+#' 
 #' @param .data Data frame with the column \code{.col} or list of such data frames.
 #' @param .n Number of values / reads / UMIs to choose.
 #' @param .perc Percentage (0 - 100). See "Details" for more info.
@@ -566,7 +573,7 @@ barcodes.to.reads <- function (.data) {
 #' # Get 100K reads (not clones!).
 #' immdata.1.100k <- resample(immdata[[1]], 100000, .col = "read.count")
 #' }
-resample <- function (.data, .n = -1, .col = 'read.count') {
+resample <- function (.data, .n = -1, .col = c("read.count", "umi.count")) {
   if (has.class(.data, 'list')) {
     if (length(.n) != length(.data)) {
       .n <- c(.n, rep.int(-1, length(.data) - length(.n)))

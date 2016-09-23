@@ -147,7 +147,7 @@ get.kmers <- function (.data, .head = -1, .k = 5, .clean = T, .meat = F, .verbos
 #' twb.kmers <- kmer.table(twb, .heads = c(5000, 10000), .meat = T)
 #' head(get.kmer.column(twb.kmers, 10000))
 #' }
-kmer.table <- function (.data, .heads = c(10, 100, 300, 1000, 3000, 10000, 30000), k = 5, .nrow = 20, .clean=T, .meat = F) {
+kmer.table <- function (.data, .heads = c(10, 100, 300, 1000, 3000, 10000, 30000), .k = 5, .nrow = 20, .clean=T, .meat = F) {
   if (class(.data) == 'list') {
     return(lapply(.data, kmer.table, .heads = .heads, .nrow = .nrow, .clean = .clean, .meat = .meat))
   }

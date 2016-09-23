@@ -6,7 +6,11 @@
 \alias{resample}
 \title{Resample data frame using values from the column with number of clonesets.}
 \usage{
-resample(.data, .n = -1, .col = "read.count")
+resample(.data, .n = -1, .col = c("read.count", "umi.count"))
+
+downsample(.data, .n, .col = c("read.count", "umi.count"))
+
+prop.sample(.data, .perc = 50, .col = c("read.count", "umi.count"))
 }
 \arguments{
 \item{.data}{Data frame with the column \code{.col} or list of such data frames.}
