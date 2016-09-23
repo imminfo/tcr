@@ -31,7 +31,7 @@ For \code{clonal.proportion} - vector or matrix with values for number of clones
 chosen clones to the overall count of clones.
 }
 \description{
-Get a specifyed subset of the given data and compute which proportion in counts
+Get a specifyed subset of the given repertiure and compute which proportion in counts
 it has comparing to the overall count.
 
 \code{tailbound.proportion} - subset by the count;
@@ -54,6 +54,6 @@ tailbound.proportion(immdata, 100)  # overall number of reads?
 }
 }
 \seealso{
-\link{vis.top.proportions}
+\link{vis.top.proportions}, \link{prop.sample}
 }
 

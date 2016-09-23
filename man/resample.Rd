@@ -2,6 +2,7 @@
 % Please edit documentation in R/dataproc.R
 \name{resample}
 \alias{downsample}
+\alias{prop.sample}
 \alias{resample}
 \title{Resample data frame using values from the column with number of clonesets.}
 \usage{
@@ -13,9 +14,11 @@ resample(.data, .n = -1, .col = "read.count")
 \item{.n}{Number of values / reads / UMIs to choose.}
 
 \item{.col}{Which column choose to represent quanitites of clonotypes. See "Details".}
+
+\item{.perc}{Percentage (0 - 100). See "Details" for more info.}
 }
 \value{
-Data frame with \code{sum(.data[, .col]) == .n}.
+Subsampled data frame.
 }
 \description{
 Resample data frame using values from the column with number of clonesets. Number of clonestes (i.e., rows of a MiTCR data frame)
@@ -30,6 +33,8 @@ very well, so use \code{downsample} instead.
 \code{downsample}. Choose \code{.n} clones (not clonotypes!) from the input repertoires without any probabilistic simulation, but
 exactly computing each choosed clones. Its output is same as for \code{resample} (repertoires), but is more consistent and
 biologically pleasant.
+
+\code{prop.sample}. Choose the first N clonotypes which occupies \code{.perc} percents of overall UMIs / reads.
 }
 \examples{
 \dontrun{
@@ -38,6 +43,6 @@ immdata.1.100k <- resample(immdata[[1]], 100000, .col = "read.count")
 }
 }
 \seealso{
-\link{rmultinom}
+\link{rmultinom}, \link{clonal.proportion}
 }
 
