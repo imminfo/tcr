@@ -45,6 +45,7 @@
 #' repOverlap(twb, "exact", .seq = "nuc", .vgene = F)
 #' repOverlap(twb, "morisita", .seq = "aa", .vgene = T, .quant = "umi.count")
 #' ov <- repOverlap(twb)
+#' ov[is.na(ov)] <- 0
 #' vis.pca(prcomp(ov, scale. = T), list(A = c(1, 2), B = c(3, 4)))
 #' }
 repOverlap <- function (.data,
