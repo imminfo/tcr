@@ -26,6 +26,7 @@ Imports:
 Suggests:
     knitr (>= 1.8),
     roxygen2 (>= 3.0.0)
+    rmarkdown (>= 1.0)
 LinkingTo: Rcpp
 URL: http://imminfo.github.io/tcr/
 BugReports: https://github.com/imminfo/tcr/issues
