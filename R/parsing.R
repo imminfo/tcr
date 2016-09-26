@@ -53,7 +53,7 @@ parse.cloneset <- function (.filename,
   
   .make.names <- function (.char) {
     if (is.na(.char[1])) { NA }
-    else { make.names(.char) }
+    else { tolower(make.names(.char)) }
   }
   
   .nuc.seq <- .make.names(.nuc.seq)
@@ -92,7 +92,7 @@ parse.cloneset <- function (.filename,
   }
   close(f)
   
-  table.colnames <- make.names(read.table(gzfile(.filename), sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "", quote = "")[1,])
+  table.colnames <- tolower(make.names(read.table(gzfile(.filename), sep = .sep, skip = .skip, nrows = 1, stringsAsFactors = F, strip.white = T, comment.char = "", quote = "")[1,]))
   
   swlist <- list('character', 'character',
                  'integer', 'integer',
@@ -111,7 +111,7 @@ parse.cloneset <- function (.filename,
   }, USE.NAMES = F))
   
   suppressWarnings(df <- read.table(file = gzfile(.filename), header = T, colClasses = col.classes, sep = .sep, skip = .skip, strip.white = T, comment.char = "", quote = ""))
-
+  names(df) = tolower(names(df))
   df$Read.proportion <- df[, make.names(.reads)] / sum(df[, make.names(.reads)])
   .read.prop <- 'Read.proportion'
   
@@ -487,15 +487,15 @@ parse.migec <- function (.filename) {
 parse.vdjtools <- function (.filename) {
   filename <- .filename
   nuc.seq <- 'cdr3nt'
-  aa.seq <- 'cdr3aa'
+  aa.seq <- 'CDR3aa'
   reads <- 'count'
   barcodes <- 'count'
-  vgenes <- 'v'
-  jgenes <- 'j'
-  dgenes <- 'd'
-  vend <- 'VEnd'
-  jstart <- 'JStart'
-  dalignments <- c('DStart', 'DEnd')
+  vgenes <- 'V'
+  jgenes <- 'J'
+  dgenes <- 'D'
+  vend <- 'Vend'
+  jstart <- 'Jstart'
+  dalignments <- c('Dstart', 'Dend')
   vd.insertions <- "NO SUCH COLUMN AT ALL 1"
   dj.insertions <- "NO SUCH COLUMN AT ALL 2"
   total.insertions <- "NO SUCH COLUMN AT ALL 3"
