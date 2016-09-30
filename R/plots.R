@@ -508,6 +508,9 @@ vis.radarlike <- function (.data, .ncol = 3, .which = NA, .expand = c(.25, 0)) {
   data.names <- colnames(.data)
   .data <- as.data.frame(melt(.data))
   .data[is.na(.data[,3]),3] <- 0
+  if (!is.na(.which[1])) {
+    .data = .data[.data$Var2 %in% .which, ]
+  }
   ps <- lapply(seq(1, nrow(.data), step), function (l) {
     ggplot(.data[l:(l+step-1),], aes(x = Var1, y = value, fill = Var1)) + 
       geom_bar(colour = 'black', stat = 'identity') + 
@@ -515,15 +518,9 @@ vis.radarlike <- function (.data, .ncol = 3, .which = NA, .expand = c(.25, 0)) {
       ggtitle(names(.data)[l]) +
       scale_y_continuous(expand = .expand) + 
       guides(fill = guide_legend(title="Sample")) +
-      theme_linedraw() + xlab('') + ylab('')
+      theme_linedraw() + xlab('') + ylab('') + 
+      ggtitle(.data$Var2[l]) + .colourblind.discrete(length(data.names))
     })
-  for (i in 1:length(data.names)) {
-    ps[[i]] <- ps[[i]] + ggtitle(data.names[i]) + .colourblind.discrete(length(data.names))
-  }
-  
-  if (!is.na(.which[1])) {
-    ps = ps[match(.which, data.names)]
-  }
   do.call(grid.arrange, c(ps, ncol = .ncol))
 }
 
