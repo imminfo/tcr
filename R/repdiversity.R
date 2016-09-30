@@ -56,7 +56,7 @@ repDiversity <- function (.data,
                 gini = gini,
                 div = function (x, ...) diversity(x, .q = .q, ...),
                 entropy = function (x, ...) entropy(x, .norm = .norm, ...),
-                { .verbose.msg("You have specified an invalid method identifier. Choosed method: chao1\n", T); chao1 })
+                { .verbose.msg("You have specified an invalid method identifier. Selected method: chao1\n", T); chao1 })
   
   if (has.class(.data, 'data.frame')) { .data <- list(Sample = .data) }
   
