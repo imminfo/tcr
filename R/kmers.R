@@ -149,7 +149,7 @@ get.kmers <- function (.data, .head = -1, .k = 5, .clean = T, .meat = F, .verbos
 #' }
 kmer.table <- function (.data, .heads = c(10, 100, 300, 1000, 3000, 10000, 30000), .k = 5, .nrow = 20, .clean=T, .meat = F) {
   if (class(.data) == 'list') {
-    return(lapply(.data, kmer.table, .heads = .heads, .nrow = .nrow, .clean = .clean, .meat = .meat))
+    return(lapply(.data, kmer.table, .k = .k, .heads = .heads, .nrow = .nrow, .clean = .clean, .meat = .meat))
   }
   res <- do.call(cbind, lapply(.heads, function (h) { head(get.kmers(.data=.data, .k = .k, .head=h, .clean=.clean, .meat = .meat), .nrow) }))
   names(res) <- sapply(1:length(names(res)), function (i) {
