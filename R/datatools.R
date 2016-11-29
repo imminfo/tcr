@@ -127,10 +127,12 @@ fix.genes <- function (.data) {
 #' twb1.gr <- group.clonotypes(twb[[1]])
 #' twb.gr <- group.clonotypes(twb)
 #' }
-group.clonotypes <- function (.data, .gene.col = 'V.gene', .count.col = 'Read.count',
-                              .prop.col = 'Read.proportion', .seq.col = 'CDR3.amino.acid.sequence') {
-  if (has.class(.data, 'list')) {
-    return(lapply(.data, group.clonotypes, .gene.col = .gene.col, .count.col = .count.col, .seq.col = .seq.col))
+group.clonotypes<-function (.data, .gene.col = "V.gene", .count.col = "Read.count", 
+                            .prop.col = "Read.proportion", .seq.col = "CDR3.amino.acid.sequence") 
+{
+  if (has.class(.data, "list")) {
+    return(lapply(.data, group.clonotypes, .gene.col = .gene.col, 
+                  .count.col = .count.col, .seq.col = .seq.col))
   }
   
   namesvec <- c(.seq.col)
@@ -138,8 +140,11 @@ group.clonotypes <- function (.data, .gene.col = 'V.gene', .count.col = 'Read.co
     namesvec <- c(namesvec, .gene.col)
   }
   
-  val <- dplyr::summarise_(dplyr::grouped_df(.data, lapply(namesvec, as.name)), value = paste0('sum(', .count.col, ')', sep = '', collapse = ''))$value
+  val <- dplyr::summarise_(dplyr::grouped_df(.data, lapply(namesvec, as.name)), 
+                           value = paste0("sum(", .count.col, ")", sep = "", collapse = ""))$value
+  
   .data <- .data[!duplicated(.data[, namesvec]), ]
+  .data <- .data[order(.data$CDR3.amino.acid.sequence),] 
   .data[, .count.col] <- val
   .data[, .prop.col] <- val / sum(val)
   permutedf(.data)
