@@ -137,11 +137,12 @@ group.clonotypes <- function (.data, .gene.col = 'V.gene', .count.col = 'Read.co
   if (!is.na(.gene.col)) {
     namesvec <- c(namesvec, .gene.col)
   }
+  
   val <- dplyr::summarise_(dplyr::grouped_df(.data, lapply(namesvec, as.name)), value = paste0('sum(', .count.col, ')', sep = '', collapse = ''))$value
   .data <- .data[!duplicated(.data[, namesvec]), ]
   .data[, .count.col] <- val
   .data[, .prop.col] <- val / sum(val)
-  .data
+  permutedf(.data)
 }
 
 
