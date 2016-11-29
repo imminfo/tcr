@@ -580,6 +580,7 @@ vis.top.proportions <- function (.data, .head = c(10, 100, 1000, 10000, 30000, 1
 #' @param .groups List with names for groups and names of the group members. If NULL than each
 #' member is in the individual group.
 #' @param .log if T then log-scale the y axis.
+#' @param .names If T then print number of samples.
 #' 
 #' @seealso \link{rarefaction}
 #' 
@@ -590,7 +591,7 @@ vis.top.proportions <- function (.data, .head = c(10, 100, 1000, 10000, 30000, 1
 #' twb.rar <- rarefaction(twb, .col = "Read.count")
 #' vis.rarefaction(twb.rar, list(A = c("Subj.A", "Subj.B"), B = c("Subj.C", "Subj.D")))
 #' }
-vis.rarefaction <- function (.muc.res, .groups = NULL, .log = F) {
+vis.rarefaction <- function (.muc.res, .groups = NULL, .log = F, .names = T) {
   .muc.res$Group <- .muc.res$People
   
   if (!is.null(.groups)) { 
@@ -610,9 +611,11 @@ vis.rarefaction <- function (.muc.res, .groups = NULL, .log = F) {
     xlab('Sample size') + ylab('Clones') + ggtitle("Rarefaction analysis") +
     theme_linedraw() + .colourblind.discrete(length(unique(.muc.res$Group)), T)
   
-  for (subj in unique(.muc.res$People)) {
-    tmp <- tail(.muc.res[.muc.res$People == subj, ], 1)
-    p <- p + geom_text(aes(x = Size, y = Mean, label = People), data = tmp, hjust=1, vjust=1)
+  if (.names) {
+    for (subj in unique(.muc.res$People)) {
+      tmp <- tail(.muc.res[.muc.res$People == subj, ], 1)
+      p <- p + geom_text(aes(x = Size, y = Mean, label = People), data = tmp, hjust=1, vjust=1)
+    }
   }
   
   if (.log) {
