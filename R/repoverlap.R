@@ -116,8 +116,11 @@ repOverlap <- function (.data,
         if (.verbose) { add.pb(pb) }
       }
       if (.verbose) { close(pb) }
+    } else {
+      for (i in 1:length(.data)) {
+        .data[[i]] <- data.frame(Sequence = new.data[[i]], Count = new.reads[[i]], stringsAsFactors = F))
+      }
     }
-    
     .pair.fun(.data,
               function (x, y) { .fun(x, y) },
               .verbose)
