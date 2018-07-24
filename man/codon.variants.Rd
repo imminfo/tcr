@@ -2,8 +2,8 @@
 % Please edit documentation in R/strtools.R
 \name{codon.variants}
 \alias{codon.variants}
-\alias{reverse.translation}
 \alias{translated.nucl.sequences}
+\alias{reverse.translation}
 \title{Functions for working with aminoacid sequences.}
 \usage{
 codon.variants(.aaseq, .nucseq = sapply(1:length(.aaseq), 
@@ -42,4 +42,3 @@ translated.nucl.sequences('ACT', 'XXXXXXXC')
 codon.variants('ACT', 'XXXXXXXC')
 reverse.translation('ACT', 'XXXXXXXC')
 }
-

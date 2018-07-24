@@ -22,4 +22,3 @@ You can read them later by \code{repLoad} function with \code{.format = "tcr"}.
 \seealso{
 \link{repLoad}
 }
-

@@ -9,7 +9,7 @@ vis.clonal.space(.clonal.space.data, .groups = NULL)
 \arguments{
 \item{.clonal.space.data}{Data from the \code{fclonal.space.homeostasis} function.}
 
-\item{.groups}{List of named character vector with names of Samples 
+\item{.groups}{List of named character vector with names of Samples
 in \code{.clonal.space.data} for grouping them together.}
 }
 \value{
@@ -21,4 +21,3 @@ Visualise which clones how much space occupy.
 \seealso{
 \link{clonal.space.homeostasis}
 }
-

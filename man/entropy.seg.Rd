@@ -44,4 +44,3 @@ Function \code{js.div.seg} applied Jensen-Shannon divergence to V-usage of two o
 \seealso{
 \link{vis.heatmap}, \link{vis.group.boxplot}, \link{geneUsage}
 }
-

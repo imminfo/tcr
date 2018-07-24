@@ -58,4 +58,3 @@ immdata1 <- parse.file("~/mitcr/immdata1.txt", 'mitcr')
 \seealso{
 \link{parse.file}
 }
-

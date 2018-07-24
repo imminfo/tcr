@@ -44,4 +44,3 @@ rarefaction(immdata, .col = "Read.count")
 \seealso{
 \link{vis.rarefaction} \link{rmultinom}
 }
-

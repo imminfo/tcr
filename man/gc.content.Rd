@@ -15,4 +15,3 @@ Numeric vector of \code{length(.nucseq)}.
 \description{
 Compute the GC-content (proportion of G-C nucleotide in a sequence).
 }
-

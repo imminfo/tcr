@@ -45,4 +45,3 @@ View(artif.rep)
 \seealso{
 \link{genesegments} \link{beta.prob}
 }
-

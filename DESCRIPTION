@@ -1,8 +1,8 @@
 Package: tcR
 Type: Package
 Title: Advanced Data Analysis of Immune Receptor Repertoires
-Version: 2.2.1.15
-Date: 2016-08-3
+Version: 2.2.2
+Date: 2018-07-23
 Author: Vadim Nazarov
 Maintainer: Vadim Nazarov <vdm.nazarov@gmail.com>
 Description: Platform for the advanced analysis of T cell receptor and
@@ -25,9 +25,10 @@ Imports:
     scales (>= 0.3.0)
 Suggests:
     knitr (>= 1.8),
-    roxygen2 (>= 3.0.0)
+    roxygen2 (>= 3.0.0),
+    rmarkdown (>= 1.0)
 LinkingTo: Rcpp
 URL: http://imminfo.github.io/tcr/
 BugReports: https://github.com/imminfo/tcr/issues
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

@@ -343,7 +343,7 @@ permutDistTest <- function (.mat, .groups, .n = 1000, .fun = mean, .signif = .05
                            .plot = T, .xlab = "Values", .title = "Monte Carlo permutation testing of overlaps",
                            .hjust = -.1, .vjust = -4) {
   
-  cat("WARNING: this is an experimental procedure, work is still in progress.")
+  cat("WARNING: this is an experimental procedure, work is still in progress \n")
   
   .pairwise.test <- function (.mat, .group.logic, .n, .fun) {
     within.val.gr1 = .fun(.mat[.group.logic, .group.logic][upper.tri(.mat[.group.logic, .group.logic])])
@@ -512,14 +512,12 @@ permutDistTest <- function (.mat, .groups, .n = 1000, .fun = mean, .signif = .05
     for (i in 1:length(p.vals[[gr.name]][["inter"]])) {
       pval <- p.vals[[gr.name]][["inter"]][i]
       if (pval <= .signif) {
-        if (pval <= .signif) {
-          cat('  Between ', 
-              formatC(paste0('"', gr.name, '"'), width = -fmt.width), 
-              ' and ', 
-              formatC(paste0('"', names(p.vals[[gr.name]][["inter"]])[i], '"'), width = fmt.width + 11), 
-              '  :  P(OBS ', i.signs[i], ' SIM) = ', pval, "\n", sep = '')
-          flag <- T
-        }
+        cat('  Between ', 
+            formatC(paste0('"', gr.name, '"'), width = -fmt.width), 
+            ' and ', 
+            formatC(paste0('"', names(p.vals[[gr.name]][["inter"]])[i], '"'), width = fmt.width + 11), 
+            '  :  P(OBS ', i.signs[i], ' SIM) = ', pval, "\n", sep = '')
+        flag <- T
       }
     }
   }

@@ -17,4 +17,3 @@ Logical.
 \description{
 Check if a given object has a given class.
 }
-

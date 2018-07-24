@@ -24,8 +24,7 @@ Plot logo-like graphs for visualising of nucleotide or amino acid motif sequence
 }
 \examples{
 \dontrun{
-d <- kmer.profile(c('CASLL', 'CASSQ', 'CASGL'))
+d <- kmer_profile(c('CASLL', 'CASSQ', 'CASGL'))
 vis.logo(d)
 }
 }
-

@@ -46,4 +46,3 @@ probability equal to its "Read.proportion" column.
 bootstrap.tcr(immdata[[2]], .fun = entropy.seg, .n = 100, .size = 20000, .sim = 'uniform')
 }
 }
-

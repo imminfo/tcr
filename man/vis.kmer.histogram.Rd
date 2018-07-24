@@ -33,4 +33,3 @@ grid.arrange(p1, p2)
 \seealso{
 \code{get.kmers}
 }
-

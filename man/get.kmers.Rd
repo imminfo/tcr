@@ -31,4 +31,3 @@ or a list with such data.frames if .data is a list.
 \description{
 Get vector of kmers from the given character vector or data frame.
 }
-

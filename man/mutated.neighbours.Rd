@@ -35,4 +35,3 @@ head(mutated.neighbours(G, 1)[[1]])
 # 6 CASSDRETGELFF          TRBV6-4   5950   -1   0100       1
 }
 }
-

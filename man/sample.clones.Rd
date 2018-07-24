@@ -19,4 +19,3 @@ Data.frame of nrow .n or a list with such data.frames.
 \description{
 Sample rows of the given data frame with replacement.
 }
-

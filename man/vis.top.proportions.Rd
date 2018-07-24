@@ -25,4 +25,3 @@ vis.top.proportions(immdata)
 \seealso{
 \code{top.proportion}
 }
-

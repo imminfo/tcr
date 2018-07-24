@@ -42,4 +42,3 @@ get.people.names(G, 300, F)  # list(c("Subj.A", "Subj.B"))
 \seealso{
 \link{shared.repertoire}, \link{find.similar.sequences}, \link{set.people.vector}, \link{get.people.names}
 }
-

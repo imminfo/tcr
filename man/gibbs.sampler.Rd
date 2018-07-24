@@ -20,4 +20,3 @@ Vector of possible motifs.
 Perform the Gibbs Sampler method for finding frequent motifs in the given vector of strings or data.frame.
 Each string splitted to kmers with the given length of motif.
 }
-

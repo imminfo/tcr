@@ -121,13 +121,14 @@ get.kmers <- function (.data, .head = -1, .k = 5, .clean = T, .meat = F, .verbos
 #' \code{get.kmer.column} - get vector of k-mers from the k-mer table from the function \code{kmer.table}
 #' 
 #' @usage
-#' kmer.table(.data, .heads = c(10, 100, 300, 1000, 3000, 10000, 30000), .nrow = 20,
+#' kmer.table(.data, .heads = c(10, 100, 300, 1000, 3000, 10000, 30000), .k = 5, .nrow = 20,
 #'            .clean = T, .meat = F)
 #' 
 #' get.kmer.column(.kmer.table.list, .head)
 #' 
-#' @param .data Mitcr data.frame or a list with mitcr data.frames.
+#' @param .data tcR data.frame or a list with tcR data.frames.
 #' @param .heads Vector of parameter for the \code{head()} function, supplied sequentialy to the \code{get.kmers()} function. -1 means all rows.
+#' @param .k Size of the kmer.
 #' @param .nrow How many most frequent k-mers include to the output table.
 #' @param .clean Parameter for the \code{get.kmers()} function.
 #' @param .meat Parameter for the \code{get.kmers()} function.
@@ -146,11 +147,11 @@ get.kmers <- function (.data, .head = -1, .k = 5, .clean = T, .meat = F, .verbos
 #' twb.kmers <- kmer.table(twb, .heads = c(5000, 10000), .meat = T)
 #' head(get.kmer.column(twb.kmers, 10000))
 #' }
-kmer.table <- function (.data, .heads = c(10, 100, 300, 1000, 3000, 10000, 30000), .nrow = 20, .clean=T, .meat = F) {
+kmer.table <- function (.data, .heads = c(10, 100, 300, 1000, 3000, 10000, 30000), .k = 5, .nrow = 20, .clean=T, .meat = F) {
   if (class(.data) == 'list') {
-    return(lapply(.data, kmer.table, .heads = .heads, .nrow = .nrow, .clean = .clean, .meat = .meat))
+    return(lapply(.data, kmer.table, .k = .k, .heads = .heads, .nrow = .nrow, .clean = .clean, .meat = .meat))
   }
-  res <- do.call(cbind, lapply(.heads, function (h) { head(get.kmers(.data=.data, .head=h, .clean=.clean, .meat = .meat), .nrow) }))
+  res <- do.call(cbind, lapply(.heads, function (h) { head(get.kmers(.data=.data, .k = .k, .head=h, .clean=.clean, .meat = .meat), .nrow) }))
   names(res) <- sapply(1:length(names(res)), function (i) {
     if (.heads[(1+i)%/%2] == -1) { paste0(names(res)[i], '.', 'all', collapse = '') }
     else                         { paste0(names(res)[i], '.', .heads[(1+i)%/%2], collapse = '') }

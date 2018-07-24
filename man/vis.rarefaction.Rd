@@ -4,7 +4,7 @@
 \alias{vis.rarefaction}
 \title{Rarefaction statistics visualisation.}
 \usage{
-vis.rarefaction(.muc.res, .groups = NULL, .log = F)
+vis.rarefaction(.muc.res, .groups = NULL, .log = F, .names = T)
 }
 \arguments{
 \item{.muc.res}{Output from the \code{muc} function.}
@@ -13,6 +13,8 @@ vis.rarefaction(.muc.res, .groups = NULL, .log = F)
 member is in the individual group.}
 
 \item{.log}{if T then log-scale the y axis.}
+
+\item{.names}{If T then print number of samples.}
 }
 \description{
 Plot a line with mean unique clones.
@@ -28,4 +30,3 @@ vis.rarefaction(twb.rar, list(A = c("Subj.A", "Subj.B"), B = c("Subj.C", "Subj.D
 \seealso{
 \link{rarefaction}
 }
-

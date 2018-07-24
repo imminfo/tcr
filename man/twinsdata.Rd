@@ -2,9 +2,9 @@
 % Please edit documentation in R/docdata.R
 \docType{data}
 \name{twinsdata}
+\alias{twinsdata}
 \alias{twa}
 \alias{twb}
-\alias{twinsdata}
 \title{Twins alpha-beta chain data}
 \format{\code{twa} and \code{twb} are lists of 4 data frames with 10000 row in each.}
 \description{
@@ -18,4 +18,3 @@ data(twa)
 data(twb)
 }
 }
-

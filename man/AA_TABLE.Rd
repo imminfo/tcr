@@ -32,4 +32,3 @@ AA_TABLE_REVERSED['K']  #  => list(K = c("AAA", "AAG"))
 }
 }
 \keyword{datasets}
-

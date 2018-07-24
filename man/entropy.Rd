@@ -53,4 +53,3 @@ is a metric often referred to as Jensen-Shannon distance.
 \seealso{
 \link{similarity}, \link{diversity}
 }
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/docdata.R
 \docType{data}
 \name{segments.list}
-\alias{genesegments}
 \alias{segments.list}
+\alias{genesegments}
 \title{Segment data.}
 \format{\code{genesegments} is a list with data frames.}
 \description{
@@ -26,4 +26,3 @@ data(genesegments)
 genesegments$Nucleotide.sequence[segments$TRBV[,1] == "TRBV10-1"]
 }
 }
-

@@ -37,4 +37,3 @@ clonal.space.homeostasis(twb, c(Low = .05, High = 1)))
 \seealso{
 \link{vis.clonal.space}
 }
-

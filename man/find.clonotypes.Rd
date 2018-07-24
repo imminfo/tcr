@@ -48,4 +48,3 @@ find.clonotypes(.data = twb, .targets = twb[[1]][, c('CDR3.amino.acid.sequence',
                 .target.col = c('CDR3.amino.acid.sequence', 'V.gene'))
 }
 }
-

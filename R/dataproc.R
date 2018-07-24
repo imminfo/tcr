@@ -449,7 +449,7 @@ generate.tcr <- function (.count = 1, .chain = c('beta', 'alpha'), .segments,
 #' clonal.proportion(.data, .perc = 10, .col = 'Read.count')
 #' 
 #' @description
-#' Get a specifyed subset of the given data and compute which proportion in counts
+#' Get a specifyed subset of the given repertiure and compute which proportion in counts
 #' it has comparing to the overall count.
 #' 
 #' \code{tailbound.proportion} - subset by the count;
@@ -469,7 +469,7 @@ generate.tcr <- function (.count = 1, .chain = c('beta', 'alpha'), .segments,
 #' For \code{top.proportion} - numeric vector of percentage for top clones.
 #' For \code{clonal.proportion} - vector or matrix with values for number of clones, occupied percentage and proportion of the
 #' chosen clones to the overall count of clones.
-#' @seealso \link{vis.top.proportions}
+#' @seealso \link{vis.top.proportions}, \link{prop.sample}
 #' 
 #' @examples
 #' \dontrun{
@@ -534,17 +534,25 @@ barcodes.to.reads <- function (.data) {
 
 #' Resample data frame using values from the column with number of clonesets.
 #' 
-#' @aliases resample downsample
+#' @aliases resample downsample prop.sample
 #' 
 #' @description
 #' Resample data frame using values from the column with number of clonesets. Number of clonestes (i.e., rows of a MiTCR data frame)
 #' are reads (usually the "Read.count" column) or UMIs (i.e., barcodes, usually the "Umi.count" column).
 #' 
+#' @usage 
+#' resample(.data, .n = -1, .col = c("read.count", "umi.count"))
+#' 
+#' downsample(.data, .n, .col = c("read.count", "umi.count"))
+#' 
+#' prop.sample(.data, .perc = 50, .col = c("read.count", "umi.count"))
+#' 
 #' @param .data Data frame with the column \code{.col} or list of such data frames.
 #' @param .n Number of values / reads / UMIs to choose.
+#' @param .perc Percentage (0 - 100). See "Details" for more info.
 #' @param .col Which column choose to represent quanitites of clonotypes. See "Details".
 #' 
-#' @return Data frame with \code{sum(.data[, .col]) == .n}.
+#' @return Subsampled data frame.
 #' 
 #' @details
 #' \code{resample}. Using multinomial distribution, compute the number of occurences for each cloneset, than remove zero-number clonotypes and
@@ -556,14 +564,16 @@ barcodes.to.reads <- function (.data) {
 #' exactly computing each choosed clones. Its output is same as for \code{resample} (repertoires), but is more consistent and
 #' biologically pleasant.
 #' 
-#' @seealso \link{rmultinom}
+#' \code{prop.sample}. Choose the first N clonotypes which occupies \code{.perc} percents of overall UMIs / reads.
+#' 
+#' @seealso \link{rmultinom}, \link{clonal.proportion}
 #' 
 #' @examples
 #' \dontrun{
 #' # Get 100K reads (not clones!).
 #' immdata.1.100k <- resample(immdata[[1]], 100000, .col = "read.count")
 #' }
-resample <- function (.data, .n = -1, .col = 'read.count') {
+resample <- function (.data, .n = -1, .col = c("read.count", "umi.count")) {
   if (has.class(.data, 'list')) {
     if (length(.n) != length(.data)) {
       .n <- c(.n, rep.int(-1, length(.data) - length(.n)))
@@ -626,6 +636,20 @@ downsample <- function (.data, .n, .col = c("read.count", "umi.count")) {
   .data[, col_current] <- fill_reads(new_reads, new_counts)
   
   subset(.data, .data[, col_current] > 0)
+}
+
+prop.sample <- function (.data, .perc = 50, .col = c("read.count", "umi.count")) {
+  if (has.class(.data, "data.frame")) { .data = list(Data = .data) }
+  
+  .col = .column.choice(.col[1])
+  res = lapply(.data, function (df) {
+    df[1:(clonal.proportion(df, .perc, .col)[1]), ]
+  })
+  if (length(res) == 1) {
+    res[[1]]
+  } else {
+    res
+  }
 }
 
 

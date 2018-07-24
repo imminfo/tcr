@@ -21,4 +21,3 @@ Loglikelihood value.
 \description{
 Compute the log-likelihood of the given distribution or vector of counts.
 }
-

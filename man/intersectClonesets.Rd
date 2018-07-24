@@ -3,8 +3,8 @@
 \name{intersectClonesets}
 \alias{intersectClonesets}
 \alias{intersectCount}
-\alias{intersectIndices}
 \alias{intersectLogic}
+\alias{intersectIndices}
 \title{Intersection between sets of sequences or any elements.}
 \usage{
 intersectClonesets(.alpha = NULL, .beta = NULL, .type = "n0e", .head = -1, .norm = F,
@@ -103,4 +103,3 @@ vis.group.boxplot(sb)
 \seealso{
 \link{repOverlap}, \link{vis.heatmap}, \link{ozScore}, \link{permutDistTest}, \link{vis.group.boxplot}
 }
-

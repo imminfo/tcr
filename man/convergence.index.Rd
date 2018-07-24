@@ -23,4 +23,3 @@ than matrix M with M[i,j] = convergence.index(.alpha[[i]], .alpha[[j]]).
 \description{
 Get a number of rows with similar aminoacid sequence but different nucleotide sequence.
 }
-

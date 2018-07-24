@@ -37,4 +37,3 @@ startmitcr('raw/TwA1_B.fastq.gz', 'mitcr/TwA1_B.txt', .file.path = '~/data/',
   pset = 'flex', level = 1, 'debug', .mitcr.path = '~/programs/', .mem = '8g')
 }
 }
-

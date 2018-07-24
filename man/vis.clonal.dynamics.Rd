@@ -24,4 +24,3 @@ ggplot object.
 Visualise clonal dynamics (i.e., changes in frequency or count) with error bars of given
 clones among time points.
 }
-

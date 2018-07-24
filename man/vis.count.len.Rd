@@ -34,4 +34,3 @@ vis.count.len(immdata[[1]], 'Main title here')
 vis.count.len(immdata, 2)
 }
 }
-

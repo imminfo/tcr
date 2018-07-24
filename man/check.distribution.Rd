@@ -30,4 +30,3 @@ Numeric vector.
 \description{
 Check if the given .data is a distribution and normalise it if necessary with optional laplace correction.
 }
-

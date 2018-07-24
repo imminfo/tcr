@@ -46,4 +46,3 @@ permutDistTest(mat, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D'
 \seealso{
 \link{repOverlap}, \link{intersectClonesets}, \link{ozScore}, \link{pca2euclid}
 }
-

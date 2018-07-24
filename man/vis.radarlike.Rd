@@ -4,14 +4,16 @@
 \alias{vis.radarlike}
 \title{Radar-like / spider-like plots.}
 \usage{
-vis.radarlike(.data, .ncol = 3, .expand = c(0.25, 0))
+vis.radarlike(.data, .ncol = 3, .which = NA, .expand = c(0.25, 0))
 }
 \arguments{
 \item{.data}{Square data frame or matrix with row names and col names stands for objects and values for distances.}
 
 \item{.ncol}{Number of columns in the grid.}
 
-\item{.expand}{Interger vector of length 2, for \code{scale_y_continous(expand = .expand)} function.}
+\item{.which}{Character vector, which datasets to show.}
+
+\item{.expand}{Integer vector of length 2, for \code{scale_y_continous(expand = .expand)} function.}
 }
 \description{
 Plot a grid of radar(-like) plots for visualising a distance among objects.
@@ -28,4 +30,3 @@ vis.radarlike(imm.js)
 \seealso{
 \link{repOverlap}, \link{js.div}
 }
-

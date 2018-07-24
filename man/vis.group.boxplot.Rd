@@ -39,7 +39,7 @@ names(immdata)  # "A1" "A2" "B1" "B2" "C1" "C2"
 # three boxplots for each group.
 vis.group.boxplot(freq.Vb(immdata),
    list(A = c('A1', 'A2'), B = c('B1', 'B2'), C = c('C1', 'C2')),
-   c('V segments', 'Frequency')) 
+   c('V segments', 'Frequency'))
 
 data(twb)
 ov <- repOverlap(twb)
@@ -47,4 +47,3 @@ sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'S
 vis.group.boxplot(sb)
 }
 }
-

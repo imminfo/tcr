@@ -49,4 +49,3 @@ imm.av <- repOverlap(immdata, .seq = 'aa', .vgene = T)
 vis.heatmap(imm.av, .title = 'Immdata - (ave)-intersection')
 }
 }
-

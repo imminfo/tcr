@@ -35,4 +35,3 @@ vis.number.count(immdata[[1]], 'Main title here')
 vis.number.count(immdata, 2)
 }
 }
-

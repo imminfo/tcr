@@ -31,4 +31,3 @@ Occasionally DNA or RNA libraries are contaminate each other. To address this is
  and removes clones from the first data frame, which has been found in the second one with counts less or equal to 10 * counts of similar clones 
  in the first one. Function \code{contamination.stats} will return the number of clones which will be removed with the \code{contamination.stats} function.
 }
-

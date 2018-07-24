@@ -4,8 +4,8 @@
 if (getRversion() >= "2.15.1") {
   utils::globalVariables(c("Segment", 'Size', 'Freq', 'Sample', 'V.gene', 'J.gene', '..count..', 'Time.point', 'Proportion', 'Sequence',
                            'Lower', 'Upper', 'Lengths', 'Read.count', 'Var', 'Value', 'Group', 'variable', 'name', 'value', 'Kmers',
-                           'Count', 'People', 'First', 'Second', 'Var1', 'Q0.025', 'Q0.975', 'Mean', 'Type', 'Clone.size', 'Q1', 'Q2', 
-                           'Symbol', 'Gene', 'Genes', 'Sample', 'label', 'Xrep', 'Yrep'))
+                           'Count', 'People', 'First', 'Second', 'Var1', 'Q0.025', 'Q0.975', 'Mean', 'Type', 'Clone.size', 'Q1', 'Q2',
+                           'Symbol', 'Gene', 'Genes', 'Sample', 'label', 'Xrep', 'Yrep', 'Clonotype'))
 }
 
 
@@ -29,9 +29,9 @@ if (getRversion() >= "2.15.1") {
 #   cs <- c("#FF4B20", "#FFB433", "#C6EDEC", "#85CFFF", "#0348A6")
   # cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
   # scale_fill_gradientn(guide='colourbar', colours=c("#0072B2", "#EEEEEE", "#D55E00")
-  
+
   cs <- c(c("#0072B2", "#EEEEEE", "#D55E00"))
-  
+
   if (!is.na(.min)) {
     if (.colour) {
       scale_colour_gradientn(limits = c(.min, .max), guide='colorbar', colours = cs, na.value = 'grey60')
@@ -50,12 +50,16 @@ if (getRversion() >= "2.15.1") {
 # white/orange/yellow - green - blue
 # colourblind - friendly
 # for fill and colour
+.colourblind.vector <- function() {
+  c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
+}
+
 .colourblind.discrete <- function (.n, .colour = F) {
   #   cs <- c("#FFFFD9", "#41B6C4", "#225EA8")
   #   cs <- c("#FFFFBB", "#41B6C4", "#225EA8")
 #   cs <- c("#FFBB00", "#41B6C4", "#225EA8") <- old version
   # cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
-  cs <- c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")
+  cs <- .colourblind.vector()
   if (.colour) {
     scale_colour_manual(values = colorRampPalette(cs)(.n))
   } else {
@@ -89,21 +93,21 @@ if (getRversion() >= "2.15.1") {
 
 
 #' Plot a histogram of lengths.
-#' 
+#'
 #' @description
 #' Plot a histogram of distribution of lengths of CDR3 nucleotide sequences. On y-axis are sum of read counts for each length.
-#' 
+#'
 #' @param .data Data frame with columns 'CDR3.nucleotide.sequence' and 'Read.count' or list with such data frames.
 #' @param .ncol If .data is a list, than number of columns in a grid of histograms for each data frame in \code{.data}. Else not used.
 #' @param .name Title for this plot.
 #' @param .col Name of the column to use in computing the lengths distribution.
-#' 
+#'
 #' @details
 #' If \code{.data} is a data frame, than one histogram will be plotted. Is \code{.data} is a list, than grid of histograms
 #' will be plotted.
-#' 
+#'
 #' @return ggplot object.
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' load('immdata.rda')
@@ -126,21 +130,21 @@ vis.count.len <- function (.data, .ncol = 3, .name = "", .col = 'Read.count') {
 
 
 #' Plot a histogram of counts.
-#' 
+#'
 #' @description
 #' Plot a histogram of distribution of counts of CDR3 nucleotide sequences. On y-axis are number of counts.
-#' 
+#'
 #' @param .data Cloneset data frame or a list of clonesets.
 #' @param .ncol If .data is a list, than number of columns in a grid of histograms for each data frame in \code{.data}. Else not used.
 #' @param .name Title for this plot.
 #' @param .col Name of the column with counts.
-#' 
+#'
 #' @details
 #' If \code{.data} is a data frame, than one histogram will be plotted. Is \code{.data} is a list, than grid of histograms
 #' will be plotted.
-#' 
+#'
 #' @return ggplot object.
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' load('immdata.rda')
@@ -151,28 +155,28 @@ vis.count.len <- function (.data, .ncol = 3, .name = "", .col = 'Read.count') {
 #' }
 vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes read counts', .col = "Read.count") {
 #   cat('Limits for x-axis set to (0,50). Transform y-axis to sqrt(y).\n')
-  
+
   if (has.class(.data, 'list')) {
     return(do.call(grid.arrange, c(lapply(1:length(.data), function (i) vis.number.count(.data[[i]], .col = .col, .name = names(.data)[i])), ncol = .ncol)))
   }
-  
+
   counts <- data.frame(Count = .data[[.col]])
-  
-  ggplot() + 
-    xlim(min(counts$Count), 300) + 
+
+  ggplot() +
+    xlim(min(counts$Count), 300) +
     ylab('Frequency') +
     geom_histogram(aes(x = Count, fill = ..count..), data = counts, binwidth = 1, colour = 'black') +
     coord_trans(x = 'log10') + scale_y_log10() +
-    ggtitle(.name) + 
+    ggtitle(.name) +
     .colourblind.gradient() +
     theme_linedraw()
 }
 
 
 #' Heatmap.
-#' 
+#'
 #' @aliases vis.heatmap
-#' 
+#'
 #' @description
 #' Plot a heatmap from a matrix or a data.frame
 #'
@@ -188,9 +192,9 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' @param .size.text Size for the text in the cells of the heatmap, 4 by default.
 #' @param .no.legend If T than remove the legend from the plot.
 #' @param .no.labs If T than remove x / y labels names from the plot.
-#' 
+#'
 #' @return ggplot object.
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' # Load your data.
@@ -200,16 +204,16 @@ vis.number.count <- function (.data, .ncol = 3, .name = 'Histogram of clonotypes
 #' # Plot a heatmap.
 #' vis.heatmap(imm.av, .title = 'Immdata - (ave)-intersection')
 #' }
-vis.heatmap <- function (.data, 
-                         .title = "Number of shared clonotypes", 
-                         .labs = c('Sample', 'Sample'), 
-                         .legend = 'Shared clonotypes', 
-                         .na.value = NA, 
-                         .text = T, 
-                         .scientific = FALSE, 
+vis.heatmap <- function (.data,
+                         .title = "Number of shared clonotypes",
+                         .labs = c('Sample', 'Sample'),
+                         .legend = 'Shared clonotypes',
+                         .na.value = NA,
+                         .text = T,
+                         .scientific = FALSE,
                          .signif.digits = 4,
-                         .size.text = 4, 
-                         .no.legend = F, 
+                         .size.text = 4,
+                         .no.legend = F,
                          .no.labs = F) {
   if (has.class(.data, 'data.frame')) {
     names <- .data[,1]
@@ -222,24 +226,24 @@ vis.heatmap <- function (.data,
   if (is.null(colnames(.data))) {
     colnames(.data) <- paste0('C', 1:ncol(.data))
   }
-  
+
   if (is.null(row.names(.data))) {
     row.names(.data) <- paste0('C', 1:nrow(.data))
   }
-  
+
   .data[is.na(.data)] <- .na.value
-  
+
   tmp <- as.data.frame(.data)
   tmp$name <- row.names(.data)
 
   m <- melt(tmp, id.var = c('name'))
   m[,1] <- factor(m[,1], levels = rev(rownames(.data)))
   m[,2] <- factor(m[,2], levels = colnames(.data))
-  
+
   .cg <- .colourblind.gradient(min(m$value), max(m$value))
 
   m$label <- format(m$value, scientific = .scientific, digits = .signif.digits)
-  
+
   p <- ggplot(m, aes(x = variable, y = name, fill = value))
   p <- p + geom_tile(aes(fill = value), colour = "white")
   if (.text) {
@@ -249,29 +253,29 @@ vis.heatmap <- function (.data,
 #   p <- p + .ryg.gradient(min(m$value), max(m$value))
   p <- p + .cg
   # p <- p + .blues.gradient(min(m$value), max(m$value))
-  
-  p <- p + ggtitle(.title) + 
+
+  p <- p + ggtitle(.title) +
     guides(fill = guide_colourbar(title=.legend)) +
     xlab(.labs[1]) + ylab(.labs[2]) + coord_fixed() +
-    theme_linedraw() + theme(axis.text.x  = element_text(angle=90)) +
+    theme_linedraw() + theme(axis.text.x  = element_text(angle=90, vjust = .5)) +
     scale_x_discrete(expand=c(0,0)) + scale_y_discrete(expand=c(0,0))
-  
+
   if (.no.legend) {
     p <- p + theme(legend.position="none")
   }
-  
+
   if (.no.labs) {
     p <- p + theme(axis.title.x = element_blank(), axis.title.y = element_blank())
   }
-  
+
   p
 }
 
 
 #' Boxplot for groups of observations.
-#' 
+#'
 #' @aliases vis.group.boxplot
-#' 
+#'
 #' @description
 #' Plot boxplots for each group.
 #'
@@ -285,9 +289,9 @@ vis.heatmap <- function (.data,
 #' @param .violin If T then plot a violin plot.
 #' @param .notch "notch" parameter to the \code{geom_boxplot} ggplo2 function.
 #' @param ... Parameters passed to \code{melt}, applied to \code{.data} before plotting in \code{vis.group.boxplot}.
-#' 
+#'
 #' @return ggplot object.
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' names(immdata)  # "A1" "A2" "B1" "B2" "C1" "C2"
@@ -295,8 +299,8 @@ vis.heatmap <- function (.data,
 #' # three boxplots for each group.
 #' vis.group.boxplot(freq.Vb(immdata),
 #'    list(A = c('A1', 'A2'), B = c('B1', 'B2'), C = c('C1', 'C2')),
-#'    c('V segments', 'Frequency')) 
-#' 
+#'    c('V segments', 'Frequency'))
+#'
 #' data(twb)
 #' ov <- repOverlap(twb)
 #' sb <- matrixSubgroups(ov, list(tw1 = c('Subj.A', 'Subj.B'), tw2 = c('Subj.C', 'Subj.D')));
@@ -314,7 +318,7 @@ vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Freque
     .data = .data[,c(1,3,2)]
   }
   # }
-  
+
   colnames(.data) <- c('Var', 'Sample', 'Value')
   .data$Group <- as.character(.data$Sample)
   if (!is.na(.groups)[1]) {
@@ -324,14 +328,14 @@ vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Freque
       }
     }
   }
-  
-  p <- ggplot() + 
+
+  p <- ggplot() +
     geom_boxplot(aes(x = Var, y = Value, fill = Group), data = .data, colour = 'black', notch = .notch)
-  
+
   if (.violin) {
     p <- p +geom_violin(aes(x = Var, y = Value, fill = Group), alpha = .2, data = .data)
   }
-    
+
   if (length(.labs) >= 2) {
     p <- p + xlab(.labs[1]) + ylab(.labs[2])
   }
@@ -344,12 +348,12 @@ vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Freque
 
 
 #' Histogram of segments usage.
-#' 
+#'
 #' @aliases vis.V.usage vis.J.usage
-#' 
+#'
 #' @description
 #' Plot a histogram or a grid of histograms of V- / J-usage.
-#' 
+#'
 #' @param .data Mitcr data frame or a list with mitcr data frames.
 #' @param .genes Gene alphabet passed to \link{geneUsage}.
 #' @param .main Main title of the plot.
@@ -359,9 +363,9 @@ vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Freque
 #' @param .dodge If \code{.data} is a list, than if this is T plot V-usage for all data frames to the one histogram.
 #' @param ... Parameter passed to \code{geneUsage}. By default the function compute V-usage or J-usage for beta chains
 #' w/o using read counts and w/ "Other" segments.
-#' 
+#'
 #' @return ggplot object.
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' # Load your data.
@@ -374,72 +378,72 @@ vis.group.boxplot <- function (.data, .groups = NA, .labs = c('V genes', 'Freque
 #' # Plot a grid of histograms - one histogram for V-usage for each data frame in .data.
 #' vis.V.usage(immdata, HUMAN_TRBV, .main = 'Immdata V-usage', .dodge = F, .other = F)
 #' }
-vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3, .coord.flip = F, .dodge = F, .labs = c("Gene", "Frequency"), ...) {  
+vis.gene.usage <- function (.data, .genes = NA, .main = "Gene usage", .ncol = 3, .coord.flip = F, .dodge = F, .labs = c("Gene", "Frequency"), ...) {
   if (!is.na(.genes[1])) {
     res <- geneUsage(.data, .genes, ...)
   } else {
     res <- .data
   }
-  
+
   if (class(res[[2]]) != "factor") {
     res <- melt(res)
-    res <- res[1:nrow(res), ] 
+    res <- res[1:nrow(res), ]
     colnames(res) <- c('Gene', 'Sample', 'Freq')
   }
-  
-  if (length(unique(res$Sample)) > 1) {    
-    if (.dodge) {      
-      p = ggplot() + 
+
+  if (length(unique(res$Sample)) > 1) {
+    if (.dodge) {
+      p = ggplot() +
             geom_bar(aes(x = Gene, y = Freq, fill = Sample), data = res, stat = 'identity', position = position_dodge(), colour = 'black') +
-            theme_linedraw() + 
-            ggtitle(.main) + 
-            theme(axis.text.x = element_text(angle=90)) + 
+            theme_linedraw() +
+            ggtitle(.main) +
+            theme(axis.text.x = element_text(angle=90, vjust = .5)) +
             .colourblind.discrete(length(unique(res$Sample))) +
-            scale_y_continuous(expand = c(.02,0)) + 
+            scale_y_continuous(expand = c(.02,0)) +
             xlab(.labs[1]) + ylab(.labs[2])
-      
+
       if (.coord.flip) { p <- p + coord_flip() }
-      
+
       p
-      
+
     } else {
       res <- split(res, res$Sample)
       ps <- lapply(1:length(res), function (i) {
-        vis.gene.usage(res[[i]], NA, names(res)[i], 0, .coord.flip, .labs = .labs, ...) 
-      })      
+        vis.gene.usage(res[[i]], NA, names(res)[i], 0, .coord.flip, .labs = .labs, ...)
+      })
       do.call(grid.arrange, c(ps, ncol = .ncol, top = .main) )
     }
-    
-  }  
-  else {        
-    p <- ggplot() + 
+
+  }
+  else {
+    p <- ggplot() +
       geom_bar(aes(x = Gene, y = Freq, fill = Freq), data = res, stat = 'identity', colour = 'black')
-    
+
     if (.coord.flip) { p <- p + coord_flip() }
-    
-    p + theme_linedraw() + 
-      theme(axis.text.x = element_text(angle=90)) + 
-      ggtitle(.main) + 
+
+    p + theme_linedraw() +
+      theme(axis.text.x = element_text(angle=90, vjust = .5)) +
+      ggtitle(.main) +
       .colourblind.gradient() +
-      scale_y_continuous(expand = c(.02,0)) + 
+      scale_y_continuous(expand = c(.02,0)) +
       xlab(.labs[1]) + ylab(.labs[2])
   }
 }
 
 
 #' PCA result visualisation
-#' 
+#'
 #' @description
 #' Plot the given pca results with colour divided by the given groups.
-#' 
+#'
 #' @param .data Result from prcomp() function or a data frame with two columns 'First' and 'Second'
 #' stands for the first PC and the second PC.
 #' @param .groups List with names for groups and indices of the group members. If NA than each
 #' member is in the individual group.
 #' @param .text If T than print the names of the subjects.
-#' 
+#'
 #' @return ggplot object.
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' data(twb)
@@ -456,8 +460,8 @@ vis.pca <- function (.data, .groups = NA, .text = T) {
     .data <- data.frame(First = .data$x[,1], Second = .data$x[,2], Sample = row.names(.data$x),
                         Group = rep('group0', times = length(.data$x[,2])), stringsAsFactors=F)
   }
-  
-  if (is.na(.groups[1])) { 
+
+  if (is.na(.groups[1])) {
     .groups <- lapply(1:nrow(.data), function (i) i)
     names(.groups) <- dnames
   }
@@ -466,8 +470,8 @@ vis.pca <- function (.data, .groups = NA, .text = T) {
       .data$Group[.groups[[i]][j]] <- names(.groups)[i]
     }
   }
-  
-  p = ggplot() + 
+
+  p = ggplot() +
     geom_point(aes(x = First, y = Second, colour = Group), size = 3, data = .data)
   if (.text) {
     p = p +
@@ -480,16 +484,17 @@ vis.pca <- function (.data, .groups = NA, .text = T) {
 
 
 #' Radar-like / spider-like plots.
-#' 
+#'
 #' @description
 #' Plot a grid of radar(-like) plots for visualising a distance among objects.
-#' 
+#'
 #' @param .data Square data frame or matrix with row names and col names stands for objects and values for distances.
 #' @param .ncol Number of columns in the grid.
-#' @param .expand Interger vector of length 2, for \code{scale_y_continous(expand = .expand)} function.
-#' 
+#' @param .which Character vector, which datasets to show.
+#' @param .expand Integer vector of length 2, for \code{scale_y_continous(expand = .expand)} function.
+#'
 #' @seealso \link{repOverlap}, \link{js.div}
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' load('immdata.rda')
@@ -498,39 +503,39 @@ vis.pca <- function (.data, .groups = NA, .text = T) {
 #' # Plot it.
 #' vis.radarlike(imm.js)
 #' }
-vis.radarlike <- function (.data, .ncol = 3, .expand = c(.25, 0)) {
+vis.radarlike <- function (.data, .ncol = 3, .which = NA, .expand = c(.25, 0)) {
   step = ncol(.data)
   data.names <- colnames(.data)
   .data <- as.data.frame(melt(.data))
   .data[is.na(.data[,3]),3] <- 0
-  ps <- lapply(seq(1, nrow(.data), step), function (l) {
-    ggplot(.data[l:(l+step-1),], aes(x = Var1, y = value, fill = Var1)) + 
-      geom_bar(colour = 'black', stat = 'identity') + 
-      coord_polar() + 
-      ggtitle(names(.data)[l]) +
-      scale_y_continuous(expand = .expand) + 
-      guides(fill = guide_legend(title="Sample")) +
-      theme_linedraw() + xlab('') + ylab('')
-    })
-  for (i in 1:length(data.names)) {
-    ps[[i]] <- ps[[i]] + ggtitle(data.names[i]) + .colourblind.discrete(length(data.names))
+  if (!is.na(.which[1])) {
+    .data = .data[.data$Var2 %in% .which, ]
   }
-  
+  ps <- lapply(seq(1, nrow(.data), step), function (l) {
+    ggplot(.data[l:(l+step-1),], aes(x = Var1, y = value, fill = Var1)) +
+      geom_bar(colour = 'black', stat = 'identity') +
+      coord_polar() +
+      ggtitle(names(.data)[l]) +
+      scale_y_continuous(expand = .expand) +
+      guides(fill = guide_legend(title="Sample")) +
+      theme_linedraw() + xlab('') + ylab('') +
+      ggtitle(.data$Var2[l]) + .colourblind.discrete(length(data.names))
+    })
   do.call(grid.arrange, c(ps, ncol = .ncol))
 }
 
 
 #' Visualisation of top clones proportions.
-#' 
+#'
 #' @description
 #' Visualisation of proportion of the top clones.
-#' 
+#'
 #' @param .data Data frame with clones.
 #' @param .head Integer vector of clones for the \code{.head} parameter for the \code{top.proportion} function.
 #' @param .col Parameter \code{.col} for the \code{top.proportion} function.
-#' 
+#'
 #' @seealso \code{top.proportion}
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' vis.top.proportions(immdata)
@@ -539,7 +544,7 @@ vis.top.proportions <- function (.data, .head = c(10, 100, 1000, 10000, 30000, 1
   if (has.class(.data, 'data.frame')) {
     .data <- list(Sample = .data)
   }
-  
+
   res <- sapply(.head, function (h) top.proportion(.data, h, .col))
   tmp <- res
   if (is.null(dim(tmp))) {
@@ -555,29 +560,30 @@ vis.top.proportions <- function (.data, .head = c(10, 100, 1000, 10000, 30000, 1
   res$People <- factor(row.names(res), levels = row.names(res))
   res <- melt(res)
   #   res$variable <- factor(as.character(res$variable), labels = paste0('[', c(1, .head[-length(.head)] + 1), ':', .head, ')'), ordered = T)
-  ggplot() + geom_bar(aes(x = People, y = value, fill = variable), data = res, stat = 'identity', position = 'stack', colour = 'black')+ 
-    theme_linedraw()  + 
-    theme(axis.text.x  = element_text(angle=90)) +
-    ylab("Clonal proportion") + 
-    xlab("Sample") + 
-    ggtitle("Summary proportion of the top N clones")  + 
+  ggplot() + geom_bar(aes(x = People, y = value, fill = variable), data = res, stat = 'identity', position = 'stack', colour = 'black')+
+    theme_linedraw()  +
+    theme(axis.text.x  = element_text(angle=90, vjust = .5)) +
+    ylab("Clonal proportion") +
+    xlab("Sample") +
+    ggtitle("Summary proportion of the top N clones")  +
     guides(fill = guide_legend("Top N clones")) + .colourblind.discrete(length(.head))
 #     scale_y_continuous(expand = c(0, 0))
 }
 
 
 #' Rarefaction statistics visualisation.
-#' 
+#'
 #' @description
 #' Plot a line with mean unique clones.
-#' 
+#'
 #' @param .muc.res Output from the \code{muc} function.
 #' @param .groups List with names for groups and names of the group members. If NULL than each
 #' member is in the individual group.
 #' @param .log if T then log-scale the y axis.
-#' 
+#' @param .names If T then print number of samples.
+#'
 #' @seealso \link{rarefaction}
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' data(twb)
@@ -585,31 +591,33 @@ vis.top.proportions <- function (.data, .head = c(10, 100, 1000, 10000, 30000, 1
 #' twb.rar <- rarefaction(twb, .col = "Read.count")
 #' vis.rarefaction(twb.rar, list(A = c("Subj.A", "Subj.B"), B = c("Subj.C", "Subj.D")))
 #' }
-vis.rarefaction <- function (.muc.res, .groups = NULL, .log = F) {
+vis.rarefaction <- function (.muc.res, .groups = NULL, .log = F, .names = T) {
   .muc.res$Group <- .muc.res$People
-  
-  if (!is.null(.groups)) { 
+
+  if (!is.null(.groups)) {
     for (i in 1:length(.groups)) {
       for (j in 1:length(.groups[[i]])) {
         .muc.res$Group[.muc.res$People == .groups[[i]][j] ] <- names(.groups)[i]
       }
     }
   }
-  
+
   .muc.res$Type <- factor(.muc.res$Type, levels = c('interpolation', 'extrapolation'), ordered = T)
-  
-  p <- ggplot() + 
-#     geom_point(aes(x = Size, y = Mean, colour = Group), data = .muc.res, size = 2) + 
-    geom_line(aes(x = Size, y = Mean, colour = Group, Group = People, linetype = Type), data = .muc.res) + 
+
+  p <- ggplot() +
+#     geom_point(aes(x = Size, y = Mean, colour = Group), data = .muc.res, size = 2) +
+    geom_line(aes(x = Size, y = Mean, colour = Group, Group = People, linetype = Type), data = .muc.res) +
 #     geom_errorbar(aes(x = Size, y = Mean, ymin = Q0.025, ymax = Q0.975, colour = Group), data = .muc.res) +
     xlab('Sample size') + ylab('Clones') + ggtitle("Rarefaction analysis") +
     theme_linedraw() + .colourblind.discrete(length(unique(.muc.res$Group)), T)
-  
-  for (subj in unique(.muc.res$People)) {
-    tmp <- tail(.muc.res[.muc.res$People == subj, ], 1)
-    p <- p + geom_text(aes(x = Size, y = Mean, label = People), data = tmp, hjust=1, vjust=1)
+
+  if (.names) {
+    for (subj in unique(.muc.res$People)) {
+      tmp <- tail(.muc.res[.muc.res$People == subj, ], 1)
+      p <- p + geom_text(aes(x = Size, y = Mean, label = People), data = tmp, hjust=1, vjust=1)
+    }
   }
-  
+
   if (.log) {
     p <- p + scale_x_log10()
   }
@@ -618,16 +626,16 @@ vis.rarefaction <- function (.muc.res, .groups = NULL, .log = F) {
 
 
 #' Plot of the most frequent kmers.
-#' 
+#'
 #' @description
 #' Plot a distribution (bar plot) of the most frequent kmers in a data.
-#' 
+#'
 #' @param .kmers Data frame with two columns "Kmers" and "Count" or a list with such data frames. See Examples.
 #' @param .head Number of the most frequent kmers to choose for plotting from each data frame.
 #' @param .position Character vector of length 1. Position of bars for each kmers. Value for the \code{ggplot2} argument \code{position}.
-#' 
+#'
 #' @seealso \code{get.kmers}
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' # Load necessary data and package.
@@ -640,8 +648,8 @@ vis.rarefaction <- function (.muc.res, .groups = NULL, .log = F) {
 #' p2 <- vis.kmer.histogran(imm.km, .position = 'fill')
 #' grid.arrange(p1, p2)
 #' }
-vis.kmer.histogram <- function (.kmers, 
-                                .head = 100, 
+vis.kmer.histogram <- function (.kmers,
+                                .head = 100,
                                 .position = c('stack', 'dodge', 'fill')) {
   kmers.df <- data.frame(Kmers = '')
   for (i in 2:ncol(.kmers)) {
@@ -652,27 +660,27 @@ vis.kmer.histogram <- function (.kmers,
   names(kmers.df) <- c('Kmers', 'People', 'Count')
   p <- ggplot() + geom_bar(aes(x = Kmers, y = Count, fill = People), data = kmers.df, stat = 'identity', position = .position[1]) + theme_linedraw()
   if (.position[1] == 'stack' || .position[1] == 'dodge') {
-    p <- p + ylab('Count') + theme(axis.text.x  = element_text(angle=90))
+    p <- p + ylab('Count') + theme(axis.text.x  = element_text(angle=90, vjust = .5))
   } else {
-    p <- p + ylab('Proportions') + theme(axis.text.x  = element_text(angle=90))
+    p <- p + ylab('Proportions') + theme(axis.text.x  = element_text(angle=90, vjust = .5))
   }
   p + scale_y_continuous(expand = c(0, 0)) + .colourblind.discrete2(length(unique(kmers.df$People)))
 }
 
 
 #' Visualise clonal dynamics among time points.
-#' 
+#'
 #' @description
 #' Visualise clonal dynamics (i.e., changes in frequency or count) with error bars of given
 #' clones among time points.
-#' 
+#'
 #' @param .changed Result from the \code{find.clonotypes} function, i.e. data frame with first
 #' columns with sequences (nucleotide or amino acid) and other columns are columns with frequency / count
 #' for each time point for each clone.
 #' @param .lower Similar to .changed but values are lower bound for clonal count / frequency.
 #' @param .upper Similar to .changed but values are upper bound for clonal count / frequency.
 #' @param .log if T then log-scale y-axis.
-#' 
+#'
 #' @return ggplot object.
 vis.clonal.dynamics <- function (.changed, .lower, .upper, .log = T) {
   .changed <- melt(.changed, id.vars = names(.changed)[1])
@@ -692,16 +700,16 @@ vis.clonal.dynamics <- function (.changed, .lower, .upper, .log = T) {
 
 
 #' Visualise occupied by clones homeostatic space among Samples or groups.
-#' 
+#'
 #' @description
 #' Visualise which clones how much space occupy.
-#' 
+#'
 #' @param .clonal.space.data Data from the \code{fclonal.space.homeostasis} function.
-#' @param .groups List of named character vector with names of Samples 
+#' @param .groups List of named character vector with names of Samples
 #' in \code{.clonal.space.data} for grouping them together.
-#' 
+#'
 #' @seealso \link{clonal.space.homeostasis}
-#' 
+#'
 #' @return ggplot object.
 vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
   melted <- melt(.clonal.space.data)
@@ -709,20 +717,20 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
   melted$Sample <- as.character(melted$Sample)
   melted$Proportion <- as.numeric(as.character(melted$Proportion))
   melted$Group <- melted$Sample
-  
-  if (!is.null(.groups)) { 
+
+  if (!is.null(.groups)) {
     for (i in 1:length(.groups)) {
       for (j in 1:length(.groups[[i]])) {
         melted$Group[melted$Sample == .groups[[i]][j] ] <- names(.groups)[i]
       }
     }
-    
+
     perc <- melt(tapply(melted$Proportion, list(melted$Group, melted$Clone.size), function (x) c(quantile(x, probs = .25), mean(x), quantile(x, probs = .75))))
     # return(perc)
     perc <- data.frame(row.names(perc), perc, stringsAsFactors = F)
     colnames(perc) <- c("Index", 'Group', "Clone.size", 'Q1', 'Mean', 'Q2')
     print(perc)
-    
+
     p <- ggplot() +
       geom_bar(aes(x = Group, y = Mean, fill = Clone.size), data = perc, colour = 'black', stat = 'identity') +
       geom_errorbar(aes(x = Group, ymin = Q1, ymax = Q2), data = perc, colour = 'black') +
@@ -732,33 +740,32 @@ vis.clonal.space <- function (.clonal.space.data, .groups = NULL) {
     p <- ggplot() +
       geom_bar(aes(x = Group, y = Proportion, fill = Clone.size), data = melted, colour = 'black', stat = 'identity', position = 'stack') +
       xlab("Sample")
-      
   }
-    
-  p + theme_linedraw() + 
-    theme(axis.text.x = element_text(angle=90)) + ylab("Occupied homeostatic space, proportion") + 
-    ggtitle("Clonal space homeostasis") + 
+
+  p + theme_linedraw() +
+    theme(axis.text.x = element_text(angle=90, vjust = .5)) + ylab("Occupied homeostatic space, proportion") +
+    ggtitle("Clonal space homeostasis") +
     guides(fill = guide_legend("Clone size")) + .colourblind.discrete(length(unique(melted$Clone.size))) +
     scale_y_continuous(expand = c(.01, .01)) + scale_x_discrete(expand = c(.02, .02))
 }
 
 
 #' Logo - plots for amino acid and nucletide profiles.
-#' 
+#'
 #' @description
 #' Plot logo-like graphs for visualising of nucleotide or amino acid motif sequences / profiles.
-#' 
+#'
 #' @param .data Output from the \code{kmer.profile} function.
 #' @param .replace.zero.with.na if T then replace all zeros with NAs, therefore letters with
 #' zero frequency wont appear at the plot.
 #' @param .jitter.width,.jitter.height,.dodge.width Parameters to \code{position_jitterdodge}
 #' for aligning text labels of letters.
-#' 
+#'
 #' @return ggplot2 object
-#' 
+#'
 #' @examples
 #' \dontrun{
-#' d <- kmer.profile(c('CASLL', 'CASSQ', 'CASGL'))
+#' d <- kmer_profile(c('CASLL', 'CASSQ', 'CASGL'))
 #' vis.logo(d)
 #' }
 vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .jitter.height = .01, .dodge.width = .15) {
@@ -766,11 +773,11 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
   if (.replace.zero.with.na) {
     .data$value[.data$value == 0] <- NA
   }
-  ggplot(aes(x = variable, y = value, fill = Symbol, colour = Symbol), data = .data) + 
-    geom_point(colour = 'black') + 
-    geom_text(aes(label = Symbol), size = 5, 
-              position = position_jitterdodge(jitter.width = .jitter.width, 
-                                              jitter.height = .jitter.height, 
+  ggplot(aes(x = variable, y = value, fill = Symbol, colour = Symbol), data = .data) +
+    geom_point(colour = 'black') +
+    geom_text(aes(label = Symbol), size = 5,
+              position = position_jitterdodge(jitter.width = .jitter.width,
+                                              jitter.height = .jitter.height,
                                               dodge.width = .dodge.width)) +
     xlab("Position") + ylab("Proportion") +
     theme_linedraw()
@@ -778,98 +785,194 @@ vis.logo <- function (.data, .replace.zero.with.na = T, .jitter.width = .01, .ji
 
 
 #' Visualisation of shared clonotypes occurrences among repertoires.
-#' 
-#' @description 
+#'
+#' @description
 #' Visualise counts or proportions of shared clonotypes among repertoires.
-#' 
+#' Code adapted from https://www.r-bloggers.com/ggplot2-cheatsheet-for-visualizing-distributions/.
+#'
 #' @param .shared.rep Shared repertoires, as from \link{shared.repertoire} function.
-#' @param .x.rep Which repertoire show on x-axis. Either a name or an index of a repertoire 
+#' @param .x.rep Which repertoire show on x-axis. Either a name or an index of a repertoire
 #' in the \code{.shared.rep} or NA to choose all repertoires.
-#' @param .y.rep Which repertoire show on y-axis. Either a name or an index of a repertoire 
+#' @param .y.rep Which repertoire show on y-axis. Either a name or an index of a repertoire
 #' in the \code{.shared.rep} or NA to choose all repertoires.
 #' @param .title Main title of the plot.
 #' @param .ncol Number of columns in the resulting plot.
 #' @param .point.size.modif Modify this to correct sizes of points.
-#' 
+#' @param .cut.axes If T than cut axes' limits to show only frequencies that exists.
+#' @param .density If T than plot densities of shared and unique clonotypes.
+#' @param .lm If T than fit and plot a linear model to shared clonotypes.
+#' @param .radj.size Size of the text for R^2-adjusted.
+#' @param .plot If F than return grobs instead of plotting.
+#'
 #' @return ggplot2 object or plot
-#' 
+#'
 #' @seealso \link{shared.repertoire}
-#' 
-#' @examples 
+#'
+#' @examples
 #' \dontrun{
 #' data(twb)
-#' # Show shared nucleotide clonotypes of all possible pairs 
+#' # Show shared nucleotide clonotypes of all possible pairs
 #' # using the Read.proportion column
 #' twb.sh <- shared.repertoire(twb, "n0rp")
 #' vis.shared.clonotypes(twb.sh, .ncol = 4)
-#' 
-#' # Show shared amino acid + Vseg clonotypes of pairs 
+#'
+#' # Show shared amino acid + Vseg clonotypes of pairs
 #' # including the Subj.A (the first one) using
 #' # the Read.count column.
 #' twb.sh <- shared.repertoire(twb, "avrc")
 #' vis.shared.clonotypes(twb.sh, 1, NA, .ncol = 4)
 #' # same, just another order of axis
 #' vis.shared.clonotypes(twb.sh, NA, 1, .ncol = 4)
-#' 
+#'
 #' # Show shared nucleotide clonotypes of Subj.A (the first one)
 #' # Subj.B (the second one) using the Read.proportion column.
 #' twb.sh <- shared.repertoire(twb, "n0rp")
 #' vis.shared.clonotypes(twb.sh, 1, 2)
-#' 
+#'
 #' # Show the same plot, but with much larget points.
 #' vis.shared.clonotypes(twb.sh, 1, 2, .point.size.modif = 3)
 #' }
-vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA, 
-                                   .title = "Shared clonotypes", .ncol = 3, 
-                                   .point.size.modif = 1) {
+vis.shared.clonotypes <- function (.shared.rep, .x.rep = NA, .y.rep = NA,
+                                   .title = NA, .ncol = 3,
+                                   .point.size.modif = 1, .cut.axes = T,
+                                   .density = T, .lm = T, .radj.size = 3.5, .plot = T) {
   mat <- shared.matrix(.shared.rep)
-  
+
   if (is.na(.x.rep) && is.na(.y.rep)) {
     ps <- list()
     for (i in 1:ncol(mat)) {
       for (j in 1:ncol(mat)) {
-        ps <- c(ps, list(vis.shared.clonotypes(.shared.rep, i, j, '')))
+        ps <- c(ps, list(vis.shared.clonotypes(.shared.rep, i, j, '', .point.size.modif = .point.size.modif,
+                                               .cut.axes = .cut.axes, .density = .density, .lm = .lm, .radj.size = .radj.size,
+                                               .plot = F)))
       }
     }
-    do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
+    grid.arrange(grobs = ps, ncol = .ncol, top = .title)
   } else if (is.na(.x.rep)) {
-    ps <- lapply(1:ncol(mat), function (i) { 
-      vis.shared.clonotypes(.shared.rep, i, .y.rep, '') 
+    ps <- lapply(1:ncol(mat), function (i) {
+      vis.shared.clonotypes(.shared.rep, i, .y.rep, '', .point.size.modif = .point.size.modif,
+                            .cut.axes = .cut.axes, .density = .density, .lm = .lm)
       })
     do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
   } else if (is.na(.y.rep)) {
-    ps <- lapply(1:ncol(mat), function (j) { 
-      vis.shared.clonotypes(.shared.rep, .x.rep, j, '') 
+    ps <- lapply(1:ncol(mat), function (j) {
+      vis.shared.clonotypes(.shared.rep, .x.rep, j, '', .point.size.modif = .point.size.modif,
+                            .cut.axes = .cut.axes, .density = .density, .lm = .lm)
     })
     do.call(grid.arrange, c(ps, ncol = .ncol, top = .title))
   } else {
     if (!is.character(.x.rep)) { .x.rep <- colnames(mat)[.x.rep] }
     if (!is.character(.y.rep)) { .y.rep <- colnames(mat)[.y.rep] }
-    
+
+    if (.x.rep == .y.rep) {
+      return(rectGrob(gp=gpar(col="white")))
+    }
+
     df <- data.frame(cbind(mat[, .x.rep], mat[, .y.rep]))
+    df[,1] = df[,1] / sum(df[,1], na.rm = T)
+    df[,2] = df[,2] / sum(df[,2], na.rm = T)
+    df_full = df
     df <- df[!is.na(df[,1]) & !is.na(df[,2]), ]
     freq <- log10(sqrt(as.numeric(df[, 1]) * df[, 2])) / 2
     names(df) <- c("Xrep", "Yrep")
-    
+    names(df_full) <- c("Xrep", "Yrep")
+
     pnt.cols <- log(df[, 1] / df[, 2])
     suppressWarnings(pnt.cols[pnt.cols > 0] <- pnt.cols[pnt.cols > 0] / max(pnt.cols[pnt.cols > 0]))
     suppressWarnings(pnt.cols[pnt.cols < 0] <- -pnt.cols[pnt.cols < 0] / min(pnt.cols[pnt.cols < 0]))
-    
-    mat.lims <- c(min(as.matrix(df)), max(as.matrix(df)))
-    
-    ggplot() + 
-      geom_point(aes(x = Xrep, y = Yrep, size = freq, fill = pnt.cols), data = df, shape=21) + 
+
+    if (.cut.axes) {
+      mat.lims <- c(min(as.matrix(df_full), na.rm = T), max(as.matrix(df_full), na.rm = T))
+    } else {
+      mat.lims <- c(min(as.matrix(df_full), na.rm = T), 1)
+    }
+
+    empty <- ggplot()+geom_point(aes(1,1), colour="white") +
+      theme(
+        plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank()
+      )
+
+    min_df = min(floor(log10(min(df_full[,1], na.rm = T))), floor(log10(min(df_full[,2], na.rm = T))))
+    max_df = max(trunc(log10(max(df_full[,1], na.rm = T))), trunc(log10(max(df_full[,2], na.rm = T))))
+    breaks_values = 10**seq(min_df, 1)
+    breaks_labels = format(log10(breaks_values), scientific = F)
+
+    grey_col = "#CCCCCC"
+
+    points = ggplot() +
+      geom_point(aes(x = Xrep, y = Yrep, size = freq, fill = pnt.cols), data = df, shape=21) +
       scale_radius(range = c(.point.size.modif, .point.size.modif * 6)) +
       geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
-      theme_linedraw() + 
+      theme_linedraw() +
       .colourblind.gradient(min(pnt.cols), max(pnt.cols)) +
-      scale_x_log10() + scale_y_log10() + theme(legend.position="none") +
-      coord_fixed(xlim = mat.lims, ylim = mat.lims) +
-      xlab(.x.rep) + ylab(.y.rep) + ggtitle(.title)
+      scale_x_log10(breaks = breaks_values, labels = breaks_labels, lim = mat.lims, expand = c(.015, .015)) +
+      scale_y_log10(breaks = breaks_values, labels = breaks_labels, lim = mat.lims, expand = c(.015, .015)) +
+      theme(legend.position="none") +
+      xlab(.x.rep) + ylab(.y.rep)
+    if (!is.na(.title)) {
+      points = points + ggtitle(.title)
+    }
+    if (.lm) {
+      adj.R.sq = summary(lm(Yrep ~ Xrep, df))$adj.
+
+      points = points +
+        geom_smooth(aes(x = Xrep, y = Yrep), method = "lm", data = df, fullrange = T, colour = "grey20", size = .5) +
+        geom_text(aes(x = max(df_full, na.rm = T) / 4,
+                      y = min(df_full, na.rm = T),
+                      label = paste0("R^2(adj.) = ", as.character(round(adj.R.sq, 2)))), size = .radj.size)
+        # ggtitle(paste0("R^2(adj.) = ", as.character(round(adj.R.sq, 2))))
+    }
+
+    if (.density) {
+      df2 = data.frame(Clonotype = df_full[!is.na(df_full[,1]) & is.na(df_full[,2]), 1], Type = "unique", stringsAsFactors = F)
+      df2 = rbind(df2, data.frame(Clonotype = df_full[!is.na(df_full[,1]) & !is.na(df_full[,2]), 1], Type = "shared", stringsAsFactors = F))
+      top_plot = ggplot() +
+        geom_density(aes(x = Clonotype, fill = Type), colour = "grey25", data = df2, alpha = .3) +
+        scale_x_log10(breaks = 10**(seq(min_df, 0)), lim = mat.lims, expand = c(.12, .015)) +
+        theme_bw() + theme(axis.title.x = element_blank(),
+                           axis.title.y = element_blank(),
+                           axis.text.x = element_blank(),
+                           axis.text.y = element_blank(),
+                           axis.ticks = element_blank(),
+                           legend.position = "none") +
+        scale_fill_manual(values = colorRampPalette(c(.colourblind.vector()[5], grey_col))(2))
+
+      df2 = data.frame(Clonotype = df_full[!is.na(df_full[,2]) & is.na(df_full[,1]), 2], Type = "unique", stringsAsFactors = F)
+      df2 = rbind(df2, data.frame(Clonotype = df_full[!is.na(df_full[,2]) & !is.na(df_full[,1]), 2], Type = "shared", stringsAsFactors = F))
+      right_plot = ggplot() +
+        geom_density(aes(x = Clonotype, fill = Type), colour = "grey25", data = df2, alpha = .3) +
+        scale_x_log10(breaks = 10**(seq(min_df, 0)), lim = mat.lims, expand = c(.12, .015)) +
+        coord_flip() +
+        theme_bw() + theme(axis.title.x = element_blank(),
+                           axis.title.y = element_blank(),
+                           axis.text.x = element_blank(),
+                           axis.text.y = element_blank(),
+                           axis.ticks = element_blank(),
+                           legend.position = "none") +
+        scale_fill_manual(values = colorRampPalette(c(.colourblind.vector()[1], grey_col))(2))
+
+      if (.plot) {
+        grid.arrange(top_plot, empty, points, right_plot, ncol=2, nrow=2, widths=c(4, 1), heights=c(1, 4))
+      } else {
+        arrangeGrob(top_plot, empty, points, right_plot, ncol=2, nrow=2, widths=c(4, 1), heights=c(1, 4))
+      }
+    } else {
+      points
+    }
+
   }
 }
 
 
 # vis.hill.numbers <- function (.hill.nums, .groups = NA) {
-#   
+#
 # }

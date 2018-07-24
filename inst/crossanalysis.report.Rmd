@@ -98,6 +98,7 @@ vis.gene.usage(immdata, HUMAN_TRBV, .ncol = 2, .coord.flip = F)
 groups <- list(Group.A = names(immdata)[1:(length(immdata) / 2)],
                Group.B = names(immdata)[(length(immdata) / 2 + 1) : length(immdata)])
 vis.group.boxplot(geneUsage(immdata, HUMAN_TRBV, .norm = T), groups, .rotate.x = T)
+
 ```
 
 ### J-segments usage
