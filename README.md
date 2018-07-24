@@ -6,7 +6,7 @@
 tcR
 ===
 
-*The package is no longer supported. If you would like to please complete a survey on immune repertoire analysis and help us understand what features should we definitely implement. Link to the survey: https://goo.gl/forms/RcLqJwkUPNfKfaOw2*
+*The package is no longer supported. If you would like to help us understand how we can improve the quality of your research and what features we should add that suit your needs, please complete a survey on immune repertoire analysis and help us understand what features should we definitely implement. Link to the survey: https://goo.gl/forms/RcLqJwkUPNfKfaOw2*
 
 tcR is a platform designed for TCR and Ig repertoire data analysis in R after preprocessing data with software tools for CDR3 extraction and gene segments aligning (MiTCR, MiXCR, MiGEC, ImmunoSEQ, IMSEQ, etc.). With the power and flexibility of R language and procedures supported by tcR users can perform advanced statistical analysis of TCR and Ig repertoires. The package was published in BMC Bioinformatics, please cite if you use it:
 
