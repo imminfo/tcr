@@ -21,4 +21,3 @@ Reverse given character vector by the given n-plets.
 reverse.string('abcde')  # => "edcba"
 reverse.string('abcde', 2)  # => "debca"
 }
-

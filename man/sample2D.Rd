@@ -17,4 +17,3 @@ Character matrix with nrow == .count and 2 columns. row[1] in row.names(.table),
 \description{
 Get a sample from matrix or data frame with pair-wise probabilities.
 }
-

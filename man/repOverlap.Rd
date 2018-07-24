@@ -69,4 +69,3 @@ vis.pca(prcomp(ov, scale. = T), list(A = c(1, 2), B = c(3, 4)))
 \seealso{
 \link{intersectClonesets}, \link{similarity}, \link{repDiversity}
 }
-

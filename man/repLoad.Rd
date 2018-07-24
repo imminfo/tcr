@@ -39,4 +39,3 @@ datalist <- repLoad(c("file1.txt", "folder_with_files1", "another_folder"), "mix
 \seealso{
 \link{parse.file}
 }
-

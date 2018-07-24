@@ -19,4 +19,3 @@ Shuffled data.frame or un-shuffled data frame if \code{.data} is a data frame, e
 Shuffle the given data.frame and order it by the Read.count column or un-shuffle
 a data frame and return it to the initial order.
 }
-

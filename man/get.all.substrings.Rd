@@ -19,4 +19,3 @@ Character vector or data frame with columns "Substring", "Start" and "End".
 \description{
 Get all substrings for the given sequence.
 }
-

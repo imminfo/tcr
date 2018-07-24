@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // exact_search
 std::vector<int> exact_search(const std::vector<std::string>& vec, const std::vector<std::string>& patterns, int max_error, bool verbose);
-RcppExport SEXP tcR_exact_search(SEXP vecSEXP, SEXP patternsSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _tcR_exact_search(SEXP vecSEXP, SEXP patternsSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,7 +21,7 @@ END_RCPP
 }
 // exact_search_list
 List exact_search_list(const std::vector<std::string>& vec, const List patterns_list, int max_error, bool verbose);
-RcppExport SEXP tcR_exact_search_list(SEXP vecSEXP, SEXP patterns_listSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _tcR_exact_search_list(SEXP vecSEXP, SEXP patterns_listSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -35,7 +35,7 @@ END_RCPP
 }
 // hamming_search
 std::vector<int> hamming_search(const std::vector<std::string>& vec, const std::vector<std::string>& patterns, int max_error, bool verbose);
-RcppExport SEXP tcR_hamming_search(SEXP vecSEXP, SEXP patternsSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _tcR_hamming_search(SEXP vecSEXP, SEXP patternsSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -49,7 +49,7 @@ END_RCPP
 }
 // levenshtein_search
 std::vector<int> levenshtein_search(const std::vector<std::string>& vec, const std::vector<std::string>& patterns, int max_error, bool verbose);
-RcppExport SEXP tcR_levenshtein_search(SEXP vecSEXP, SEXP patternsSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _tcR_levenshtein_search(SEXP vecSEXP, SEXP patternsSEXP, SEXP max_errorSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -60,4 +60,17 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(levenshtein_search(vec, patterns, max_error, verbose));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_tcR_exact_search", (DL_FUNC) &_tcR_exact_search, 4},
+    {"_tcR_exact_search_list", (DL_FUNC) &_tcR_exact_search_list, 4},
+    {"_tcR_hamming_search", (DL_FUNC) &_tcR_hamming_search, 4},
+    {"_tcR_levenshtein_search", (DL_FUNC) &_tcR_levenshtein_search, 4},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_tcR(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

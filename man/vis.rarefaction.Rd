@@ -30,4 +30,3 @@ vis.rarefaction(twb.rar, list(A = c("Subj.A", "Subj.B"), B = c("Subj.C", "Subj.D
 \seealso{
 \link{rarefaction}
 }
-

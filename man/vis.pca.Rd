@@ -28,4 +28,3 @@ tmp = geneUsage(twb)
 vis.pca(prcomp(t(tmp[,-1])))
 }
 }
-

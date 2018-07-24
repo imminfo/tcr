@@ -35,4 +35,3 @@ spectratype(tmp, .quant = "id", .plot = T, .gene = 'V')
 spectratype(tmp, .quant = "read.count", .plot = F)
 }
 }
-

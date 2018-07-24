@@ -15,4 +15,3 @@ Full matrix.
 \description{
 Copy the up-triangle matrix values to low-triangle.
 }
-

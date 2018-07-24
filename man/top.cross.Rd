@@ -2,8 +2,8 @@
 % Please edit documentation in R/stats.R
 \name{top.cross}
 \alias{top.cross}
-\alias{top.cross.plot}
 \alias{top.cross.vec}
+\alias{top.cross.plot}
 \title{Perform sequential cross starting from the top of a data frame.}
 \usage{
 top.cross(.data, .n = NA, .data2 = NULL, .type = 'ave', .norm = F, .verbose = T)
@@ -70,4 +70,3 @@ top.cross.plot(immdata.top)
 \seealso{
 \code{\link{intersect}}
 }
-

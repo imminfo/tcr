@@ -56,4 +56,3 @@ geneUsage(twb, list(HUMAN_TRBV, HUMAN_TRBJ))
 \seealso{
 \code{\link{genealphabets}}, \code{\link{vis.gene.usage}}, \code{\link{pca.segments}}
 }
-

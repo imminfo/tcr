@@ -30,4 +30,3 @@ vis.radarlike(imm.js)
 \seealso{
 \link{repOverlap}, \link{js.div}
 }
-

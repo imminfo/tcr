@@ -2,12 +2,12 @@
 % Please edit documentation in R/measures.R
 \name{cosine.similarity}
 \alias{cosine.similarity}
-\alias{horn.index}
-\alias{jaccard.index}
-\alias{morisitas.index}
-\alias{overlap.coef}
 \alias{similarity}
 \alias{tversky.index}
+\alias{overlap.coef}
+\alias{morisitas.index}
+\alias{jaccard.index}
+\alias{horn.index}
 \title{Set and vector similarity measures.}
 \usage{
 cosine.similarity(.alpha, .beta, .do.norm = NA, .laplace = 0)
@@ -92,4 +92,3 @@ repOverlap(immdata[1:2], 'jaccard', seq = 'aa', .vgene = T)
 \seealso{
 \link{repOverlap}, \link{intersectClonesets}, \link{entropy}, \link{diversity}
 }
-

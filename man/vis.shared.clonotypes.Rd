@@ -11,10 +11,10 @@ vis.shared.clonotypes(.shared.rep, .x.rep = NA, .y.rep = NA, .title = NA,
 \arguments{
 \item{.shared.rep}{Shared repertoires, as from \link{shared.repertoire} function.}
 
-\item{.x.rep}{Which repertoire show on x-axis. Either a name or an index of a repertoire 
+\item{.x.rep}{Which repertoire show on x-axis. Either a name or an index of a repertoire
 in the \code{.shared.rep} or NA to choose all repertoires.}
 
-\item{.y.rep}{Which repertoire show on y-axis. Either a name or an index of a repertoire 
+\item{.y.rep}{Which repertoire show on y-axis. Either a name or an index of a repertoire
 in the \code{.shared.rep} or NA to choose all repertoires.}
 
 \item{.title}{Main title of the plot.}
@@ -37,18 +37,18 @@ in the \code{.shared.rep} or NA to choose all repertoires.}
 ggplot2 object or plot
 }
 \description{
-Visualise counts or proportions of shared clonotypes among repertoires. 
+Visualise counts or proportions of shared clonotypes among repertoires.
 Code adapted from https://www.r-bloggers.com/ggplot2-cheatsheet-for-visualizing-distributions/.
 }
 \examples{
 \dontrun{
 data(twb)
-# Show shared nucleotide clonotypes of all possible pairs 
+# Show shared nucleotide clonotypes of all possible pairs
 # using the Read.proportion column
 twb.sh <- shared.repertoire(twb, "n0rp")
 vis.shared.clonotypes(twb.sh, .ncol = 4)
 
-# Show shared amino acid + Vseg clonotypes of pairs 
+# Show shared amino acid + Vseg clonotypes of pairs
 # including the Subj.A (the first one) using
 # the Read.count column.
 twb.sh <- shared.repertoire(twb, "avrc")
@@ -68,4 +68,3 @@ vis.shared.clonotypes(twb.sh, 1, 2, .point.size.modif = 3)
 \seealso{
 \link{shared.repertoire}
 }
-

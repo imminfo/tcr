@@ -2,8 +2,8 @@
 % Please edit documentation in R/shared.R
 \name{cosine.sharing}
 \alias{cosine.sharing}
-\alias{shared.clones.count}
 \alias{shared.representation}
+\alias{shared.clones.count}
 \alias{shared.summary}
 \title{Shared repertoire analysis.}
 \usage{
@@ -57,4 +57,3 @@ apply(sh.repr, 2, function (col) col / col[1])
 \seealso{
 \link{shared.repertoire}
 }
-

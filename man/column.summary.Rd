@@ -43,4 +43,3 @@ column.summary(immdata[[1]], 'V.gene', 'Total.insertions', HUMAN_TRBV_MITCR)
 \seealso{
 \link{summary}
 }
-

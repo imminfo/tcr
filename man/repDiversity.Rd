@@ -56,4 +56,3 @@ twb.div <- repDiversity(twb, "chao1", "read.count")
 \seealso{
 \link{diversity}, \link{entropy}
 }
-

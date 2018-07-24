@@ -42,4 +42,3 @@ vis.group.boxplot(sb)
 \seealso{
 \link{repOverlap}, \link{intersectClonesets}, \link{permutDistTest}
 }
-

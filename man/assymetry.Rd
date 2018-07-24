@@ -24,4 +24,3 @@ of the counts of shared clones.
 Merge two data frames by the given column and compute
 value Sum(Log((Percentage for shared clone S from alpha) / (Percentage for shared clone S from beta))) / (# of shared clones).
 }
-

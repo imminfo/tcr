@@ -13,4 +13,3 @@ fix.alleles(.data)
 \description{
 Fix alleles / genes by removing allele information / unnecessary colons.
 }
-

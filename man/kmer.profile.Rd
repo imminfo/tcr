@@ -26,4 +26,3 @@ of equal length or list with them.
 \seealso{
 \link{vis.logo}
 }
-

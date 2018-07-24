@@ -40,4 +40,3 @@ J-beta segments. Each element is a mutual probability of choosing J-D segments.
 generate.kmers.prob(rep.int(10, 10), .probs=beta.prob$P.ins.nucl[,c(1, 2:5)])
 }
 }
-

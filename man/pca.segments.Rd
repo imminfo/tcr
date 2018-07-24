@@ -34,4 +34,3 @@ data(twb)
 pca.segments(twb, T, scale. = T)
 }
 }
-

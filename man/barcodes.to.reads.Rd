@@ -15,4 +15,3 @@ Data frame with new "Read.count" and "Percentage" columns.
 \description{
 Replace Read.count with Umi.count, recompute Percentage and sort data.
 }
-

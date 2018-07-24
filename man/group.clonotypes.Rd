@@ -57,4 +57,3 @@ twb1.gr <- group.clonotypes(twb[[1]])
 twb.gr <- group.clonotypes(twb)
 }
 }
-
