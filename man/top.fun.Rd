@@ -2,17 +2,17 @@
 % Please edit documentation in R/datatools.R
 \name{top.fun}
 \alias{top.fun}
-\alias{slice.fun}
+\alias{slice_fun}
 \title{Get samples from a repertoire slice-by-slice or top-by-top and apply function to them.}
 \usage{
 top.fun(.data, .n, .fun, ..., .simplify = T)
 
-slice.fun(.data, .size, .n, .fun, ..., .simplify = T)
+slice_fun(.data, .size, .n, .fun, ..., .simplify = T)
 }
 \arguments{
 \item{.data}{Data.frame, matrix, vector or any enumerated type or a list of this types.}
 
-\item{.n}{Vector of values passed to head function for top.fun or the number of slices for slice.fun.}
+\item{.n}{Vector of values passed to head function for top.fun or the number of slices for slice_fun.}
 
 \item{.fun}{Funtions to apply to every sample subset. First input argument is a data.frame, others are passed as \code{...}.}
 
@@ -20,14 +20,14 @@ slice.fun(.data, .size, .n, .fun, ..., .simplify = T)
 
 \item{.simplify}{if T then try to simplify result to a vector or to a matrix if .data is a list.}
 
-\item{.size}{Size of the slice for sampling for slice.fun.}
+\item{.size}{Size of the slice for sampling for slice_fun.}
 }
 \value{
-List of length length(.n) for top.fun or .n for slice.fun.
+List of length length(.n) for top.fun or .n for slice_fun.
 }
 \description{
 Functions for getting samples from data frames either by consequently applying
-head functions (\code{top.fun}) or by getting equal number of rows in the moving window (\code{slice.fun})
+head functions (\code{top.fun}) or by getting equal number of rows in the moving window (\code{slice_fun})
 and applying specified function to this samples.
 }
 \examples{

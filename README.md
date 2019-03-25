@@ -1,12 +1,21 @@
-[![Licence](https://img.shields.io/hexpm/l/plug.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0)
 [![CRAN](http://www.r-pkg.org/badges/version/tcR?style=flat-square)](https://cran.r-project.org/package=tcR)
 [![Downloads_all](http://cranlogs.r-pkg.org/badges/grand-total/tcR)](http://www.r-pkg.org/pkg/tcR)
 [![Downloads_week](http://cranlogs.r-pkg.org/badges/last-week/tcR)](http://www.r-pkg.org/pkg/tcR)
+[![Licence](https://img.shields.io/hexpm/l/plug.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0)
 
 tcR
 ===
 
-*The package is no longer supported. If you would like to help us understand how we can improve the quality of your research and what features we should add that suit your needs, please complete a survey on immune repertoire analysis and help us understand what features should we definitely implement. Link to the survey: https://goo.gl/forms/RcLqJwkUPNfKfaOw2*
+*The tcR package is no longer supported and current issues will not be fixed. A new package is available that is designed to replace tcR called immunarch.*
+*We have solved most of the problems tcR package had and improved the overall pipeline, providing functions for painless repertoire file parsing and publication-ready plot making.*
+
+*The mission of immunarch is to make immune repertoire data analysis as easy and possible - even with R. *
+*Please feel free to check it here: https://immunarch.com/*
+
+*We will be happy to help you to integrate the new package into your pipelines. Please do not hesitate to contact us via emails on https://immunarch.com/, should any question arise.*
+
+*Sincerely, *
+*  immunarch dev team and Vadim I. Nazarov, lead developer*
 
 tcR is a platform designed for TCR and Ig repertoire data analysis in R after preprocessing data with software tools for CDR3 extraction and gene segments aligning (MiTCR, MiXCR, MiGEC, ImmunoSEQ, IMSEQ, etc.). With the power and flexibility of R language and procedures supported by tcR users can perform advanced statistical analysis of TCR and Ig repertoires. The package was published in BMC Bioinformatics, please cite if you use it:
 

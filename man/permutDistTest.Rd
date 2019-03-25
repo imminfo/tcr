@@ -6,8 +6,8 @@
 \usage{
 permutDistTest(.mat, .groups, .n = 1000, .fun = mean, .signif = 0.05,
   .plot = T, .xlab = "Values",
-  .title = "Monte Carlo permutation testing of overlaps", .hjust = -0.1,
-  .vjust = -4)
+  .title = "Monte Carlo permutation testing of overlaps",
+  .hjust = -0.1, .vjust = -4)
 }
 \arguments{
 \item{.mat}{Symmetric matrix of repertoire distances.}

@@ -4,9 +4,9 @@
 \alias{vis.shared.clonotypes}
 \title{Visualisation of shared clonotypes occurrences among repertoires.}
 \usage{
-vis.shared.clonotypes(.shared.rep, .x.rep = NA, .y.rep = NA, .title = NA,
-  .ncol = 3, .point.size.modif = 1, .cut.axes = T, .density = T,
-  .lm = T, .radj.size = 3.5, .plot = T)
+vis.shared.clonotypes(.shared.rep, .x.rep = NA, .y.rep = NA,
+  .title = NA, .ncol = 3, .point.size.modif = 1, .cut.axes = T,
+  .density = T, .lm = T, .radj.size = 3.5, .plot = T)
 }
 \arguments{
 \item{.shared.rep}{Shared repertoires, as from \link{shared.repertoire} function.}

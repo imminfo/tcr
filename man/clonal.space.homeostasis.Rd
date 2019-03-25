@@ -4,8 +4,8 @@
 \alias{clonal.space.homeostasis}
 \title{Clonal space homeostasis.}
 \usage{
-clonal.space.homeostasis(.data, .clone.types = c(Rare = 1e-05, Small = 1e-04,
-  Medium = 0.001, Large = 0.01, Hyperexpanded = 1),
+clonal.space.homeostasis(.data, .clone.types = c(Rare = 1e-05, Small =
+  1e-04, Medium = 0.001, Large = 0.01, Hyperexpanded = 1),
   .prop.col = "Read.proportion")
 }
 \arguments{

@@ -4,8 +4,9 @@
 \alias{group.clonotypes}
 \title{Get all unique clonotypes.}
 \usage{
-group.clonotypes(.data, .gene.col = "V.gene", .count.col = "Read.count",
-  .prop.col = "Read.proportion", .seq.col = "CDR3.amino.acid.sequence")
+group.clonotypes(.data, .gene.col = "V.gene",
+  .count.col = "Read.count", .prop.col = "Read.proportion",
+  .seq.col = "CDR3.amino.acid.sequence")
 }
 \arguments{
 \item{.data}{Either tcR data frame or a list with data frames.}

@@ -51,7 +51,7 @@ fix.genes <- function (.data) {
 
 #' Choose the right column.
 #' 
-#' @param .x Character vector with column IDs.
+#' @param x Character vector with column IDs.
 #' @param .verbose If T then print the error mesasge.
 #' @return Character.
 .column.choice <- function (x, .verbose = T) {
@@ -384,26 +384,26 @@ check.distribution <- function (.data, .do.norm = NA, .laplace = 1, .na.val = 0,
 
 #' Get samples from a repertoire slice-by-slice or top-by-top and apply function to them.
 #' 
-#' @aliases top.fun slice.fun
+#' @aliases top.fun slice_fun
 #' 
 #' @description
 #' Functions for getting samples from data frames either by consequently applying
-#' head functions (\code{top.fun}) or by getting equal number of rows in the moving window (\code{slice.fun})
+#' head functions (\code{top.fun}) or by getting equal number of rows in the moving window (\code{slice_fun})
 #' and applying specified function to this samples.
 #' 
 #' @usage
 #' top.fun(.data, .n, .fun, ..., .simplify = T)
 #' 
-#' slice.fun(.data, .size, .n, .fun, ..., .simplify = T)
+#' slice_fun(.data, .size, .n, .fun, ..., .simplify = T)
 #' 
 #' @param .data Data.frame, matrix, vector or any enumerated type or a list of this types.
-#' @param .n Vector of values passed to head function for top.fun or the number of slices for slice.fun.
-#' @param .size Size of the slice for sampling for slice.fun.
+#' @param .n Vector of values passed to head function for top.fun or the number of slices for slice_fun.
+#' @param .size Size of the slice for sampling for slice_fun.
 #' @param .fun Funtions to apply to every sample subset. First input argument is a data.frame, others are passed as \code{...}.
 #' @param ... Additional parameters passed to the .fun.
 #' @param .simplify if T then try to simplify result to a vector or to a matrix if .data is a list.
 #' 
-#' @return List of length length(.n) for top.fun or .n for slice.fun.
+#' @return List of length length(.n) for top.fun or .n for slice_fun.
 #' 
 #' @examples
 #' \dontrun{
@@ -427,9 +427,9 @@ top.fun <- function (.data, .n, .fun, ..., .simplify = T) {
   res
 }
 
-slice.fun <- function(.data, .size, .n, .fun, ..., .simplify = T) {
+slice_fun <- function(.data, .size, .n, .fun, ..., .simplify = T) {
   if (has.class(.data, 'list')) {
-    res <- lapply(.data, function(d) { slice.fun(d, .size, .n, .fun, ..., .simplify = .simplify) })
+    res <- lapply(.data, function(d) { slice_fun(d, .size, .n, .fun, ..., .simplify = .simplify) })
     if (.simplify) {
       res <- as.matrix(data.frame(res))
     }
@@ -456,6 +456,10 @@ slice.fun <- function(.data, .size, .n, .fun, ..., .simplify = T) {
 #' Given a list of ggplot2 plots, remove legend from each of them and return 
 #' grid of such plots plus legend from the first vis. Suitable for plots
 #' with similar legends.
+#' 
+#' @param .vis.list A list with ggplot2 plots.
+#' @param .vis.nrow Number of rows of the resulting grid with plots.
+#' @param .legend.ncol Number of columns in the shared legend.
 .add.legend <- function (.vis.list, .vis.nrow = 2, .legend.ncol = 1) {
   leg <- gtable_filter(ggplot_gtable(ggplot_build(.vis.list[[1]] + guides(fill=guide_legend(ncol=.legend.ncol)))), "guide-box")
   grid.arrange(do.call(arrangeGrob, c(.vis.list, nrow = .vis.nrow)), leg, widths=unit.c(unit(1, "npc") - leg$width, leg$width), nrow = 1, top ='Top crosses')

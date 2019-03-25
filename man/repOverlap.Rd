@@ -4,8 +4,8 @@
 \alias{repOverlap}
 \title{General function for the repertoire overlap evaluation.}
 \usage{
-repOverlap(.data, .method = c("exact", "hamm", "lev", "jaccard", "morisita",
-  "tversky", "overlap", "horn"), .seq = c("nuc", "aa"),
+repOverlap(.data, .method = c("exact", "hamm", "lev", "jaccard",
+  "morisita", "tversky", "overlap", "horn"), .seq = c("nuc", "aa"),
   .quant = c("read.count", "umi.count", "read.prop", "umi.prop"),
   .vgene = F, .norm = T, .a = 0.5, .b = 0.5, .do.unique = T,
   .verbose = T)

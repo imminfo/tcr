@@ -2,17 +2,19 @@
   packageStartupMessage("
 ==================================
 ==================================
-We want to help you improve the quality of the research and make a new package with more features added that suit your needs.
-Please, complete a survey on immune repertoire analysis and help us understand what features should we definitely implement.
-Link to the survey:
-https://goo.gl/forms/RcLqJwkUPNfKfaOw2
+The tcR package is no longer supported and current issues will not be fixed. A new package is available that is designed to replace tcR called immunarch. 
+We have solved most of the problems tcR package had and improved the overall pipeline, providing functions for painless repertoire file parsing and publication-ready plot making. 
 
-Thank you so much for your time! Please do not hesitate to contact us, should any question arise:
-Email: vdm.nazarov@gmail.com
+The mission of immunarch is to make immune repertoire data analysis as easy and possible - even with R. 
+Please feel free to check it here: 
+https://immunarch.com/
+
+We will be happy to help you to integrate the new package into your pipelines. Please do not hesitate to contact us, should any question arise:
+Email: vdm.nazarov at gmail.com
 LinkedIn: https://linkedin.com/in/vdnaz
-  
+
 Sincerely, 
-  tcR 3.0 Dev Team
+  immunarch dev team and Vadim I. Nazarov, lead developer
         
 P.S. To suppress this message, just wrap any call to tcR as follows:
 suppressPackageStartupMessages(library(tcR))
