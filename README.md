@@ -8,7 +8,7 @@ tcR
 
 **The tcR package is no longer supported and current issues will not be fixed.** 
 
-*A new package is available that is designed to replace tcR called immunarch: https://immunarch.com/*
+**A new package is available that is designed to replace tcR called immunarch: https://immunarch.com/**
 
 *We have solved most of the problems tcR package had and improved the overall pipeline, providing functions for painless repertoire file parsing and publication-ready plot making. We will be happy to help you to integrate the new package into your pipelines. Please do not hesitate to contact us via emails on https://immunarch.com/ or via issues on https://github.com/immunomind/immunarch, should any question arise.*
 
