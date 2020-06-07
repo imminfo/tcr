@@ -5,7 +5,8 @@
 \alias{AA_TABLE}
 \alias{AA_TABLE_REVERSED}
 \title{Tables with genetic code.}
-\format{AA_TABLE:
+\format{
+AA_TABLE:
 
 \code{Class 'table'  Named chr [1:65] "K" "N" "K" "N" ...
 ..- attr(*, "names")= chr [1:65] "AAA" "AAC" "AAG" "AAT" ...}
@@ -18,7 +19,8 @@ $ A: chr [1:4] "GCA" "GCC" "GCG" "GCT"
 $ C: chr [1:2] "TGC" "TGT"
 $ D: chr [1:2] "GAC" "GAT"
 ...
-}}
+}
+}
 \usage{
 AA_TABLE
 }

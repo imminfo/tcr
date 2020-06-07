@@ -95,7 +95,7 @@ shared.repertoire <- function (.datalist, .type = 'avrc', .min.ppl = 1, .head = 
 #     minidata <- as.data.table(.data[.bc])
     minidata <- as.data.table(.data[.bc])
     minidata$value <- .data[, .sc]
-    res <- as.data.table(dplyr::summarise(grouped_df(minidata, lapply(.bc, as.name)), value = value[1]))
+    res <- as.data.table(dplyr::summarise(grouped_df(minidata, .bc), value = value[1]))
     class(res) <- c('data.table', 'data.frame')
     setnames(res, c(.bc, .sc))
     res
@@ -206,7 +206,6 @@ shared.matrix <- function (.shared.rep) {
 #'                .max.ppl = max(.shared.rep$People))
 #' 
 #' @param .shared.rep Shared repertoire, obtained from the function \code{shared.repertoire}.
-#' @param ... Parameters passed to the \code{prcomp} function.
 #' @param .log if T then apply log to the after adding laplace correction equal to one.
 #' @param .min.ppl Filter: get sequences with # people >= .min.ppl.
 #' @param .max.ppl Filter: get sequences with # people <= .max.ppl.

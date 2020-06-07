@@ -4,7 +4,9 @@
 \name{beta.prob}
 \alias{beta.prob}
 \title{List with assembling probabilities of beta chain TCRs.}
-\format{\code{beta.prob} is a list of matrices and data frames.}
+\format{
+\code{beta.prob} is a list of matrices and data frames.
+}
 \description{
 \code{beta.prob} is a list with probabilities of TCR assembling taken from
 \code{Murugan et al. Statistical inference of the generation probability

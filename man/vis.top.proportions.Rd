@@ -4,8 +4,11 @@
 \alias{vis.top.proportions}
 \title{Visualisation of top clones proportions.}
 \usage{
-vis.top.proportions(.data, .head = c(10, 100, 1000, 10000, 30000, 1e+05,
-  3e+05, 1e+06), .col = "Read.count")
+vis.top.proportions(
+  .data,
+  .head = c(10, 100, 1000, 10000, 30000, 1e+05, 3e+05, 1e+06),
+  .col = "Read.count"
+)
 }
 \arguments{
 \item{.data}{Data frame with clones.}

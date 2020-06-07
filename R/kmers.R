@@ -260,7 +260,7 @@ generate.kmers.prob <- function (.k, .probs, .count = 1, .alphabet = c('A', 'C',
 #' @seealso \link{vis.logo}
 kmer.profile <- function (.data, .names = rep('Noname', times=length(.data)), .verbose = F) {
   .get.nth.letter.stats <- function (.data, .n) {
-    res <- summarise(grouped_df(data.frame(Letter = substr(.data[, 1], .n, .n), Count = .data[,2]), list(as.name("Letter"))), Sum.count = sum(Count))
+    res <- summarise(grouped_df(data.frame(Letter = substr(.data[, 1], .n, .n), Count = .data[,2]), "Letter"), Sum.count = sum(Count))
     res$Sum.count <- res$Sum.count / sum(res$Sum.count)
     names(res) <- c("Sequence", as.character(.n))
     res

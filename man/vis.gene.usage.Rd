@@ -6,8 +6,16 @@
 \alias{vis.J.usage}
 \title{Histogram of segments usage.}
 \usage{
-vis.gene.usage(.data, .genes = NA, .main = "Gene usage", .ncol = 3,
-  .coord.flip = F, .dodge = F, .labs = c("Gene", "Frequency"), ...)
+vis.gene.usage(
+  .data,
+  .genes = NA,
+  .main = "Gene usage",
+  .ncol = 3,
+  .coord.flip = F,
+  .dodge = F,
+  .labs = c("Gene", "Frequency"),
+  ...
+)
 }
 \arguments{
 \item{.data}{Mitcr data frame or a list with mitcr data frames.}

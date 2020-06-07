@@ -4,8 +4,11 @@
 \alias{vis.kmer.histogram}
 \title{Plot of the most frequent kmers.}
 \usage{
-vis.kmer.histogram(.kmers, .head = 100, .position = c("stack", "dodge",
-  "fill"))
+vis.kmer.histogram(
+  .kmers,
+  .head = 100,
+  .position = c("stack", "dodge", "fill")
+)
 }
 \arguments{
 \item{.kmers}{Data frame with two columns "Kmers" and "Count" or a list with such data frames. See Examples.}

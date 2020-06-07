@@ -4,8 +4,14 @@
 \alias{rarefaction}
 \title{Diversity evaluation using rarefaction.}
 \usage{
-rarefaction(.data, .step = NA, .quantile = c(0.025, 0.975),
-  .extrapolation = 2e+05, .col = "Umi.count", .verbose = T)
+rarefaction(
+  .data,
+  .step = NA,
+  .quantile = c(0.025, 0.975),
+  .extrapolation = 2e+05,
+  .col = "Umi.count",
+  .verbose = T
+)
 }
 \arguments{
 \item{.data}{Data frame or a list with data frames.}

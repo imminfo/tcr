@@ -4,9 +4,15 @@
 \alias{repDiversity}
 \title{General function for the repertoire diversity estimation.}
 \usage{
-repDiversity(.data, .method = c("chao1", "gini.simp", "inv.simp", "gini",
-  "div", "entropy"), .quant = c("read.count", "umi.count", "read.prop",
-  "umi.prop"), .q = 5, .norm = F, .do.norm = NA, .laplace = 0)
+repDiversity(
+  .data,
+  .method = c("chao1", "gini.simp", "inv.simp", "gini", "div", "entropy"),
+  .quant = c("read.count", "umi.count", "read.prop", "umi.prop"),
+  .q = 5,
+  .norm = F,
+  .do.norm = NA,
+  .laplace = 0
+)
 }
 \arguments{
 \item{.data}{Cloneset or a list of clonesets.}

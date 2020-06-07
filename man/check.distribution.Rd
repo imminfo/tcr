@@ -4,8 +4,14 @@
 \alias{check.distribution}
 \title{Check for adequaty of distrubution.}
 \usage{
-check.distribution(.data, .do.norm = NA, .laplace = 1, .na.val = 0,
-  .warn.zero = F, .warn.sum = T)
+check.distribution(
+  .data,
+  .do.norm = NA,
+  .laplace = 1,
+  .na.val = 0,
+  .warn.zero = F,
+  .warn.sum = T
+)
 }
 \arguments{
 \item{.data}{Numeric vector of values.}

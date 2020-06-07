@@ -4,8 +4,12 @@
 \alias{convergence.index}
 \title{Compute convergence characteristics of repertoires.}
 \usage{
-convergence.index(.alpha, .beta, .col.nuc = "CDR3.nucleotide.sequence",
-  .col.aa = "CDR3.amino.acid.sequence")
+convergence.index(
+  .alpha,
+  .beta,
+  .col.nuc = "CDR3.nucleotide.sequence",
+  .col.aa = "CDR3.amino.acid.sequence"
+)
 }
 \arguments{
 \item{.alpha}{Either data frame with columns \code{.col.nuc} and \code{.col.aa} or list with such data frames.}

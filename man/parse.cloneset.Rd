@@ -4,9 +4,24 @@
 \alias{parse.cloneset}
 \title{Parse input table files with the immune receptor repertoire data.}
 \usage{
-parse.cloneset(.filename, .nuc.seq, .aa.seq, .reads, .barcodes, .vgenes,
-  .jgenes, .dgenes, .vend, .jstart, .dalignments, .vd.insertions,
-  .dj.insertions, .total.insertions, .skip = 0, .sep = "\\t")
+parse.cloneset(
+  .filename,
+  .nuc.seq,
+  .aa.seq,
+  .reads,
+  .barcodes,
+  .vgenes,
+  .jgenes,
+  .dgenes,
+  .vend,
+  .jstart,
+  .dalignments,
+  .vd.insertions,
+  .dj.insertions,
+  .total.insertions,
+  .skip = 0,
+  .sep = "\\t"
+)
 }
 \arguments{
 \item{.filename}{Path to the input file with cloneset data.}

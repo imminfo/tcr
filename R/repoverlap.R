@@ -59,6 +59,26 @@ repOverlap <- function (.data,
                         .do.unique = T,
                         .verbose = T) {
   
+  message("
+========================================
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! The tcR package WILL SOON BE ORPHANED 
+!! AND REMOVED FROM CRAN.
+!!
+!! A new package is available that is 
+!! designed to replace tcR: 
+!! immunarch  --  https://immunarch.com/
+!!
+!! We will be happy to help you to move
+!! to the new package. Feel free to contact us:
+!! http://github.com/immunomind/immunarch
+!!
+!! Sincerely, 
+!!  immunarch dev team and 
+!!  Vadim I. Nazarov, lead developer of tcR
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+=======================================")
+  
   .merge.with.v <- function (.data, .seqcol, .vgene) {
     if (.vgene) {
       lapply(.data, function (x) paste0(x[[.seqcol]], x$V.gene) )
@@ -113,7 +133,7 @@ repOverlap <- function (.data,
       if (.verbose) { pb <- set.pb(length(.data)) }
       for (i in 1:length(.data)) {
         .data[[i]] <- as.data.frame(summarise(grouped_df(data.frame(Sequence = new.data[[i]], Count = new.reads[[i]], stringsAsFactors = F),
-                                           list(as.name("Sequence"))), Count = sum(Count)), stringsAsFactors = F)
+                                              "Sequence"), Count = sum(Count)), stringsAsFactors = F)
         if (.verbose) { add.pb(pb) }
       }
       if (.verbose) { close(pb) }

@@ -8,6 +8,10 @@
 revcomp(.seq)
 
 bunch.translate(.seq, .two.way = T)
+
+revcomp(.seq)
+
+bunch.translate(.seq, .two.way = T)
 }
 \arguments{
 \item{.seq}{Vector of nucleotide sequences.}

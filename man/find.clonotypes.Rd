@@ -4,9 +4,14 @@
 \alias{find.clonotypes}
 \title{Find target clonotypes and get columns' value corresponded to that clonotypes.}
 \usage{
-find.clonotypes(.data, .targets, .method = c("exact", "hamm", "lev"),
-  .col.name = "Read.count", .target.col = "CDR3.amino.acid.sequence",
-  .verbose = T)
+find.clonotypes(
+  .data,
+  .targets,
+  .method = c("exact", "hamm", "lev"),
+  .col.name = "Read.count",
+  .target.col = "CDR3.amino.acid.sequence",
+  .verbose = T
+)
 }
 \arguments{
 \item{.data}{List with mitcr data.frames or a mitcr data.frame.}

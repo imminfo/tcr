@@ -4,8 +4,7 @@
 \alias{ozScore}
 \title{Overlap Z-score.}
 \usage{
-ozScore(.mat, .symm = T, .as.matrix = F, .val.col = c("norm", "abs",
-  "oz"))
+ozScore(.mat, .symm = T, .as.matrix = F, .val.col = c("norm", "abs", "oz"))
 }
 \arguments{
 \item{.mat}{Matrix with overlap values.}

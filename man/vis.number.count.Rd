@@ -4,8 +4,12 @@
 \alias{vis.number.count}
 \title{Plot a histogram of counts.}
 \usage{
-vis.number.count(.data, .ncol = 3,
-  .name = "Histogram of clonotypes read counts", .col = "Read.count")
+vis.number.count(
+  .data,
+  .ncol = 3,
+  .name = "Histogram of clonotypes read counts",
+  .col = "Read.count"
+)
 }
 \arguments{
 \item{.data}{Cloneset data frame or a list of clonesets.}

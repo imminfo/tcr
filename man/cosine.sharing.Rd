@@ -21,8 +21,6 @@ shared.summary(.shared.rep, .min.ppl = min(.shared.rep$People),
 
 \item{.log}{if T then apply log to the after adding laplace correction equal to one.}
 
-\item{...}{Parameters passed to the \code{prcomp} function.}
-
 \item{.min.ppl}{Filter: get sequences with # people >= .min.ppl.}
 
 \item{.max.ppl}{Filter: get sequences with # people <= .max.ppl.}

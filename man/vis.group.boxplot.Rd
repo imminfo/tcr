@@ -4,9 +4,16 @@
 \alias{vis.group.boxplot}
 \title{Boxplot for groups of observations.}
 \usage{
-vis.group.boxplot(.data, .groups = NA, .labs = c("V genes",
-  "Frequency"), .title = "", .rotate.x = T, .violin = T,
-  .notch = F, ...)
+vis.group.boxplot(
+  .data,
+  .groups = NA,
+  .labs = c("V genes", "Frequency"),
+  .title = "",
+  .rotate.x = T,
+  .violin = T,
+  .notch = F,
+  ...
+)
 }
 \arguments{
 \item{.data}{Either a matrix with colnames and rownames specifyed or a data frame with the first column of

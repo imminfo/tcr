@@ -4,10 +4,18 @@
 \alias{permutDistTest}
 \title{Monte Carlo permutation test for pairwise and one-vs-all-wise within- and inter-group differences in a set of repertoires.}
 \usage{
-permutDistTest(.mat, .groups, .n = 1000, .fun = mean, .signif = 0.05,
-  .plot = T, .xlab = "Values",
+permutDistTest(
+  .mat,
+  .groups,
+  .n = 1000,
+  .fun = mean,
+  .signif = 0.05,
+  .plot = T,
+  .xlab = "Values",
   .title = "Monte Carlo permutation testing of overlaps",
-  .hjust = -0.1, .vjust = -4)
+  .hjust = -0.1,
+  .vjust = -4
+)
 }
 \arguments{
 \item{.mat}{Symmetric matrix of repertoire distances.}

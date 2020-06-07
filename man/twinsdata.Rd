@@ -6,7 +6,9 @@
 \alias{twa}
 \alias{twb}
 \title{Twins alpha-beta chain data}
-\format{\code{twa} and \code{twb} are lists of 4 data frames with 10000 row in each.}
+\format{
+\code{twa} and \code{twb} are lists of 4 data frames with 10000 row in each.
+}
 \description{
 \code{twa.rda}, \code{twb.rda} - data frames with downsampled to the 10000 most 
 abundant clonesets and 4 samples data of twins data (alpha and beta chains).

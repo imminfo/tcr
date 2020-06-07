@@ -4,8 +4,16 @@
 \alias{get.kmers}
 \title{Get kmers from sequences.}
 \usage{
-get.kmers(.data, .head = -1, .k = 5, .clean = T, .meat = F,
-  .verbose = T, .left.shift = 0, .right.shift = 0)
+get.kmers(
+  .data,
+  .head = -1,
+  .k = 5,
+  .clean = T,
+  .meat = F,
+  .verbose = T,
+  .left.shift = 0,
+  .right.shift = 0
+)
 }
 \arguments{
 \item{.data}{Either character vector or a data.frame.}

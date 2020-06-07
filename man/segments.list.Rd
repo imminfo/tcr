@@ -5,7 +5,9 @@
 \alias{segments.list}
 \alias{genesegments}
 \title{Segment data.}
-\format{\code{genesegments} is a list with data frames.}
+\format{
+\code{genesegments} is a list with data frames.
+}
 \description{
 \code{segments} is a list with 5 data frames with data of human alpha-beta chain segments.
 Elements names as "TRAV", "TRAJ", "TRBV", "TRVJ", "TRVD". Each data frame consists of 5 columns:

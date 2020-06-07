@@ -2,7 +2,7 @@
 
 
 if (getRversion() >= "2.15.1") {
-  utils::globalVariables(c('PC1', 'PC2', "Subject"))
+  utils::globalVariables(c('PC1', 'PC2', "Subject", "n"))
 }
 
 
@@ -56,6 +56,26 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
                        .norm = F, .ambig = F #, .species = c("human", "mouse"), .genes = c("trbv", "trbd", "trbj")
                        ) {
   
+  message("
+========================================
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! The tcR package WILL SOON BE ORPHANED 
+!! AND REMOVED FROM CRAN.
+!!
+!! A new package is available that is 
+!! designed to replace tcR: 
+!! immunarch  --  https://immunarch.com/
+!!
+!! We will be happy to help you to move
+!! to the new package. Feel free to contact us:
+!! http://github.com/immunomind/immunarch
+!!
+!! Sincerely, 
+!!  immunarch dev team and 
+!!  Vadim I. Nazarov, lead developer of tcR
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+=======================================")
+  
   .process.df <- function (.df, .quant, .cols) {
     cast.fun <- dcast
     if (length(.cols) == 2) { cast.fun <- acast; len <- 2 }
@@ -64,12 +84,18 @@ geneUsage <- function (.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA, "read.co
       .df[ which(!(.df[[.cols[i]]] %in% .genes[[i]])), .cols[i] ] <- "Ambiguous"
     }
     
-    count.fun <- "n()"
-    if (!is.na(.quant)) { count.fun <- paste0("sum(", .quant, ")", collapse = "", sep = "")}
-    
     if (length(.cols) == 1) { .cols <- c(.cols, '.'); len <- 1}
     
-    cast.fun(summarise_(grouped_df(select_(.df, .dots = as.list(na.exclude(c(.quant, .cols[1:len])))), lapply(.cols[1:len], as.name)), Freq = count.fun), as.formula(paste0(.cols[1], " ~ ", .cols[2])), value.var = 'Freq')
+    .df = .df %>% select(na.exclude(c(.quant, .cols[1:len])))
+    .df = .df %>% grouped_df(.cols[1:len])
+    
+    if (!is.na(.quant)) {
+      .df = .df %>% summarise(Freq = sum(.quant))
+    } else {
+      .df = .df %>% summarise(Freq = n())
+    }
+
+    .df
   }
   
   

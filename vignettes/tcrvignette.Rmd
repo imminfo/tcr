@@ -22,6 +22,16 @@ output:
 -->
 
 
+# IMPORTANT INFORMATION
+
+The tcR package WILL SOON BE ORPHANED AND REMOVED FROM CRAN.
+
+A new package is available that is designed to replace tcR: immunarch  --  https://immunarch.com/
+
+We will be happy to help you to move to the new package. Feel free to contact us: http://github.com/immunomind/immunarch
+
+Sincerely, immunarch dev team and Vadim I. Nazarov, lead developer of tcR
+
 
 ## Introduction
 The *tcR* package designed to help researchers in the immunology field to analyse T cell receptor (`TCR`) and immunoglobulin (`Ig`) repertoires.
@@ -315,10 +325,6 @@ head(imm1.vs)
 
 imm.vs.all <- geneUsage(twb, HUMAN_TRBV)
 imm.vs.all[1:10, 1:4]
-
-# Compute joint V-J counts
-imm1.vj <- geneUsage(twb[[1]], list(HUMAN_TRBV, HUMAN_TRBJ))
-imm1.vj[1:5, 1:5]
 ```
 
 

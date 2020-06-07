@@ -4,8 +4,13 @@
 \alias{vis.logo}
 \title{Logo - plots for amino acid and nucletide profiles.}
 \usage{
-vis.logo(.data, .replace.zero.with.na = T, .jitter.width = 0.01,
-  .jitter.height = 0.01, .dodge.width = 0.15)
+vis.logo(
+  .data,
+  .replace.zero.with.na = T,
+  .jitter.width = 0.01,
+  .jitter.height = 0.01,
+  .dodge.width = 0.15
+)
 }
 \arguments{
 \item{.data}{Output from the \code{kmer.profile} function.}

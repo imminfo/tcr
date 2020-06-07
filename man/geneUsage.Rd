@@ -4,9 +4,13 @@
 \alias{geneUsage}
 \title{Gene usage.}
 \usage{
-geneUsage(.data, .genes = HUMAN_TRBV_MITCR, .quant = c(NA,
-  "read.count", "umi.count", "read.prop", "umi.prop"), .norm = F,
-  .ambig = F)
+geneUsage(
+  .data,
+  .genes = HUMAN_TRBV_MITCR,
+  .quant = c(NA, "read.count", "umi.count", "read.prop", "umi.prop"),
+  .norm = F,
+  .ambig = F
+)
 }
 \arguments{
 \item{.data}{Cloneset data frame or a list with clonesets.}

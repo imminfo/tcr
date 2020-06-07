@@ -4,10 +4,17 @@
 \alias{bootstrap.tcr}
 \title{Bootstrap for data frames in package tcR.}
 \usage{
-bootstrap.tcr(.data, .fun = entropy.seg, .n = 1000,
-  .size = nrow(.data), .sim = c("uniform", "percentage"),
-  .postfun = function(x) {     unlist(x) }, .verbose = T,
-  .prop.col = "Read.proportion", ...)
+bootstrap.tcr(
+  .data,
+  .fun = entropy.seg,
+  .n = 1000,
+  .size = nrow(.data),
+  .sim = c("uniform", "percentage"),
+  .postfun = function(x) {     unlist(x) },
+  .verbose = T,
+  .prop.col = "Read.proportion",
+  ...
+)
 }
 \arguments{
 \item{.data}{Data frame.}

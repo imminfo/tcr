@@ -4,9 +4,15 @@
 \alias{spectratype}
 \title{Spectratype}
 \usage{
-spectratype(.data, .quant = c("read.count", "umi.count", "id"),
-  .gene = "V", .plot = T, .main = "Spectratype",
-  .legend = "Gene segment", .labs = c("CDR3 length", NA))
+spectratype(
+  .data,
+  .quant = c("read.count", "umi.count", "id"),
+  .gene = "V",
+  .plot = T,
+  .main = "Spectratype",
+  .legend = "Gene segment",
+  .labs = c("CDR3 length", NA)
+)
 }
 \arguments{
 \item{.data}{tcR data frame.}

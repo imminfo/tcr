@@ -4,8 +4,14 @@
 \alias{startmitcr}
 \title{Start MiTCR directly from the package.}
 \usage{
-startmitcr(.input = "", .output = "", ..., .file.path = "",
-  .mitcr.path = "~/programs/", .mem = "4g")
+startmitcr(
+  .input = "",
+  .output = "",
+  ...,
+  .file.path = "",
+  .mitcr.path = "~/programs/",
+  .mem = "4g"
+)
 }
 \arguments{
 \item{.input, .output}{Input and output files.}
