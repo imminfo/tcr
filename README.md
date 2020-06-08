@@ -1,7 +1,5 @@
-[![CRAN](http://www.r-pkg.org/badges/version/tcR?style=flat-square)](https://cran.r-project.org/package=tcR)
 [![Downloads_all](http://cranlogs.r-pkg.org/badges/grand-total/tcR)](http://www.r-pkg.org/pkg/tcR)
 [![Downloads_week](http://cranlogs.r-pkg.org/badges/last-week/tcR)](http://www.r-pkg.org/pkg/tcR)
-[![Licence](https://img.shields.io/hexpm/l/plug.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0)
 
 tcR
 ===

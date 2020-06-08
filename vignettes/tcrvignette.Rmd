@@ -26,7 +26,7 @@ output:
 
 The tcR package WILL SOON BE ORPHANED AND REMOVED FROM CRAN.
 
-A new package is available that is designed to replace tcR: immunarch  --  https://immunarch.com/
+A new package is available that is designed to replace tcR: immunarch  --  http://immunarch.com/
 
 We will be happy to help you to move to the new package. Feel free to contact us: http://github.com/immunomind/immunarch
 
@@ -632,8 +632,6 @@ head(mutated.neighbours(G, 1)[[1]])
 
 ## Conclusion
 Feel free to contact me for the package-related or immunoinformatics research-related questions.
-
-If you spot a bug or would like to see something useful for you in the package feel free to raise an issue at *tcR* GitHub: [https://github.com/imminfo/tcr/issues](Issues)
 
 
 ## Appendix A: Kmers manipulation and processing
